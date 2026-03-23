@@ -216,12 +216,12 @@
                 <p style="color: #f80f3f; font-size: 13px; line-height: 1.5;">WiFi credentials cannot be configured remotely for security. Edit config.h on the device directly.</p>
             </div>
 
-            <button class="btn btn-primary" onclick="saveConfig()">Generate config.json</button>
+            <button class="btn btn-primary" onclick="saveConfigToGitHub()">Save to Device</button>
+            <div id="config-status" class="status"></div>
             <div id="config-output" style="display:none; margin-top:16px;">
                 <div class="card">
-                    <h3>Copy this to your GitHub config.json</h3>
-                    <textarea id="config-json" style="min-height:200px; font-family:monospace; font-size:12px;"></textarea>
-                    <button class="btn btn-secondary" onclick="copyConfig()" style="margin-top:8px;">Copy to Clipboard</button>
+                    <h3>Config saved successfully</h3>
+                    <textarea id="config-json" style="min-height:150px; font-family:monospace; font-size:11px;" readonly></textarea>
                 </div>
             </div>
         </div>
@@ -231,6 +231,20 @@
         const BIN_ID = '69c17141c3097a1dd5511da5';
         const API_KEY = '$2a$10$9duNlyVBIBGKYvozxz5xyugJWV/vqC6E2zpG0hnwoZfjdLh.tNBmm';
         const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+        const GH_REPO = 'dmccuk/wonder-config';
+        const GH_FILE = 'config.json';
+        const GH_API = `https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`;
+
+        // Token stored in browser only — never in the code
+        function getGHToken() {
+            let token = localStorage.getItem('gh_token');
+            if (!token) {
+                token = prompt('Enter your GitHub Personal Access Token (one-time setup):');
+                if (token) localStorage.setItem('gh_token', token);
+            }
+            return token;
+        }
 
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -329,7 +343,56 @@
             setTimeout(() => { el.style.display = 'none'; el.className = 'status'; }, 5000);
         }
 
-        function saveConfig() {
+        async function saveConfigToGitHub() {
+            const status = document.getElementById('config-status');
+            showStatus(status, 'Saving to device...', 'success');
+
+            const config = buildConfig();
+            const configJson = JSON.stringify(config, null, 2);
+
+            try {
+                // Get current file SHA (needed for update)
+                const getRes = await fetch(GH_API, {
+                    headers: { 'Authorization': `Bearer ${getGHToken()}` }
+                });
+                if (!getRes.ok) throw new Error('Could not read current config');
+                const current = await getRes.json();
+
+                // Merge with existing config to preserve f1_session_active etc.
+                const existingContent = atob(current.content.replace(/\n/g, ''));
+                let existing = {};
+                try { existing = JSON.parse(existingContent); } catch(e) {}
+                const merged = { ...existing, ...config };
+                const mergedJson = JSON.stringify(merged, null, 2);
+
+                // Update file
+                const putRes = await fetch(GH_API, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${getGHToken()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Update config from Wonder Device website',
+                        content: btoa(mergedJson),
+                        sha: current.sha
+                    })
+                });
+
+                if (!putRes.ok) {
+                    const err = await putRes.json();
+                    throw new Error(err.message || 'Failed to save');
+                }
+
+                showStatus(status, 'Config saved! Device will update within 30 minutes.', 'success');
+                document.getElementById('config-json').value = mergedJson;
+                document.getElementById('config-output').style.display = 'block';
+            } catch (e) {
+                showStatus(status, 'Error: ' + e.message, 'error');
+            }
+        }
+
+        function buildConfig() {
             const loc_label = document.getElementById('cfg-loc-label').value || 'East Grinstead';
             const lat = parseFloat(document.getElementById('cfg-loc-lat').value) || 51.13;
             const lon = parseFloat(document.getElementById('cfg-loc-lon').value) || -0.01;
@@ -350,7 +413,7 @@
             let cy = 2026, cm = 8, cd = 15;
             if (cdate) { const d = new Date(cdate); cy = d.getFullYear(); cm = d.getMonth()+1; cd = d.getDate(); }
 
-            const config = {
+            return {
                 location: { lat, lon, label: loc_label },
                 train_home: { from: hf, to: ht, from_name: hfn, to_name: htn },
                 train_away: { from: ht, to: hf, from_name: htn, to_name: hfn },
@@ -363,20 +426,47 @@
                 pomo_work_mins: pomoWork,
                 pomo_break_mins: pomoBreak
             };
-
-            document.getElementById('config-json').value = JSON.stringify(config, null, 2);
-            document.getElementById('config-output').style.display = 'block';
         }
 
-        function copyConfig() {
-            const ta = document.getElementById('config-json');
-            ta.select();
-            document.execCommand('copy');
-            alert('Copied! Now paste into your GitHub config.json file.');
+        // Load current config into form fields
+        async function loadConfig() {
+            try {
+                const res = await fetch(GH_API, {
+                    headers: { 'Authorization': `Bearer ${getGHToken()}` }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                const cfg = JSON.parse(atob(data.content.replace(/\n/g, '')));
+
+                if (cfg.location) {
+                    document.getElementById('cfg-loc-label').value = cfg.location.label || '';
+                    document.getElementById('cfg-loc-lat').value = cfg.location.lat || '';
+                    document.getElementById('cfg-loc-lon').value = cfg.location.lon || '';
+                }
+                if (cfg.train_home) {
+                    document.getElementById('cfg-train-home-from').value = cfg.train_home.from || '';
+                    document.getElementById('cfg-train-home-from-name').value = cfg.train_home.from_name || '';
+                    document.getElementById('cfg-train-home-to').value = cfg.train_home.to || '';
+                    document.getElementById('cfg-train-home-to-name').value = cfg.train_home.to_name || '';
+                }
+                if (cfg.crypto) document.getElementById('cfg-crypto-ids').value = cfg.crypto.join(',');
+                if (cfg.crypto_symbols) document.getElementById('cfg-crypto-syms').value = cfg.crypto_symbols.join(',');
+                if (cfg.countdown) {
+                    document.getElementById('cfg-countdown-label').value = cfg.countdown.label || '';
+                    const d = `${cfg.countdown.year}-${String(cfg.countdown.month).padStart(2,'0')}-${String(cfg.countdown.day).padStart(2,'0')}`;
+                    document.getElementById('cfg-countdown-date').value = d;
+                }
+                if (cfg.home_radius_km) document.getElementById('cfg-radius').value = cfg.home_radius_km;
+                if (cfg.screensaver_timeout_secs) document.getElementById('cfg-ss-timeout').value = cfg.screensaver_timeout_secs;
+                if (cfg.screensaver_mode !== undefined) document.getElementById('cfg-ss-mode').value = cfg.screensaver_mode;
+                if (cfg.pomo_work_mins) document.getElementById('cfg-pomo-work').value = cfg.pomo_work_mins;
+                if (cfg.pomo_break_mins) document.getElementById('cfg-pomo-break').value = cfg.pomo_break_mins;
+            } catch(e) { console.log('Could not load config:', e); }
         }
 
-        // Load messages on page load
+        // Load messages and config on page load
         loadMessages();
+        loadConfig();
     </script>
 </body>
 </html>
