@@ -159,6 +159,14 @@
                 <input type="number" step="0.0001" id="cfg-loc-lat" placeholder="51.13">
                 <label>Longitude</label>
                 <input type="number" step="0.0001" id="cfg-loc-lon" placeholder="-0.01">
+                <label>Screensaver Timeout (seconds)</label>
+                <input type="number" id="cfg-ss-timeout" placeholder="60" step="1">
+                <label>Screensaver Mode</label>
+                <select id="cfg-ss-mode">
+                    <option value="0">Dim Only</option>
+                    <option value="1" selected>Matrix Rain</option>
+                    <option value="2">Wormhole</option>
+                </select>
             </div>
 
             <div class="card">
@@ -193,6 +201,19 @@
                 <h3>Home Radius (km)</h3>
                 <label>Distance from home before switching train routes</label>
                 <input type="number" id="cfg-radius" placeholder="15" step="1">
+            </div>
+
+            <div class="card">
+                <h3>Pomodoro Timer</h3>
+                <label>Work Duration (minutes)</label>
+                <input type="number" id="cfg-pomo-work" placeholder="25" step="1">
+                <label>Break Duration (minutes)</label>
+                <input type="number" id="cfg-pomo-break" placeholder="5" step="1">
+            </div>
+
+            <div class="card">
+                <h3>WiFi Networks</h3>
+                <p style="color: #f80f3f; font-size: 13px; line-height: 1.5;">WiFi credentials cannot be configured remotely for security. Edit config.h on the device directly.</p>
             </div>
 
             <button class="btn btn-primary" onclick="saveConfig()">Generate config.json</button>
@@ -266,7 +287,7 @@
                     priority: priority,
                     time: new Date().toLocaleString('en-GB')
                 });
-                if (msgs.length > 5) msgs = msgs.slice(-5);
+                if (msgs.length > 10) msgs = msgs.slice(-10);
 
                 // Write back
                 await fetch(BIN_URL, {
@@ -321,6 +342,10 @@
             const clabel = document.getElementById('cfg-countdown-label').value || 'Summer Holiday';
             const cdate = document.getElementById('cfg-countdown-date').value;
             const radius = parseInt(document.getElementById('cfg-radius').value) || 15;
+            const ssTimeout = parseInt(document.getElementById('cfg-ss-timeout').value) || 60;
+            const ssMode = parseInt(document.getElementById('cfg-ss-mode').value) || 1;
+            const pomoWork = parseInt(document.getElementById('cfg-pomo-work').value) || 25;
+            const pomoBreak = parseInt(document.getElementById('cfg-pomo-break').value) || 5;
 
             let cy = 2026, cm = 8, cd = 15;
             if (cdate) { const d = new Date(cdate); cy = d.getFullYear(); cm = d.getMonth()+1; cd = d.getDate(); }
@@ -332,7 +357,11 @@
                 home_radius_km: radius,
                 crypto: cryptoIds,
                 crypto_symbols: cryptoSyms,
-                countdown: { label: clabel, year: cy, month: cm, day: cd }
+                countdown: { label: clabel, year: cy, month: cm, day: cd },
+                screensaver_timeout_secs: ssTimeout,
+                screensaver_mode: ssMode,
+                pomo_work_mins: pomoWork,
+                pomo_break_mins: pomoBreak
             };
 
             document.getElementById('config-json').value = JSON.stringify(config, null, 2);
