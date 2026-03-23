@@ -1,0 +1,29 @@
+
+{
+  "location": {
+    "lat": 51.13,
+    "lon": -0.01,
+    "label": "East Grinstead"
+  },
+  "train_home": {
+    "from": "EGR",
+    "to": "VIC",
+    "from_name": "East Grinstead",
+    "to_name": "Victoria"
+  },
+  "train_away": {
+    "from": "VIC",
+    "to": "EGR",
+    "from_name": "Victoria",
+    "to_name": "East Grinstead"
+  },
+  "home_radius_km": 15,
+  "crypto": ["bitcoin", "ethereum", "solana", "cardano"],
+  "crypto_symbols": ["BTC", "ETH", "SOL", "ADA"],
+  "countdown": {
+    "label": "Summer Holiday",
+    "year": 2026,
+    "month": 8,
+    "day": 02
+  }
+}
