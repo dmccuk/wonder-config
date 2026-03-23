@@ -7,9 +7,9 @@
   },
   "train_home": {
     "from": "EGR",
-    "to": "VIC",
+    "to": "BRI",
     "from_name": "East Grinstead",
-    "to_name": "Victoria"
+    "to_name": "London Bridge"
   },
   "train_away": {
     "from": "VIC",
