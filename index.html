@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wonder Device - Message Board</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+        .header {
+            text-align: center;
+            padding: 30px 0 20px;
+            border-bottom: 2px solid #05ff;
+        }
+        .header h1 { color: #00e5ff; font-size: 28px; letter-spacing: 2px; }
+        .header p { color: #888; margin-top: 8px; font-size: 14px; }
+        .tabs {
+            display: flex;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            background: #1a1a2e;
+            color: #888;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .tab.active { background: #00e5ff; color: #0a0a1a; }
+        .tab:hover:not(.active) { background: #222240; }
+        .panel { display: none; margin-top: 20px; }
+        .panel.active { display: block; }
+        .card {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #333;
+        }
+        .card h3 { color: #00e5ff; margin-bottom: 12px; font-size: 16px; }
+        label { display: block; color: #aaa; font-size: 13px; margin-bottom: 6px; margin-top: 12px; }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 14px;
+            background: #0a0a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+        }
+        input:focus, textarea:focus { outline: none; border-color: #00e5ff; }
+        textarea { resize: vertical; min-height: 80px; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: #00e5ff; color: #0a0a1a; }
+        .btn-primary:hover { background: #00b8d4; }
+        .btn-danger { background: #f80f3f; color: #fff; }
+        .btn-danger:hover { background: #d32f2f; }
+        .btn-secondary { background: #333; color: #ccc; }
+        .msg-item {
+            background: #0a0a1a;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid #00e5ff;
+        }
+        .msg-item.high { border-left-color: #f80f3f; }
+        .msg-item .from { color: #00e5ff; font-weight: 600; font-size: 13px; }
+        .msg-item .text { margin-top: 4px; color: #ddd; }
+        .msg-item .time { color: #666; font-size: 11px; margin-top: 4px; }
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: none;
+        }
+        .status.success { display: block; background: #1b5e20; color: #a5d6a7; }
+        .status.error { display: block; background: #b71c1c; color: #ef9a9a; }
+        .empty { text-align: center; color: #666; padding: 20px; font-style: italic; }
+        .priority-toggle {
+            display: flex; gap: 10px; margin-top: 6px;
+        }
+        .priority-toggle label {
+            flex: 1; text-align: center; padding: 8px;
+            border-radius: 6px; cursor: pointer;
+            border: 1px solid #444; margin: 0;
+        }
+        .priority-toggle input { display: none; }
+        .priority-toggle input:checked + span { color: #00e5ff; }
+        .priority-toggle label:has(input:checked) { border-color: #00e5ff; background: #1a1a3e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WONDER DEVICE</h1>
+            <p>Send messages to the display</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('messages')">Messages</div>
+            <div class="tab" onclick="switchTab('config')">Configure</div>
+        </div>
+
+        <!-- MESSAGES PANEL -->
+        <div id="messages-panel" class="panel active">
+            <div class="card">
+                <h3>Send a Message</h3>
+                <label>Your Name</label>
+                <input type="text" id="msg-from" placeholder="e.g. Dad, Sarah, Office">
+                <label>Message</label>
+                <textarea id="msg-text" placeholder="Type your message here..."></textarea>
+                <div>
+                    <label>Priority</label>
+                    <div class="priority-toggle">
+                        <label><input type="radio" name="priority" value="normal" checked><span>Normal</span></label>
+                        <label><input type="radio" name="priority" value="high"><span>Urgent</span></label>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="sendMessage()">Send Message</button>
+                <div id="send-status" class="status"></div>
+            </div>
+
+            <div class="card">
+                <h3>Current Messages</h3>
+                <div id="msg-list"><div class="empty">Loading...</div></div>
+                <button class="btn btn-danger" onclick="clearMessages()">Clear All Messages</button>
+            </div>
+        </div>
+
+        <!-- CONFIG PANEL -->
+        <div id="config-panel" class="panel">
+            <div class="card">
+                <h3>Device Location</h3>
+                <label>Label</label>
+                <input type="text" id="cfg-loc-label" placeholder="East Grinstead">
+                <label>Latitude</label>
+                <input type="number" step="0.0001" id="cfg-loc-lat" placeholder="51.13">
+                <label>Longitude</label>
+                <input type="number" step="0.0001" id="cfg-loc-lon" placeholder="-0.01">
+            </div>
+
+            <div class="card">
+                <h3>Train Routes</h3>
+                <label>Home Station (CRS code)</label>
+                <input type="text" id="cfg-train-home-from" placeholder="EGR" maxlength="3">
+                <label>Home Station Name</label>
+                <input type="text" id="cfg-train-home-from-name" placeholder="East Grinstead">
+                <label>Destination (CRS code)</label>
+                <input type="text" id="cfg-train-home-to" placeholder="VIC" maxlength="3">
+                <label>Destination Name</label>
+                <input type="text" id="cfg-train-home-to-name" placeholder="Victoria">
+            </div>
+
+            <div class="card">
+                <h3>Crypto Coins</h3>
+                <label>Coins (CoinGecko IDs, comma-separated)</label>
+                <input type="text" id="cfg-crypto-ids" placeholder="bitcoin,ethereum,solana,cardano">
+                <label>Symbols (comma-separated)</label>
+                <input type="text" id="cfg-crypto-syms" placeholder="BTC,ETH,SOL,ADA">
+            </div>
+
+            <div class="card">
+                <h3>Countdown Timer</h3>
+                <label>Event Name</label>
+                <input type="text" id="cfg-countdown-label" placeholder="Summer Holiday">
+                <label>Date</label>
+                <input type="date" id="cfg-countdown-date">
+            </div>
+
+            <div class="card">
+                <h3>Home Radius (km)</h3>
+                <label>Distance from home before switching train routes</label>
+                <input type="number" id="cfg-radius" placeholder="15" step="1">
+            </div>
+
+            <button class="btn btn-primary" onclick="saveConfig()">Generate config.json</button>
+            <div id="config-output" style="display:none; margin-top:16px;">
+                <div class="card">
+                    <h3>Copy this to your GitHub config.json</h3>
+                    <textarea id="config-json" style="min-height:200px; font-family:monospace; font-size:12px;"></textarea>
+                    <button class="btn btn-secondary" onclick="copyConfig()" style="margin-top:8px;">Copy to Clipboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BIN_ID = '69c17141c3097a1dd5511da5';
+        const API_KEY = '$2a$10$9duNlyVBIBGKYvozxz5xyugJWV/vqC6E2zpG0hnwoZfjdLh.tNBmm';
+        const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(tab + '-panel').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function loadMessages() {
+            try {
+                const res = await fetch(BIN_URL + '/latest', {
+                    headers: { 'X-Access-Key': API_KEY }
+                });
+                const data = await res.json();
+                const msgs = data.record.messages || [];
+                const list = document.getElementById('msg-list');
+                if (msgs.length === 0) {
+                    list.innerHTML = '<div class="empty">No messages yet. Be the first!</div>';
+                    return;
+                }
+                list.innerHTML = msgs.map(m => `
+                    <div class="msg-item ${m.priority === 'high' ? 'high' : ''}">
+                        <div class="from">${m.from || 'Anonymous'}</div>
+                        <div class="text">${m.text}</div>
+                        <div class="time">${m.time || ''}</div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                document.getElementById('msg-list').innerHTML =
+                    '<div class="empty">Could not load messages</div>';
+            }
+        }
+
+        async function sendMessage() {
+            const from = document.getElementById('msg-from').value.trim() || 'Anonymous';
+            const text = document.getElementById('msg-text').value.trim();
+            const priority = document.querySelector('input[name="priority"]:checked').value;
+            const status = document.getElementById('send-status');
+
+            if (!text) { showStatus(status, 'Please type a message', 'error'); return; }
+
+            try {
+                // Read current messages
+                const res = await fetch(BIN_URL + '/latest', {
+                    headers: { 'X-Access-Key': API_KEY }
+                });
+                const data = await res.json();
+                let msgs = data.record.messages || [];
+
+                // Add new message (keep max 5)
+                msgs.push({
+                    text: text,
+                    from: from,
+                    priority: priority,
+                    time: new Date().toLocaleString('en-GB')
+                });
+                if (msgs.length > 5) msgs = msgs.slice(-5);
+
+                // Write back
+                await fetch(BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Access-Key': API_KEY
+                    },
+                    body: JSON.stringify({ messages: msgs })
+                });
+
+                showStatus(status, 'Message sent! It will appear on the device within 2 minutes.', 'success');
+                document.getElementById('msg-text').value = '';
+                document.getElementById('msg-from').value = '';
+                loadMessages();
+            } catch (e) {
+                showStatus(status, 'Failed to send: ' + e.message, 'error');
+            }
+        }
+
+        async function clearMessages() {
+            if (!confirm('Clear all messages from the device?')) return;
+            try {
+                await fetch(BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Access-Key': API_KEY
+                    },
+                    body: JSON.stringify({ messages: [] })
+                });
+                loadMessages();
+            } catch (e) { alert('Failed: ' + e.message); }
+        }
+
+        function showStatus(el, msg, type) {
+            el.textContent = msg;
+            el.className = 'status ' + type;
+            setTimeout(() => { el.style.display = 'none'; el.className = 'status'; }, 5000);
+        }
+
+        function saveConfig() {
+            const loc_label = document.getElementById('cfg-loc-label').value || 'East Grinstead';
+            const lat = parseFloat(document.getElementById('cfg-loc-lat').value) || 51.13;
+            const lon = parseFloat(document.getElementById('cfg-loc-lon').value) || -0.01;
+            const hf = document.getElementById('cfg-train-home-from').value.toUpperCase() || 'EGR';
+            const ht = document.getElementById('cfg-train-home-to').value.toUpperCase() || 'VIC';
+            const hfn = document.getElementById('cfg-train-home-from-name').value || 'East Grinstead';
+            const htn = document.getElementById('cfg-train-home-to-name').value || 'Victoria';
+            const cryptoIds = (document.getElementById('cfg-crypto-ids').value || 'bitcoin,ethereum,solana,cardano').split(',').map(s=>s.trim());
+            const cryptoSyms = (document.getElementById('cfg-crypto-syms').value || 'BTC,ETH,SOL,ADA').split(',').map(s=>s.trim());
+            const clabel = document.getElementById('cfg-countdown-label').value || 'Summer Holiday';
+            const cdate = document.getElementById('cfg-countdown-date').value;
+            const radius = parseInt(document.getElementById('cfg-radius').value) || 15;
+
+            let cy = 2026, cm = 8, cd = 15;
+            if (cdate) { const d = new Date(cdate); cy = d.getFullYear(); cm = d.getMonth()+1; cd = d.getDate(); }
+
+            const config = {
+                location: { lat, lon, label: loc_label },
+                train_home: { from: hf, to: ht, from_name: hfn, to_name: htn },
+                train_away: { from: ht, to: hf, from_name: htn, to_name: hfn },
+                home_radius_km: radius,
+                crypto: cryptoIds,
+                crypto_symbols: cryptoSyms,
+                countdown: { label: clabel, year: cy, month: cm, day: cd }
+            };
+
+            document.getElementById('config-json').value = JSON.stringify(config, null, 2);
+            document.getElementById('config-output').style.display = 'block';
+        }
+
+        function copyConfig() {
+            const ta = document.getElementById('config-json');
+            ta.select();
+            document.execCommand('copy');
+            alert('Copied! Now paste into your GitHub config.json file.');
+        }
+
+        // Load messages on page load
+        loadMessages();
+    </script>
+</body>
+</html>
