@@ -39,6 +39,10 @@
         }
         .tab.active { background: #00e5ff; color: #0a0a1a; }
         .tab:hover:not(.active) { background: #222240; }
+        .admin-link { text-align:center; margin-top:30px; }
+        .admin-link a { color:#444; font-size:12px; text-decoration:none; }
+        .admin-link a:hover { color:#00e5ff; }
+        .hidden { display: none !important; }
         .panel { display: none; margin-top: 20px; }
         .panel.active { display: block; }
         .card {
@@ -118,7 +122,7 @@
             <p>Send messages to the display</p>
         </div>
 
-        <div class="tabs">
+        <div class="tabs hidden" id="admin-tabs">
             <div class="tab active" onclick="switchTab('messages')">Messages</div>
             <div class="tab" onclick="switchTab('config')">Configure</div>
         </div>
@@ -149,8 +153,13 @@
             </div>
         </div>
 
-        <!-- CONFIG PANEL -->
-        <div id="config-panel" class="panel">
+        <!-- ADMIN LINK (visible to everyone, opens config after token) -->
+        <div class="admin-link" id="admin-link-div">
+            <a href="#" onclick="unlockAdmin(); return false;">Device Admin</a>
+        </div>
+
+        <!-- CONFIG PANEL (hidden until admin unlocked) -->
+        <div id="config-panel" class="panel hidden">
             <div class="card">
                 <h3>Device Location</h3>
                 <label>Label</label>
@@ -428,6 +437,25 @@
             };
         }
 
+        function unlockAdmin() {
+            const token = getGHToken();
+            if (!token) { alert('Token required for admin access'); return; }
+            document.getElementById('admin-tabs').classList.remove('hidden');
+            document.getElementById('config-panel').classList.remove('hidden');
+            document.getElementById('admin-link-div').classList.add('hidden');
+            switchTab('config');
+            loadConfig();
+        }
+
+        // Auto-unlock admin if token already saved in browser
+        function checkAutoUnlock() {
+            const token = localStorage.getItem('gh_token');
+            if (token) {
+                document.getElementById('admin-tabs').classList.remove('hidden');
+                document.getElementById('admin-link-div').classList.add('hidden');
+            }
+        }
+
         // Load current config into form fields
         async function loadConfig() {
             try {
@@ -464,9 +492,11 @@
             } catch(e) { console.log('Could not load config:', e); }
         }
 
-        // Load messages and config on page load
+        // Load on page start
         loadMessages();
-        loadConfig();
+        checkAutoUnlock();
+        // Only load config if admin is unlocked
+        if (localStorage.getItem('gh_token')) loadConfig();
     </script>
 </body>
 </html>
