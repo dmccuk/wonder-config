@@ -1,8 +1,8 @@
 {
   "location": {
-    "lat": 51.13,
-    "lon": -0.01,
-    "label": "East Grinstead"
+    "lat": 50.83,
+    "lon": -0.166,
+    "label": "Brighton"
   },
   "train_home": {
     "from": "BTN",
