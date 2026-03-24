@@ -4,26 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wonder Device — Your world at a glance</title>
-    <meta name="description" content="A swipe-driven AMOLED smart display. Live weather, trains, crypto, news, messages and more — all on your desk.">
+    <meta name="description" content="A swipe-driven AMOLED smart display. Live weather, trains, crypto, F1, messages and more — all on your desk.">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg:       #060612;
-            --bg2:      #0c0c20;
-            --card:     #12122a;
-            --card2:    #1a1a36;
-            --border:   #252545;
-            --accent:   #00e5ff;
-            --accent2:  #667fff;
-            --success:  #00e68a;
-            --warn:     #ffaa00;
-            --danger:   #ff3366;
-            --white:    #f0f0f5;
-            --gray:     #888899;
-            --darkgray: #444455;
+            --bg:        #ffffff;
+            --bg2:       #f5f7fa;
+            --card:      #ffffff;
+            --card2:     #f0f2f5;
+            --border:    #e2e5ea;
+            --accent:    #00b8d4;
+            --accent2:   #0091a7;
+            --navy:      #0a0e1a;
+            --navy2:     #1a1e2e;
+            --success:   #00c97a;
+            --warn:      #f5a623;
+            --danger:    #e53e5c;
+            --text:      #1a1e2e;
+            --text2:     #555b6e;
+            --text3:     #8a91a0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.10);
         }
 
         html { scroll-behavior: smooth; }
@@ -31,14 +36,14 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
-            color: var(--white);
+            color: var(--text);
             overflow-x: hidden;
         }
 
         /* ── NAV ──────────────────────────────────────────────── */
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: rgba(6, 6, 18, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             transition: all 0.3s;
@@ -50,20 +55,20 @@
         }
         nav .logo {
             font-weight: 800; font-size: 18px; letter-spacing: 3px;
-            color: var(--white);
+            color: var(--navy);
         }
         nav .logo span { color: var(--accent); }
         nav .links { display: flex; gap: 28px; align-items: center; }
         nav .links a {
-            color: var(--gray); text-decoration: none; font-size: 14px;
+            color: var(--text2); text-decoration: none; font-size: 14px;
             font-weight: 500; transition: color 0.2s;
         }
         nav .links a:hover { color: var(--accent); }
         nav .links .cta {
-            background: var(--accent); color: var(--bg); padding: 8px 20px;
+            background: var(--navy); color: #fff; padding: 8px 20px;
             border-radius: 8px; font-weight: 600;
         }
-        nav .links .cta:hover { background: #00b8d4; color: var(--bg); }
+        nav .links .cta:hover { background: var(--accent); color: #fff; }
 
         /* ── HERO ─────────────────────────────────────────────── */
         .hero {
@@ -71,127 +76,111 @@
             display: flex; align-items: center; justify-content: center;
             position: relative;
             overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute; top: 0; left: 0; right: 0; height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-        }
-        .hero::after {
-            content: '';
-            position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-        }
-
-        /* Animated glow behind the title */
-        .hero-glow {
-            position: absolute;
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
-            border-radius: 50%;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            animation: pulse-glow 4s ease-in-out infinite;
-        }
-        @keyframes pulse-glow {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            background: linear-gradient(180deg, #f5f7fa 0%, #ffffff 100%);
         }
 
         .hero-content {
             text-align: center;
             position: relative; z-index: 2;
-            padding: 0 24px;
+            padding: 100px 24px 60px;
+            max-width: 900px;
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: rgba(0, 184, 212, 0.1);
+            color: var(--accent2);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
         }
         .hero-title {
-            font-size: clamp(48px, 10vw, 80px);
+            font-size: clamp(40px, 8vw, 72px);
             font-weight: 900;
-            letter-spacing: 8px;
-            line-height: 1.1;
-            margin-bottom: 8px;
+            line-height: 1.05;
+            margin-bottom: 20px;
+            color: var(--navy);
         }
-        .hero-title .line1 { color: var(--white); display: block; }
-        .hero-title .line2 { color: var(--accent); display: block; }
+        .hero-title span { color: var(--accent); }
         .hero-tagline {
-            font-size: clamp(16px, 3vw, 22px);
-            color: var(--gray);
-            font-weight: 300;
-            margin-top: 20px;
-            letter-spacing: 1px;
-        }
-
-        /* Boot log card — matches device splash */
-        .boot-card {
-            margin: 40px auto 0;
-            max-width: 360px;
-            background: var(--card);
-            border: 1px solid var(--accent);
-            border-radius: 12px;
-            padding: 20px 24px;
-            text-align: left;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: var(--accent);
-            line-height: 1.8;
-        }
-        .boot-card .line {
-            opacity: 0;
-            animation: boot-line 0.4s ease forwards;
-        }
-        .boot-card .line:nth-child(1) { animation-delay: 0.5s; }
-        .boot-card .line:nth-child(2) { animation-delay: 1.2s; }
-        .boot-card .line:nth-child(3) { animation-delay: 1.8s; }
-        .boot-card .line:nth-child(4) { animation-delay: 2.5s; }
-        .boot-card .line:nth-child(5) { animation-delay: 3.2s; }
-        .boot-card .line.ok { color: var(--success); }
-        @keyframes boot-line {
-            from { opacity: 0; transform: translateY(4px); }
-            to   { opacity: 1; transform: translateY(0); }
+            font-size: clamp(16px, 2.5vw, 20px);
+            color: var(--text2);
+            font-weight: 400;
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
 
         .hero-cta {
-            margin-top: 48px;
-            display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+            margin-top: 36px;
+            display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
         }
         .hero-cta a {
             padding: 14px 32px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s;
         }
         .hero-cta .primary {
-            background: var(--accent); color: var(--bg);
+            background: var(--navy); color: #fff;
+            box-shadow: var(--shadow-md);
         }
-        .hero-cta .primary:hover { background: #00b8d4; transform: translateY(-2px); }
+        .hero-cta .primary:hover { background: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
         .hero-cta .secondary {
-            background: transparent; color: var(--accent);
-            border: 1px solid var(--accent);
+            background: transparent; color: var(--navy);
+            border: 2px solid var(--border);
         }
-        .hero-cta .secondary:hover { background: rgba(0,229,255,0.1); transform: translateY(-2px); }
+        .hero-cta .secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+        /* Hero device showcase */
+        .hero-devices {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .hero-devices img {
+            height: 320px;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.12));
+            transition: transform 0.4s ease;
+        }
+        .hero-devices img:hover { transform: translateY(-8px); }
+        .hero-devices img:nth-child(2) { height: 360px; }
+
+        /* ── SECTION SHARED ──────────────────────────────────── */
+        .section-title {
+            text-align: center;
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--navy);
+        }
+        .section-title span { color: var(--accent); }
+        .section-subtitle {
+            text-align: center;
+            color: var(--text2); font-size: 16px;
+            max-width: 500px;
+            margin: 0 auto 50px;
+            line-height: 1.6;
+        }
 
         /* ── FEATURES ─────────────────────────────────────────── */
         .features {
             max-width: 1100px; margin: 0 auto;
             padding: 100px 24px;
         }
-        .features h2 {
-            text-align: center;
-            font-size: 36px; font-weight: 800;
-            margin-bottom: 12px;
-        }
-        .features h2 span { color: var(--accent); }
-        .features .subtitle {
-            text-align: center;
-            color: var(--gray); font-size: 16px;
-            margin-bottom: 60px;
-        }
 
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 16px;
         }
         .feature-card {
             background: var(--card);
@@ -203,19 +192,29 @@
         .feature-card:hover {
             border-color: var(--accent);
             transform: translateY(-4px);
-            box-shadow: 0 8px 32px rgba(0,229,255,0.08);
+            box-shadow: var(--shadow-lg);
         }
         .feature-icon {
-            font-size: 32px;
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
             margin-bottom: 16px;
-            display: block;
         }
+        .icon-cyan   { background: rgba(0,184,212,0.1); }
+        .icon-green  { background: rgba(0,201,122,0.1); }
+        .icon-amber  { background: rgba(245,166,35,0.1); }
+        .icon-pink   { background: rgba(229,62,92,0.1); }
+        .icon-purple { background: rgba(102,127,255,0.1); }
         .feature-card h3 {
-            font-size: 18px; font-weight: 700;
+            font-size: 17px; font-weight: 700;
             margin-bottom: 8px;
+            color: var(--navy);
         }
         .feature-card p {
-            color: var(--gray); font-size: 14px;
+            color: var(--text2); font-size: 14px;
             line-height: 1.6;
         }
         .feature-card .tag {
@@ -227,120 +226,193 @@
             font-weight: 600;
             letter-spacing: 0.5px;
         }
-        .tag-free { background: rgba(0,230,138,0.15); color: var(--success); }
-        .tag-live { background: rgba(0,229,255,0.15); color: var(--accent); }
-        .tag-fun  { background: rgba(255,170,0,0.15); color: var(--warn); }
+        .tag-free { background: rgba(0,201,122,0.1); color: var(--success); }
+        .tag-live { background: rgba(0,184,212,0.1); color: var(--accent2); }
+        .tag-fun  { background: rgba(245,166,35,0.1); color: var(--warn); }
 
-        /* ── VIDEO SECTION ────────────────────────────────────── */
-        .video-section {
-            max-width: 1100px; margin: 0 auto;
-            padding: 0 24px 100px;
-            text-align: center;
+        /* ── SHOWCASE (replaces old video section) ───────────── */
+        .showcase {
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 100px 24px;
         }
-        .video-section h2 {
-            font-size: 36px; font-weight: 800;
-            margin-bottom: 12px;
-        }
-        .video-section h2 span { color: var(--accent); }
-        .video-section .subtitle {
-            color: var(--gray); font-size: 16px;
-            margin-bottom: 40px;
-        }
-        .video-placeholder {
-            max-width: 360px;
+        .showcase-inner {
+            max-width: 1100px;
             margin: 0 auto;
-            aspect-ratio: 9/16;
-            background: var(--card);
-            border: 2px dashed var(--border);
-            border-radius: 20px;
+        }
+        .showcase-row {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: var(--darkgray);
-            font-size: 14px;
-            flex-direction: column;
-            gap: 12px;
+            gap: 60px;
+            margin-bottom: 80px;
         }
-        .video-placeholder .play-icon {
-            width: 60px; height: 60px;
-            border-radius: 50%;
-            border: 2px solid var(--darkgray);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
+        .showcase-row:last-child { margin-bottom: 0; }
+        .showcase-row.reverse { flex-direction: row-reverse; }
+        .showcase-img {
+            flex: 0 0 280px;
+            text-align: center;
+        }
+        .showcase-img img {
+            height: 400px;
+            object-fit: contain;
+            filter: drop-shadow(0 16px 40px rgba(0,0,0,0.12));
+            transition: transform 0.4s;
+        }
+        .showcase-img img:hover { transform: scale(1.03); }
+        .showcase-text {
+            flex: 1;
+        }
+        .showcase-text .label {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .label-cyan  { background: rgba(0,184,212,0.1); color: var(--accent2); }
+        .label-green { background: rgba(0,201,122,0.1); color: var(--success); }
+        .label-amber { background: rgba(245,166,35,0.1); color: var(--warn); }
+        .label-pink  { background: rgba(229,62,92,0.1); color: var(--danger); }
+        .showcase-text h3 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+        .showcase-text p {
+            color: var(--text2);
+            font-size: 15px;
+            line-height: 1.7;
+            max-width: 440px;
         }
 
         /* ── SPECS ────────────────────────────────────────────── */
         .specs {
-            background: var(--bg2);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
+            padding: 100px 24px;
         }
         .specs-inner {
             max-width: 1100px; margin: 0 auto;
-            padding: 80px 24px;
         }
-        .specs h2 {
-            text-align: center;
-            font-size: 36px; font-weight: 800;
-            margin-bottom: 48px;
-        }
-        .specs h2 span { color: var(--accent); }
         .spec-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
         }
         .spec-item {
             text-align: center;
-            padding: 24px;
+            padding: 28px 20px;
+            background: var(--bg2);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        .spec-item:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
         }
         .spec-val {
-            font-size: 36px; font-weight: 800;
-            color: var(--accent);
+            font-size: 28px; font-weight: 800;
+            color: var(--navy);
             margin-bottom: 4px;
         }
         .spec-label {
-            color: var(--gray); font-size: 13px;
-            font-weight: 500; letter-spacing: 1px;
+            color: var(--text3); font-size: 12px;
+            font-weight: 600; letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        /* ── GALLERY PLACEHOLDER ──────────────────────────────── */
+        /* ── GALLERY ────────────────────────────────────────── */
         .gallery {
-            max-width: 1100px; margin: 0 auto;
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
             padding: 100px 24px;
-            text-align: center;
         }
-        .gallery h2 {
-            font-size: 36px; font-weight: 800;
-            margin-bottom: 12px;
-        }
-        .gallery h2 span { color: var(--accent); }
-        .gallery .subtitle {
-            color: var(--gray); font-size: 16px;
-            margin-bottom: 40px;
+        .gallery-inner {
+            max-width: 1100px;
+            margin: 0 auto;
         }
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
         }
-        .gallery-slot {
-            aspect-ratio: 4/3;
+        .gallery-item {
             background: var(--card);
-            border: 2px dashed var(--border);
-            border-radius: 14px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--darkgray);
-            font-size: 13px;
+            transition: all 0.3s;
+            aspect-ratio: 3/4;
+        }
+        .gallery-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+        .gallery-item img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.08));
+        }
+        .gallery-item .caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text3);
+            text-align: center;
+        }
+
+        /* ── CTA BANNER ──────────────────────────────────────── */
+        .cta-banner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 100px 24px;
+            text-align: center;
+        }
+        .cta-box {
+            background: var(--navy);
+            border-radius: 24px;
+            padding: 60px 40px;
+            color: #fff;
+        }
+        .cta-box h2 {
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        .cta-box h2 span { color: var(--accent); }
+        .cta-box p {
+            color: rgba(255,255,255,0.6);
+            font-size: 16px;
+            margin-bottom: 32px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-box a {
+            display: inline-block;
+            padding: 14px 36px;
+            background: var(--accent);
+            color: var(--navy);
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            text-decoration: none;
             transition: all 0.3s;
         }
-        .gallery-slot:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
+        .cta-box a:hover { background: #fff; transform: translateY(-2px); }
 
         /* ── FOOTER ───────────────────────────────────────────── */
         footer {
@@ -350,32 +422,44 @@
         }
         footer .logo {
             font-weight: 800; font-size: 16px; letter-spacing: 3px;
+            color: var(--navy);
             margin-bottom: 12px;
         }
         footer .logo span { color: var(--accent); }
-        footer p { color: var(--darkgray); font-size: 13px; }
+        footer p { color: var(--text3); font-size: 13px; }
         footer .links {
             margin-top: 16px;
             display: flex; gap: 24px; justify-content: center;
         }
         footer .links a {
-            color: var(--gray); text-decoration: none; font-size: 13px;
+            color: var(--text2); text-decoration: none; font-size: 13px;
         }
         footer .links a:hover { color: var(--accent); }
 
         /* ── SCROLLBAR ────────────────────────────────────────── */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-track { background: var(--bg2); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         /* ── MOBILE ───────────────────────────────────────────── */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             nav .links { gap: 16px; }
             nav .links a:not(.cta) { display: none; }
-            .hero-title { letter-spacing: 4px; }
-            .feature-grid { grid-template-columns: 1fr; }
+            .hero-devices img { height: 220px !important; }
+            .hero-devices img:nth-child(2) { height: 250px !important; }
+            .showcase-row, .showcase-row.reverse {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+            }
+            .showcase-img { flex: none; }
+            .showcase-img img { height: 300px; }
+            .showcase-text p { max-width: 100%; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
             .spec-grid { grid-template-columns: repeat(2, 1fr); }
+            .feature-grid { grid-template-columns: 1fr; }
+            .cta-box { padding: 40px 24px; }
         }
     </style>
 </head>
@@ -396,85 +480,74 @@
 
     <!-- HERO -->
     <section class="hero" id="top">
-        <div class="hero-glow"></div>
         <div class="hero-content">
-            <h1 class="hero-title">
-                <span class="line1">WONDER</span>
-                <span class="line2">DEVICE</span>
-            </h1>
-            <p class="hero-tagline">Your world at a glance</p>
-
-            <div class="boot-card">
-                <div class="line">Initialising display...</div>
-                <div class="line">Touch ready</div>
-                <div class="line">IMU ready — shake to refresh</div>
-                <div class="line">WiFi connected</div>
-                <div class="line ok">All systems go</div>
-            </div>
+            <div class="hero-badge">ESP32-S3 AMOLED SMART DISPLAY</div>
+            <h1 class="hero-title">Your world<br><span>at a glance</span></h1>
+            <p class="hero-tagline">A swipe-driven smart display that shows live weather, train times, crypto prices, F1 standings, messages and more — beautifully.</p>
 
             <div class="hero-cta">
                 <a href="app.html" class="primary">Send a Message</a>
                 <a href="#features" class="secondary">Explore Features</a>
+            </div>
+
+            <div class="hero-devices">
+                <img src="images/homescreen-image-07.png" alt="Wonder Device home screen">
+                <img src="images/startup-image-05.png" alt="Wonder Device startup">
+                <img src="images/weather-image-04.png" alt="Wonder Device weather page">
             </div>
         </div>
     </section>
 
     <!-- FEATURES -->
     <section class="features" id="features">
-        <h2>5 pages. <span>One swipe.</span></h2>
-        <p class="subtitle">Everything you need, updating in real time on a beautiful AMOLED display</p>
+        <h2 class="section-title">Five pages. <span>One swipe.</span></h2>
+        <p class="section-subtitle">Everything you need, updating in real time on a beautiful AMOLED display</p>
 
         <div class="feature-grid">
             <div class="feature-card">
-                <span class="feature-icon">&#9201;</span>
+                <div class="feature-icon icon-cyan">&#9201;</div>
                 <h3>Home</h3>
                 <p>Live clock, WiFi status, weather snapshot and your next train at a glance. Swipe up for messages sent from anyone, anywhere.</p>
                 <span class="tag tag-live">LIVE UPDATES</span>
             </div>
             <div class="feature-card">
-                <span class="feature-icon">&#9748;</span>
+                <div class="feature-icon icon-green">&#9748;</div>
                 <h3>Weather</h3>
                 <p>Current conditions, hourly forecast and 3-day outlook for multiple locations. Hand-drawn weather icons on pure black AMOLED.</p>
                 <span class="tag tag-free">NO API KEY</span>
             </div>
             <div class="feature-card">
-                <span class="feature-icon">&#128646;</span>
+                <div class="feature-icon icon-green">&#128646;</div>
                 <h3>Trains</h3>
                 <p>Live UK National Rail departures with platform numbers, delay alerts and cancellation warnings. Auto-switches direction based on your location.</p>
                 <span class="tag tag-live">LIVE DEPARTURES</span>
             </div>
             <div class="feature-card">
-                <span class="feature-icon">&#9889;</span>
+                <div class="feature-icon icon-amber">&#9889;</div>
                 <h3>Crypto</h3>
                 <p>Live prices in GBP with 24h change, market cap and 3-day sparkline charts. Track Bitcoin, Ethereum, Solana and more.</p>
                 <span class="tag tag-free">NO API KEY</span>
             </div>
             <div class="feature-card">
-                <span class="feature-icon">&#128240;</span>
-                <h3>News</h3>
-                <p>Top tech headlines from Hacker News. Tap for the full story or scan a QR code to read on your phone.</p>
-                <span class="tag tag-live">AUTO REFRESH</span>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">&#127937;</span>
+                <div class="feature-icon icon-pink">&#127937;</div>
                 <h3>Formula 1</h3>
                 <p>Driver standings, next race countdown and live session tracking. The device auto-switches to F1 when a session goes live.</p>
                 <span class="tag tag-fun">RACE DAY</span>
             </div>
             <div class="feature-card">
-                <span class="feature-icon">&#128172;</span>
+                <div class="feature-icon icon-purple">&#128172;</div>
                 <h3>Messages</h3>
                 <p>Anyone can send messages to your device from the web app. Urgent messages flash orange. Perfect for family or the office.</p>
                 <span class="tag tag-fun">INTERACTIVE</span>
             </div>
             <div class="feature-card">
-                <span class="feature-icon">&#127918;</span>
-                <h3>Games & Timers</h3>
+                <div class="feature-icon icon-amber">&#127918;</div>
+                <h3>Games &amp; Timers</h3>
                 <p>Reaction time test, memory game, Pomodoro timer and a countdown to your next big event — all on your wrist-sized screen.</p>
                 <span class="tag tag-fun">MINI GAMES</span>
             </div>
             <div class="feature-card">
-                <span class="feature-icon">&#9881;</span>
+                <div class="feature-icon icon-cyan">&#9881;</div>
                 <h3>Remote Config</h3>
                 <p>Change stations, crypto coins, brightness, screensaver and more from the website. No reflashing needed — updates sync over WiFi.</p>
                 <span class="tag tag-live">OTA CONFIG</span>
@@ -482,24 +555,63 @@
         </div>
     </section>
 
-    <!-- VIDEO -->
-    <section class="video-section" id="video">
-        <h2>See it <span>in action</span></h2>
-        <p class="subtitle">A quick demo of the Wonder Device in daily use</p>
+    <!-- SHOWCASE -->
+    <section class="showcase" id="showcase">
+        <div class="showcase-inner">
+            <h2 class="section-title">See it <span>in action</span></h2>
+            <p class="section-subtitle">Real screenshots from the device, running live data</p>
 
-        <!-- Replace this div with a YouTube Shorts embed:
-             <iframe width="315" height="560" src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-             frameborder="0" allowfullscreen style="border-radius:20px;"></iframe> -->
-        <div class="video-placeholder">
-            <div class="play-icon">&#9654;</div>
-            <span>YouTube Short coming soon</span>
+            <div class="showcase-row">
+                <div class="showcase-img">
+                    <img src="images/train-times-image-03.png" alt="Live train departures">
+                </div>
+                <div class="showcase-text">
+                    <div class="label label-green">LIVE DATA</div>
+                    <h3>Never miss your train</h3>
+                    <p>Real-time departures from National Rail with platform numbers, on-time status, and upcoming services. The device auto-flips direction when you're away from home.</p>
+                </div>
+            </div>
+
+            <div class="showcase-row reverse">
+                <div class="showcase-img">
+                    <img src="images/crypto-image-01.png" alt="Crypto prices">
+                </div>
+                <div class="showcase-text">
+                    <div class="label label-amber">MARKETS</div>
+                    <h3>Crypto at a glance</h3>
+                    <p>Live prices in GBP with 24-hour change percentages, market cap, and mini sparkline charts. Track up to 4 coins, configured from the web app.</p>
+                </div>
+            </div>
+
+            <div class="showcase-row">
+                <div class="showcase-img">
+                    <img src="images/F1-image-02.png" alt="F1 standings">
+                </div>
+                <div class="showcase-text">
+                    <div class="label label-pink">RACE DAY</div>
+                    <h3>Formula 1 standings</h3>
+                    <p>Driver championship standings with points, next race countdown, and session times. The device automatically switches to the F1 page when a live session begins.</p>
+                </div>
+            </div>
+
+            <div class="showcase-row reverse">
+                <div class="showcase-img">
+                    <img src="images/messages-image-08.png" alt="Messages on device">
+                </div>
+                <div class="showcase-text">
+                    <div class="label label-cyan">INTERACTIVE</div>
+                    <h3>Messages from anywhere</h3>
+                    <p>Friends and family can send messages straight to your desk from the web app. Urgent messages glow pink. No account needed — just open the link and type.</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- SPECS -->
     <section class="specs" id="specs">
         <div class="specs-inner">
-            <h2>Built on <span>real hardware</span></h2>
+            <h2 class="section-title">Built on <span>real hardware</span></h2>
+            <p class="section-subtitle">Waveshare ESP32-S3 AMOLED 1.91" with touch and IMU</p>
             <div class="spec-grid">
                 <div class="spec-item">
                     <div class="spec-val">240&times;536</div>
@@ -539,18 +651,45 @@
 
     <!-- GALLERY -->
     <section class="gallery" id="gallery">
-        <h2>The <span>gallery</span></h2>
-        <p class="subtitle">Photos of the Wonder Device on a desk, in hand, and in the dark</p>
+        <div class="gallery-inner">
+            <h2 class="section-title">Every <span>page</span></h2>
+            <p class="section-subtitle">Swipe through all the screens</p>
 
-        <div class="gallery-grid">
-            <!-- Replace these with <img> tags:
-                 <img src="images/photo1.jpg" alt="Wonder Device on desk" style="width:100%;border-radius:14px;"> -->
-            <div class="gallery-slot">Photo 1 — Device on desk</div>
-            <div class="gallery-slot">Photo 2 — Close-up of display</div>
-            <div class="gallery-slot">Photo 3 — Weather page</div>
-            <div class="gallery-slot">Photo 4 — Train departures</div>
-            <div class="gallery-slot">Photo 5 — Screensaver at night</div>
-            <div class="gallery-slot">Photo 6 — Message received</div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="images/homescreen-image-07.png" alt="Home screen">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/weather-image-04.png" alt="Weather page">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/train-times-image-03.png" alt="Train departures">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/crypto-image-01.png" alt="Crypto prices">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/F1-image-02.png" alt="F1 standings">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/messages-image-08.png" alt="Messages">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/screensaver-image-06.png" alt="Matrix screensaver">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/startup-image-05.png" alt="Boot screen">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <section class="cta-banner">
+        <div class="cta-box">
+            <h2>Send a message <span>right now</span></h2>
+            <p>Type a message on the web app and watch it appear on the device in under two minutes.</p>
+            <a href="app.html">Open Message Board</a>
         </div>
     </section>
 
@@ -563,7 +702,7 @@
             <a href="app.html">Device Config</a>
             <a href="https://github.com/dmccuk/wonder-config" target="_blank">GitHub</a>
         </div>
-        <p style="margin-top: 20px; color: #333;">&copy; 2026 Wonder Device</p>
+        <p style="margin-top: 20px; color: #bbb;">&copy; 2026 Wonder Device</p>
     </footer>
 
     <!-- Smooth scroll for nav links -->
