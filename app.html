@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wonder Device - Message Board</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+        .header {
+            text-align: center;
+            padding: 30px 0 20px;
+            border-bottom: 2px solid #05ff;
+        }
+        .header h1 { color: #00e5ff; font-size: 28px; letter-spacing: 2px; }
+        .header p { color: #888; margin-top: 8px; font-size: 14px; }
+        .tabs {
+            display: flex;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            background: #1a1a2e;
+            color: #888;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .tab.active { background: #00e5ff; color: #0a0a1a; }
+        .tab:hover:not(.active) { background: #222240; }
+        .admin-link { text-align:center; margin-top:30px; }
+        .admin-link a { color:#444; font-size:12px; text-decoration:none; }
+        .admin-link a:hover { color:#00e5ff; }
+        .hidden { display: none !important; }
+        .panel { display: none; margin-top: 20px; }
+        .panel.active { display: block; }
+        .card {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #333;
+        }
+        .card h3 { color: #00e5ff; margin-bottom: 12px; font-size: 16px; }
+        label { display: block; color: #aaa; font-size: 13px; margin-bottom: 6px; margin-top: 12px; }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 14px;
+            background: #0a0a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+        }
+        input:focus, textarea:focus { outline: none; border-color: #00e5ff; }
+        textarea { resize: vertical; min-height: 80px; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: #00e5ff; color: #0a0a1a; }
+        .btn-primary:hover { background: #00b8d4; }
+        .btn-danger { background: #f80f3f; color: #fff; }
+        .btn-danger:hover { background: #d32f2f; }
+        .btn-secondary { background: #333; color: #ccc; }
+        .msg-item {
+            background: #0a0a1a;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid #00e5ff;
+        }
+        .msg-item.high { border-left-color: #f80f3f; }
+        .msg-item .from { color: #00e5ff; font-weight: 600; font-size: 13px; }
+        .msg-item .text { margin-top: 4px; color: #ddd; }
+        .msg-item .time { color: #666; font-size: 11px; margin-top: 4px; }
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: none;
+        }
+        .status.success { display: block; background: #1b5e20; color: #a5d6a7; }
+        .status.error { display: block; background: #b71c1c; color: #ef9a9a; }
+        .empty { text-align: center; color: #666; padding: 20px; font-style: italic; }
+        .priority-toggle {
+            display: flex; gap: 10px; margin-top: 6px;
+        }
+        .priority-toggle label {
+            flex: 1; text-align: center; padding: 8px;
+            border-radius: 6px; cursor: pointer;
+            border: 1px solid #444; margin: 0;
+        }
+        .priority-toggle input { display: none; }
+        .priority-toggle input:checked + span { color: #00e5ff; }
+        .priority-toggle label:has(input:checked) { border-color: #00e5ff; background: #1a1a3e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WONDER DEVICE</h1>
+            <p>Send messages to the display</p>
+        </div>
+
+        <div class="tabs hidden" id="admin-tabs">
+            <div class="tab active" onclick="switchTab('messages')">Messages</div>
+            <div class="tab" onclick="switchTab('config')">Configure</div>
+        </div>
+
+        <!-- MESSAGES PANEL -->
+        <div id="messages-panel" class="panel active">
+            <div class="card">
+                <h3>Send a Message</h3>
+                <label>Your Name</label>
+                <input type="text" id="msg-from" placeholder="e.g. Dad, Sarah, Office">
+                <label>Message</label>
+                <textarea id="msg-text" placeholder="Type your message here..."></textarea>
+                <div>
+                    <label>Priority</label>
+                    <div class="priority-toggle">
+                        <label><input type="radio" name="priority" value="normal" checked><span>Normal</span></label>
+                        <label><input type="radio" name="priority" value="high"><span>Urgent</span></label>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="sendMessage()">Send Message</button>
+                <div id="send-status" class="status"></div>
+            </div>
+
+            <div class="card">
+                <h3>Current Messages</h3>
+                <div id="msg-list"><div class="empty">Loading...</div></div>
+                <button class="btn btn-danger" onclick="clearMessages()">Clear All Messages</button>
+            </div>
+        </div>
+
+        <!-- ADMIN LINK (visible to everyone, opens config after token) -->
+        <div class="admin-link" id="admin-link-div">
+            <a href="#" onclick="unlockAdmin(); return false;">Device Admin</a>
+        </div>
+
+        <!-- CONFIG PANEL (hidden until admin unlocked) -->
+        <div id="config-panel" class="panel hidden">
+            <div class="card">
+                <h3>Device Location</h3>
+                <label>Label</label>
+                <input type="text" id="cfg-loc-label" placeholder="Brighton">
+                <label>Latitude</label>
+                <input type="number" step="0.0001" id="cfg-loc-lat" placeholder="50.8225">
+                <label>Longitude</label>
+                <input type="number" step="0.0001" id="cfg-loc-lon" placeholder="-0.1372">
+            </div>
+
+            <div class="card">
+                <h3>Train Routes</h3>
+                <p style="color: #888; font-size: 12px; margin-bottom: 8px;">Find CRS codes at huxley2.azurewebsites.net/crs</p>
+                <label>Home Station (CRS code)</label>
+                <input type="text" id="cfg-train-home-from" placeholder="BTN" maxlength="3" style="text-transform:uppercase">
+                <label>Home Station Name</label>
+                <input type="text" id="cfg-train-home-from-name" placeholder="Brighton">
+                <label>Destination (CRS code)</label>
+                <input type="text" id="cfg-train-home-to" placeholder="VIC" maxlength="3" style="text-transform:uppercase">
+                <label>Destination Name</label>
+                <input type="text" id="cfg-train-home-to-name" placeholder="Victoria">
+                <label>Home Radius (km)</label>
+                <input type="number" id="cfg-radius" placeholder="15" step="1" min="1" max="100">
+                <p style="color: #666; font-size: 11px; margin-top: 4px;">Distance from home before auto-switching train direction</p>
+            </div>
+
+            <div class="card">
+                <h3>Display &amp; Screensaver</h3>
+                <label>Brightness (10–255)</label>
+                <input type="range" id="cfg-brightness" min="10" max="255" value="210">
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:11px;"><span>Dim</span><span id="cfg-brightness-val">210</span><span>Max</span></div>
+                <label>Dim Brightness (5–200)</label>
+                <input type="range" id="cfg-dim-brightness" min="5" max="200" value="60">
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:11px;"><span>Low</span><span id="cfg-dim-brightness-val">60</span><span>High</span></div>
+                <label>Dim Timeout (seconds)</label>
+                <input type="number" id="cfg-dim-timeout" placeholder="30" step="5" min="5" max="600">
+                <label>Screensaver Timeout (seconds)</label>
+                <input type="number" id="cfg-ss-timeout" placeholder="60" step="5" min="10" max="600">
+                <label>Screensaver Mode</label>
+                <select id="cfg-ss-mode">
+                    <option value="0">Dim Only</option>
+                    <option value="1" selected>Matrix Rain</option>
+                    <option value="2">Hyperspace</option>
+                </select>
+            </div>
+
+            <div class="card">
+                <h3>Crypto Coins</h3>
+                <p style="color: #888; font-size: 12px; margin-bottom: 8px;">IDs from coingecko.com/api/v3/coins/list</p>
+                <label>Coins (CoinGecko IDs, comma-separated)</label>
+                <input type="text" id="cfg-crypto-ids" placeholder="bitcoin,ethereum,solana,cardano">
+                <label>Symbols (comma-separated)</label>
+                <input type="text" id="cfg-crypto-syms" placeholder="BTC,ETH,SOL,ADA">
+            </div>
+
+            <div class="card">
+                <h3>Countdown Timer</h3>
+                <label>Event Name</label>
+                <input type="text" id="cfg-countdown-label" placeholder="Summer Holiday">
+                <label>Date</label>
+                <input type="date" id="cfg-countdown-date">
+            </div>
+
+            <div class="card">
+                <h3>Pomodoro Timer</h3>
+                <label>Work Duration (minutes)</label>
+                <input type="number" id="cfg-pomo-work" placeholder="25" step="1" min="1" max="120">
+                <label>Break Duration (minutes)</label>
+                <input type="number" id="cfg-pomo-break" placeholder="5" step="1" min="1" max="60">
+            </div>
+
+            <div class="card">
+                <h3>WiFi Networks</h3>
+                <p style="color: #f80f3f; font-size: 13px; line-height: 1.5;">WiFi credentials cannot be configured remotely for security. Edit config.h on the device directly.</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="saveConfigToGitHub()">Save to Device</button>
+            <div id="config-status" class="status"></div>
+            <div id="config-output" style="display:none; margin-top:16px;">
+                <div class="card">
+                    <h3>Config saved successfully</h3>
+                    <textarea id="config-json" style="min-height:150px; font-family:monospace; font-size:11px;" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BIN_ID = '69c17141c3097a1dd5511da5';
+        const API_KEY = '$2a$10$9duNlyVBIBGKYvozxz5xyugJWV/vqC6E2zpG0hnwoZfjdLh.tNBmm';
+        const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+        const GH_REPO = 'dmccuk/wonder-config';
+        const GH_FILE = 'config.json';
+        const GH_API = `https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`;
+
+        // Token stored in browser only — never in the code
+        function getGHToken() {
+            let token = localStorage.getItem('gh_token');
+            if (!token) {
+                token = prompt('Enter your GitHub Personal Access Token (one-time setup):');
+                if (token) localStorage.setItem('gh_token', token);
+            }
+            return token;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(tab + '-panel').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function loadMessages() {
+            try {
+                const res = await fetch(BIN_URL + '/latest', {
+                    headers: { 'X-Access-Key': API_KEY }
+                });
+                const data = await res.json();
+                const msgs = data.record.messages || [];
+                const list = document.getElementById('msg-list');
+                if (msgs.length === 0) {
+                    list.innerHTML = '<div class="empty">No messages yet. Be the first!</div>';
+                    return;
+                }
+                list.innerHTML = msgs.map(m => `
+                    <div class="msg-item ${m.priority === 'high' ? 'high' : ''}">
+                        <div class="from">${m.from || 'Anonymous'}</div>
+                        <div class="text">${m.text}</div>
+                        <div class="time">${m.time || ''}</div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                document.getElementById('msg-list').innerHTML =
+                    '<div class="empty">Could not load messages</div>';
+            }
+        }
+
+        async function sendMessage() {
+            const from = document.getElementById('msg-from').value.trim() || 'Anonymous';
+            const text = document.getElementById('msg-text').value.trim();
+            const priority = document.querySelector('input[name="priority"]:checked').value;
+            const status = document.getElementById('send-status');
+
+            if (!text) { showStatus(status, 'Please type a message', 'error'); return; }
+
+            try {
+                // Read current messages
+                const res = await fetch(BIN_URL + '/latest', {
+                    headers: { 'X-Access-Key': API_KEY }
+                });
+                const data = await res.json();
+                let msgs = data.record.messages || [];
+
+                // Add new message (keep max 5)
+                msgs.push({
+                    text: text,
+                    from: from,
+                    priority: priority,
+                    time: new Date().toLocaleString('en-GB')
+                });
+                if (msgs.length > 10) msgs = msgs.slice(-10);
+
+                // Write back
+                await fetch(BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Access-Key': API_KEY
+                    },
+                    body: JSON.stringify({ messages: msgs })
+                });
+
+                showStatus(status, 'Message sent! It will appear on the device within 2 minutes.', 'success');
+                document.getElementById('msg-text').value = '';
+                document.getElementById('msg-from').value = '';
+                loadMessages();
+            } catch (e) {
+                showStatus(status, 'Failed to send: ' + e.message, 'error');
+            }
+        }
+
+        async function clearMessages() {
+            if (!confirm('Clear all messages from the device?')) return;
+            try {
+                await fetch(BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Access-Key': API_KEY
+                    },
+                    body: JSON.stringify({ messages: [] })
+                });
+                loadMessages();
+            } catch (e) { alert('Failed: ' + e.message); }
+        }
+
+        function showStatus(el, msg, type) {
+            el.textContent = msg;
+            el.className = 'status ' + type;
+            setTimeout(() => { el.style.display = 'none'; el.className = 'status'; }, 5000);
+        }
+
+        async function saveConfigToGitHub() {
+            const status = document.getElementById('config-status');
+            showStatus(status, 'Saving to device...', 'success');
+
+            const config = buildConfig();
+            const configJson = JSON.stringify(config, null, 2);
+
+            try {
+                // Get current file SHA (needed for update)
+                const getRes = await fetch(GH_API, {
+                    headers: { 'Authorization': `Bearer ${getGHToken()}` }
+                });
+                if (!getRes.ok) throw new Error('Could not read current config');
+                const current = await getRes.json();
+
+                // Merge with existing config to preserve f1_session_active etc.
+                const existingContent = atob(current.content.replace(/\n/g, ''));
+                let existing = {};
+                try { existing = JSON.parse(existingContent); } catch(e) {}
+                const merged = { ...existing, ...config };
+                const mergedJson = JSON.stringify(merged, null, 2);
+
+                // Update file
+                const putRes = await fetch(GH_API, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${getGHToken()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Update config from Wonder Device website',
+                        content: btoa(mergedJson),
+                        sha: current.sha
+                    })
+                });
+
+                if (!putRes.ok) {
+                    const err = await putRes.json();
+                    throw new Error(err.message || 'Failed to save');
+                }
+
+                showStatus(status, 'Config saved! Device will update within 30 minutes.', 'success');
+                document.getElementById('config-json').value = mergedJson;
+                document.getElementById('config-output').style.display = 'block';
+            } catch (e) {
+                showStatus(status, 'Error: ' + e.message, 'error');
+            }
+        }
+
+        function buildConfig() {
+            const loc_label = document.getElementById('cfg-loc-label').value || 'Brighton';
+            const lat = parseFloat(document.getElementById('cfg-loc-lat').value) || 50.8225;
+            const lon = parseFloat(document.getElementById('cfg-loc-lon').value) || -0.1372;
+            const hf = document.getElementById('cfg-train-home-from').value.toUpperCase() || 'BTN';
+            const ht = document.getElementById('cfg-train-home-to').value.toUpperCase() || 'VIC';
+            const hfn = document.getElementById('cfg-train-home-from-name').value || 'Brighton';
+            const htn = document.getElementById('cfg-train-home-to-name').value || 'Victoria';
+            const cryptoIds = (document.getElementById('cfg-crypto-ids').value || 'bitcoin,ethereum,solana,cardano').split(',').map(s=>s.trim());
+            const cryptoSyms = (document.getElementById('cfg-crypto-syms').value || 'BTC,ETH,SOL,ADA').split(',').map(s=>s.trim());
+            const clabel = document.getElementById('cfg-countdown-label').value || 'Summer Holiday';
+            const cdate = document.getElementById('cfg-countdown-date').value;
+            const radius = parseInt(document.getElementById('cfg-radius').value) || 15;
+            const ssTimeout = parseInt(document.getElementById('cfg-ss-timeout').value) || 60;
+            const ssMode = parseInt(document.getElementById('cfg-ss-mode').value) || 1;
+            const pomoWork = parseInt(document.getElementById('cfg-pomo-work').value) || 25;
+            const pomoBreak = parseInt(document.getElementById('cfg-pomo-break').value) || 5;
+            const brightness = parseInt(document.getElementById('cfg-brightness').value) || 210;
+            const dimBrightness = parseInt(document.getElementById('cfg-dim-brightness').value) || 60;
+            const dimTimeout = parseInt(document.getElementById('cfg-dim-timeout').value) || 30;
+
+            let cy = 2026, cm = 8, cd = 15;
+            if (cdate) { const d = new Date(cdate); cy = d.getFullYear(); cm = d.getMonth()+1; cd = d.getDate(); }
+
+            return {
+                location: { lat, lon, label: loc_label },
+                train_home: { from: hf, to: ht, from_name: hfn, to_name: htn },
+                train_away: { from: ht, to: hf, from_name: htn, to_name: hfn },
+                home_radius_km: radius,
+                crypto: cryptoIds,
+                crypto_symbols: cryptoSyms,
+                countdown: { label: clabel, year: cy, month: cm, day: cd },
+                screensaver_timeout_secs: ssTimeout,
+                screensaver_mode: ssMode,
+                pomo_work_mins: pomoWork,
+                pomo_break_mins: pomoBreak,
+                brightness: brightness,
+                dim_brightness: dimBrightness,
+                dim_timeout_secs: dimTimeout
+            };
+        }
+
+        function unlockAdmin() {
+            const token = getGHToken();
+            if (!token) { alert('Token required for admin access'); return; }
+            document.getElementById('admin-tabs').classList.remove('hidden');
+            document.getElementById('config-panel').classList.remove('hidden');
+            document.getElementById('admin-link-div').classList.add('hidden');
+            switchTab('config');
+            loadConfig();
+        }
+
+        // Auto-unlock admin if token already saved in browser
+        function checkAutoUnlock() {
+            const token = localStorage.getItem('gh_token');
+            if (token) {
+                document.getElementById('admin-tabs').classList.remove('hidden');
+                document.getElementById('config-panel').classList.remove('hidden');
+                document.getElementById('admin-link-div').classList.add('hidden');
+            }
+        }
+
+        // Load current config into form fields
+        async function loadConfig() {
+            try {
+                const res = await fetch(GH_API, {
+                    headers: { 'Authorization': `Bearer ${getGHToken()}` }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                const cfg = JSON.parse(atob(data.content.replace(/\n/g, '')));
+
+                if (cfg.location) {
+                    document.getElementById('cfg-loc-label').value = cfg.location.label || '';
+                    document.getElementById('cfg-loc-lat').value = cfg.location.lat || '';
+                    document.getElementById('cfg-loc-lon').value = cfg.location.lon || '';
+                }
+                if (cfg.train_home) {
+                    document.getElementById('cfg-train-home-from').value = cfg.train_home.from || '';
+                    document.getElementById('cfg-train-home-from-name').value = cfg.train_home.from_name || '';
+                    document.getElementById('cfg-train-home-to').value = cfg.train_home.to || '';
+                    document.getElementById('cfg-train-home-to-name').value = cfg.train_home.to_name || '';
+                }
+                if (cfg.crypto) document.getElementById('cfg-crypto-ids').value = cfg.crypto.join(',');
+                if (cfg.crypto_symbols) document.getElementById('cfg-crypto-syms').value = cfg.crypto_symbols.join(',');
+                if (cfg.countdown) {
+                    document.getElementById('cfg-countdown-label').value = cfg.countdown.label || '';
+                    const d = `${cfg.countdown.year}-${String(cfg.countdown.month).padStart(2,'0')}-${String(cfg.countdown.day).padStart(2,'0')}`;
+                    document.getElementById('cfg-countdown-date').value = d;
+                }
+                if (cfg.home_radius_km) document.getElementById('cfg-radius').value = cfg.home_radius_km;
+                if (cfg.screensaver_timeout_secs) document.getElementById('cfg-ss-timeout').value = cfg.screensaver_timeout_secs;
+                if (cfg.screensaver_mode !== undefined) document.getElementById('cfg-ss-mode').value = cfg.screensaver_mode;
+                if (cfg.pomo_work_mins) document.getElementById('cfg-pomo-work').value = cfg.pomo_work_mins;
+                if (cfg.pomo_break_mins) document.getElementById('cfg-pomo-break').value = cfg.pomo_break_mins;
+                if (cfg.brightness) {
+                    document.getElementById('cfg-brightness').value = cfg.brightness;
+                    document.getElementById('cfg-brightness-val').textContent = cfg.brightness;
+                }
+                if (cfg.dim_brightness) {
+                    document.getElementById('cfg-dim-brightness').value = cfg.dim_brightness;
+                    document.getElementById('cfg-dim-brightness-val').textContent = cfg.dim_brightness;
+                }
+                if (cfg.dim_timeout_secs) document.getElementById('cfg-dim-timeout').value = cfg.dim_timeout_secs;
+            } catch(e) { console.log('Could not load config:', e); }
+        }
+
+        // Slider value display
+        document.getElementById('cfg-brightness').oninput = function() {
+            document.getElementById('cfg-brightness-val').textContent = this.value;
+        };
+        document.getElementById('cfg-dim-brightness').oninput = function() {
+            document.getElementById('cfg-dim-brightness-val').textContent = this.value;
+        };
+
+        // Load on page start
+        loadMessages();
+        checkAutoUnlock();
+        // Only load config if admin is unlocked
+        if (localStorage.getItem('gh_token')) loadConfig();
+    </script>
+</body>
+</html>
