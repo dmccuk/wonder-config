@@ -153,6 +153,31 @@
         }
         .hero-devices img:hover { transform: translateY(-8px); }
 
+        /* ── CONFIGURABLE ────────────────────────────────────── */
+        .configurable {
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 80px 24px;
+        }
+        .config-inner { max-width: 1100px; margin: 0 auto; }
+        .config-row {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+        .config-img {
+            flex: 0 0 320px;
+            text-align: center;
+        }
+        .config-img img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+        }
+        .config-text { flex: 1; }
+
         /* ── SECTION SHARED ──────────────────────────────────── */
         .section-title {
             text-align: center;
@@ -446,6 +471,14 @@
             nav .links { gap: 16px; }
             nav .links a:not(.cta) { display: none; }
             .hero-devices img { height: 220px !important; }
+            .config-row {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+            }
+            .config-img { flex: none; }
+            .config-text .section-title { text-align: center !important; }
+            .config-text p { max-width: 100%; }
             .showcase-row, .showcase-row.reverse {
                 flex-direction: column;
                 text-align: center;
@@ -492,6 +525,23 @@
                 <img src="images/homescreen-image-07.png" alt="Wonder Device home screen">
                 <img src="images/startup-image-05.png" alt="Wonder Device startup">
                 <img src="images/weather-image-04.png" alt="Wonder Device weather page">
+            </div>
+        </div>
+    </section>
+
+    <!-- CONFIGURABLE -->
+    <section class="configurable">
+        <div class="config-inner">
+            <div class="config-row">
+                <div class="config-img">
+                    <img src="images/configure-wonder-device-image-11.png" alt="Wonder Device web dashboard">
+                </div>
+                <div class="config-text">
+                    <div class="hero-badge" style="margin-bottom:16px">FULLY CONFIGURABLE</div>
+                    <h2 class="section-title" style="text-align:left; margin-bottom:12px;">Configure everything<br>from the <span>web app</span></h2>
+                    <p style="color:var(--text2); font-size:15px; line-height:1.7; max-width:420px;">Change your location, train stations, crypto coins, weather locations, display brightness, screensaver, refresh intervals and more — all from your phone or laptop. Changes sync to the device over WiFi. No cables, no reflashing.</p>
+                    <a href="app.html" style="display:inline-block; margin-top:20px; padding:12px 28px; background:var(--navy); color:#fff; border-radius:10px; font-weight:600; font-size:14px; text-decoration:none; transition:all 0.3s;">Open Dashboard</a>
+                </div>
             </div>
         </div>
     </section>
@@ -602,6 +652,28 @@
                     <p>Friends and family can send messages straight to your desk from the web app. Urgent messages glow pink. No account needed — just open the link and type.</p>
                 </div>
             </div>
+
+            <div class="showcase-row">
+                <div class="showcase-img">
+                    <img src="images/news-image-10.png" alt="News headlines">
+                </div>
+                <div class="showcase-text">
+                    <div class="label label-amber">HEADLINES</div>
+                    <h3>Top tech news</h3>
+                    <p>Top stories from Hacker News, refreshed automatically. Swipe through headlines, see points and comments, and tap to read the full article or scan a QR code to open it on your phone.</p>
+                </div>
+            </div>
+
+            <div class="showcase-row reverse">
+                <div class="showcase-img">
+                    <img src="images/memory-game-image-09.png" alt="Memory game">
+                </div>
+                <div class="showcase-text">
+                    <div class="label label-pink">MINI GAMES</div>
+                    <h3>Games on your desk</h3>
+                    <p>Take a break with built-in mini games. The memory game challenges you to repeat colour sequences that get longer each round. There's also a reaction time test — tap when the screen changes colour.</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -671,6 +743,12 @@
                 </div>
                 <div class="gallery-item">
                     <img src="images/messages-image-08.png" alt="Messages">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/news-image-10.png" alt="News headlines">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/memory-game-image-09.png" alt="Memory game">
                 </div>
                 <div class="gallery-item">
                     <img src="images/screensaver-image-06.png" alt="Matrix screensaver">
