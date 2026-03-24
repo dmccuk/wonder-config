@@ -5,16 +5,16 @@
     "label": "East Grinstead"
   },
   "train_home": {
-    "from": "EGR",
+    "from": "BTN",
     "to": "VIC",
-    "from_name": "East Grinstead",
+    "from_name": "Brighton",
     "to_name": "Victoria"
   },
   "train_away": {
     "from": "VIC",
-    "to": "EGR",
+    "to": "BTN",
     "from_name": "Victoria",
-    "to_name": "East Grinstead"
+    "to_name": "Brighton"
   },
   "home_radius_km": 15,
   "crypto": [
@@ -32,11 +32,14 @@
   "countdown": {
     "label": "Summer Holiday",
     "year": 2026,
-    "month": 8,
+    "month": 7,
     "day": 2
   },
   "screensaver_timeout_secs": 30,
   "screensaver_mode": 1,
   "pomo_work_mins": 10,
-  "pomo_break_mins": 5
+  "pomo_break_mins": 5,
+  "brightness": 210,
+  "dim_brightness": 60,
+  "dim_timeout_secs": 30
 }
