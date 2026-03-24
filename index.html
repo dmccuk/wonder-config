@@ -163,35 +163,52 @@
             <div class="card">
                 <h3>Device Location</h3>
                 <label>Label</label>
-                <input type="text" id="cfg-loc-label" placeholder="East Grinstead">
+                <input type="text" id="cfg-loc-label" placeholder="Brighton">
                 <label>Latitude</label>
-                <input type="number" step="0.0001" id="cfg-loc-lat" placeholder="51.13">
+                <input type="number" step="0.0001" id="cfg-loc-lat" placeholder="50.8225">
                 <label>Longitude</label>
-                <input type="number" step="0.0001" id="cfg-loc-lon" placeholder="-0.01">
-                <label>Screensaver Timeout (seconds)</label>
-                <input type="number" id="cfg-ss-timeout" placeholder="60" step="1">
-                <label>Screensaver Mode</label>
-                <select id="cfg-ss-mode">
-                    <option value="0">Dim Only</option>
-                    <option value="1" selected>Matrix Rain</option>
-                    <option value="2">Wormhole</option>
-                </select>
+                <input type="number" step="0.0001" id="cfg-loc-lon" placeholder="-0.1372">
             </div>
 
             <div class="card">
                 <h3>Train Routes</h3>
+                <p style="color: #888; font-size: 12px; margin-bottom: 8px;">Find CRS codes at huxley2.azurewebsites.net/crs</p>
                 <label>Home Station (CRS code)</label>
-                <input type="text" id="cfg-train-home-from" placeholder="EGR" maxlength="3">
+                <input type="text" id="cfg-train-home-from" placeholder="BTN" maxlength="3" style="text-transform:uppercase">
                 <label>Home Station Name</label>
-                <input type="text" id="cfg-train-home-from-name" placeholder="East Grinstead">
+                <input type="text" id="cfg-train-home-from-name" placeholder="Brighton">
                 <label>Destination (CRS code)</label>
-                <input type="text" id="cfg-train-home-to" placeholder="VIC" maxlength="3">
+                <input type="text" id="cfg-train-home-to" placeholder="VIC" maxlength="3" style="text-transform:uppercase">
                 <label>Destination Name</label>
                 <input type="text" id="cfg-train-home-to-name" placeholder="Victoria">
+                <label>Home Radius (km)</label>
+                <input type="number" id="cfg-radius" placeholder="15" step="1" min="1" max="100">
+                <p style="color: #666; font-size: 11px; margin-top: 4px;">Distance from home before auto-switching train direction</p>
+            </div>
+
+            <div class="card">
+                <h3>Display &amp; Screensaver</h3>
+                <label>Brightness (10–255)</label>
+                <input type="range" id="cfg-brightness" min="10" max="255" value="210">
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:11px;"><span>Dim</span><span id="cfg-brightness-val">210</span><span>Max</span></div>
+                <label>Dim Brightness (5–200)</label>
+                <input type="range" id="cfg-dim-brightness" min="5" max="200" value="60">
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:11px;"><span>Low</span><span id="cfg-dim-brightness-val">60</span><span>High</span></div>
+                <label>Dim Timeout (seconds)</label>
+                <input type="number" id="cfg-dim-timeout" placeholder="30" step="5" min="5" max="600">
+                <label>Screensaver Timeout (seconds)</label>
+                <input type="number" id="cfg-ss-timeout" placeholder="60" step="5" min="10" max="600">
+                <label>Screensaver Mode</label>
+                <select id="cfg-ss-mode">
+                    <option value="0">Dim Only</option>
+                    <option value="1" selected>Matrix Rain</option>
+                    <option value="2">Hyperspace</option>
+                </select>
             </div>
 
             <div class="card">
                 <h3>Crypto Coins</h3>
+                <p style="color: #888; font-size: 12px; margin-bottom: 8px;">IDs from coingecko.com/api/v3/coins/list</p>
                 <label>Coins (CoinGecko IDs, comma-separated)</label>
                 <input type="text" id="cfg-crypto-ids" placeholder="bitcoin,ethereum,solana,cardano">
                 <label>Symbols (comma-separated)</label>
@@ -207,17 +224,11 @@
             </div>
 
             <div class="card">
-                <h3>Home Radius (km)</h3>
-                <label>Distance from home before switching train routes</label>
-                <input type="number" id="cfg-radius" placeholder="15" step="1">
-            </div>
-
-            <div class="card">
                 <h3>Pomodoro Timer</h3>
                 <label>Work Duration (minutes)</label>
-                <input type="number" id="cfg-pomo-work" placeholder="25" step="1">
+                <input type="number" id="cfg-pomo-work" placeholder="25" step="1" min="1" max="120">
                 <label>Break Duration (minutes)</label>
-                <input type="number" id="cfg-pomo-break" placeholder="5" step="1">
+                <input type="number" id="cfg-pomo-break" placeholder="5" step="1" min="1" max="60">
             </div>
 
             <div class="card">
@@ -402,12 +413,12 @@
         }
 
         function buildConfig() {
-            const loc_label = document.getElementById('cfg-loc-label').value || 'East Grinstead';
-            const lat = parseFloat(document.getElementById('cfg-loc-lat').value) || 51.13;
-            const lon = parseFloat(document.getElementById('cfg-loc-lon').value) || -0.01;
-            const hf = document.getElementById('cfg-train-home-from').value.toUpperCase() || 'EGR';
+            const loc_label = document.getElementById('cfg-loc-label').value || 'Brighton';
+            const lat = parseFloat(document.getElementById('cfg-loc-lat').value) || 50.8225;
+            const lon = parseFloat(document.getElementById('cfg-loc-lon').value) || -0.1372;
+            const hf = document.getElementById('cfg-train-home-from').value.toUpperCase() || 'BTN';
             const ht = document.getElementById('cfg-train-home-to').value.toUpperCase() || 'VIC';
-            const hfn = document.getElementById('cfg-train-home-from-name').value || 'East Grinstead';
+            const hfn = document.getElementById('cfg-train-home-from-name').value || 'Brighton';
             const htn = document.getElementById('cfg-train-home-to-name').value || 'Victoria';
             const cryptoIds = (document.getElementById('cfg-crypto-ids').value || 'bitcoin,ethereum,solana,cardano').split(',').map(s=>s.trim());
             const cryptoSyms = (document.getElementById('cfg-crypto-syms').value || 'BTC,ETH,SOL,ADA').split(',').map(s=>s.trim());
@@ -418,6 +429,9 @@
             const ssMode = parseInt(document.getElementById('cfg-ss-mode').value) || 1;
             const pomoWork = parseInt(document.getElementById('cfg-pomo-work').value) || 25;
             const pomoBreak = parseInt(document.getElementById('cfg-pomo-break').value) || 5;
+            const brightness = parseInt(document.getElementById('cfg-brightness').value) || 210;
+            const dimBrightness = parseInt(document.getElementById('cfg-dim-brightness').value) || 60;
+            const dimTimeout = parseInt(document.getElementById('cfg-dim-timeout').value) || 30;
 
             let cy = 2026, cm = 8, cd = 15;
             if (cdate) { const d = new Date(cdate); cy = d.getFullYear(); cm = d.getMonth()+1; cd = d.getDate(); }
@@ -433,7 +447,10 @@
                 screensaver_timeout_secs: ssTimeout,
                 screensaver_mode: ssMode,
                 pomo_work_mins: pomoWork,
-                pomo_break_mins: pomoBreak
+                pomo_break_mins: pomoBreak,
+                brightness: brightness,
+                dim_brightness: dimBrightness,
+                dim_timeout_secs: dimTimeout
             };
         }
 
@@ -490,8 +507,25 @@
                 if (cfg.screensaver_mode !== undefined) document.getElementById('cfg-ss-mode').value = cfg.screensaver_mode;
                 if (cfg.pomo_work_mins) document.getElementById('cfg-pomo-work').value = cfg.pomo_work_mins;
                 if (cfg.pomo_break_mins) document.getElementById('cfg-pomo-break').value = cfg.pomo_break_mins;
+                if (cfg.brightness) {
+                    document.getElementById('cfg-brightness').value = cfg.brightness;
+                    document.getElementById('cfg-brightness-val').textContent = cfg.brightness;
+                }
+                if (cfg.dim_brightness) {
+                    document.getElementById('cfg-dim-brightness').value = cfg.dim_brightness;
+                    document.getElementById('cfg-dim-brightness-val').textContent = cfg.dim_brightness;
+                }
+                if (cfg.dim_timeout_secs) document.getElementById('cfg-dim-timeout').value = cfg.dim_timeout_secs;
             } catch(e) { console.log('Could not load config:', e); }
         }
+
+        // Slider value display
+        document.getElementById('cfg-brightness').oninput = function() {
+            document.getElementById('cfg-brightness-val').textContent = this.value;
+        };
+        document.getElementById('cfg-dim-brightness').oninput = function() {
+            document.getElementById('cfg-dim-brightness-val').textContent = this.value;
+        };
 
         // Load on page start
         loadMessages();
