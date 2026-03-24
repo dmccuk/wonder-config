@@ -3,123 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wonder Device - Message Board</title>
+    <title>Wonder Device — Dashboard</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg:       #f5f7fa;
+            --card:     #ffffff;
+            --border:   #e2e5ea;
+            --accent:   #00b8d4;
+            --accent2:  #0091a7;
+            --navy:     #0a0e1a;
+            --navy2:    #1a1e2e;
+            --success:  #00c97a;
+            --danger:   #e53e5c;
+            --text:     #1a1e2e;
+            --text2:    #555b6e;
+            --text3:    #8a91a0;
+            --shadow:   0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a1a;
-            color: #e0e0e0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
         }
-        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+
+        .container { max-width: 520px; margin: 0 auto; padding: 20px; }
+
+        /* ── HEADER ──────────────────────────────── */
         .header {
             text-align: center;
-            padding: 30px 0 20px;
-            border-bottom: 2px solid #05ff;
+            padding: 30px 0 24px;
         }
-        .header h1 { color: #00e5ff; font-size: 28px; letter-spacing: 2px; }
-        .header p { color: #888; margin-top: 8px; font-size: 14px; }
+        .header-back {
+            display: inline-block;
+            color: var(--text3);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        .header-back:hover { color: var(--accent); }
+        .header h1 {
+            font-size: 24px; font-weight: 800;
+            letter-spacing: 2px; color: var(--navy);
+        }
+        .header h1 span { color: var(--accent); }
+        .header p { color: var(--text3); margin-top: 6px; font-size: 14px; }
+
+        /* ── TABS ────────────────────────────────── */
         .tabs {
             display: flex;
-            margin: 20px 0;
+            margin: 0 0 20px;
             border-radius: 10px;
             overflow: hidden;
-            border: 1px solid #333;
+            border: 1px solid var(--border);
+            background: var(--card);
+            box-shadow: var(--shadow);
         }
         .tab {
             flex: 1;
             padding: 12px;
             text-align: center;
             cursor: pointer;
-            background: #1a1a2e;
-            color: #888;
+            background: var(--card);
+            color: var(--text3);
             font-weight: 600;
-            transition: all 0.3s;
+            font-size: 14px;
+            transition: all 0.2s;
+            border: none;
         }
-        .tab.active { background: #00e5ff; color: #0a0a1a; }
-        .tab:hover:not(.active) { background: #222240; }
-        .admin-link { text-align:center; margin-top:30px; }
-        .admin-link a { color:#444; font-size:12px; text-decoration:none; }
-        .admin-link a:hover { color:#00e5ff; }
+        .tab.active { background: var(--navy); color: #fff; }
+        .tab:hover:not(.active) { background: var(--bg); color: var(--text); }
+
+        /* ── PANELS ──────────────────────────────── */
         .hidden { display: none !important; }
-        .panel { display: none; margin-top: 20px; }
+        .panel { display: none; }
         .panel.active { display: block; }
+
+        /* ── CARDS ────────────────────────────────── */
         .card {
-            background: #1a1a2e;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 1px solid #333;
+            background: var(--card);
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
-        .card h3 { color: #00e5ff; margin-bottom: 12px; font-size: 16px; }
-        label { display: block; color: #aaa; font-size: 13px; margin-bottom: 6px; margin-top: 12px; }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .card-header:hover { background: var(--bg); }
+        .card-header h3 {
+            font-size: 15px; font-weight: 700;
+            color: var(--navy);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .card-header h3 .icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+        .card-header .chevron {
+            width: 20px; height: 20px;
+            color: var(--text3);
+            transition: transform 0.3s;
+        }
+        .card-header.open .chevron { transform: rotate(180deg); }
+        .card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+        .card-body.open { max-height: 2000px; }
+        .card-body-inner { padding: 0 20px 20px; }
+
+        /* ── FORM ELEMENTS ───────────────────────── */
+        label {
+            display: block;
+            color: var(--text2);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            margin-top: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        label:first-child { margin-top: 0; }
         input, textarea, select {
             width: 100%;
             padding: 10px 14px;
-            background: #0a0a1a;
-            border: 1px solid #444;
+            background: var(--bg);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            color: #fff;
-            font-size: 15px;
+            color: var(--text);
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
         }
-        input:focus, textarea:focus { outline: none; border-color: #00e5ff; }
-        textarea { resize: vertical; min-height: 80px; }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,184,212,0.1);
+        }
+        textarea { resize: vertical; min-height: 70px; }
+        .hint {
+            color: var(--text3); font-size: 11px; margin-top: 3px;
+        }
+        .row { display: flex; gap: 12px; }
+        .row > * { flex: 1; }
+
+        /* Range slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            border: none;
+            padding: 0;
+            margin-top: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+        .range-labels {
+            display: flex; justify-content: space-between;
+            color: var(--text3); font-size: 11px; margin-top: 4px;
+        }
+
+        /* ── BUTTONS ─────────────────────────────── */
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 13px;
             border: none;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 16px;
-            transition: all 0.3s;
+            margin-top: 14px;
+            transition: all 0.2s;
+            font-family: inherit;
         }
-        .btn-primary { background: #00e5ff; color: #0a0a1a; }
-        .btn-primary:hover { background: #00b8d4; }
-        .btn-danger { background: #f80f3f; color: #fff; }
-        .btn-danger:hover { background: #d32f2f; }
-        .btn-secondary { background: #333; color: #ccc; }
+        .btn-primary { background: var(--navy); color: #fff; }
+        .btn-primary:hover { background: var(--accent); }
+        .btn-danger { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+
+        /* ── MESSAGES ────────────────────────────── */
         .msg-item {
-            background: #0a0a1a;
-            border-radius: 8px;
-            padding: 12px;
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 12px 14px;
             margin-bottom: 8px;
-            border-left: 3px solid #00e5ff;
+            border-left: 3px solid var(--accent);
         }
-        .msg-item.high { border-left-color: #f80f3f; }
-        .msg-item .from { color: #00e5ff; font-weight: 600; font-size: 13px; }
-        .msg-item .text { margin-top: 4px; color: #ddd; }
-        .msg-item .time { color: #666; font-size: 11px; margin-top: 4px; }
+        .msg-item.high { border-left-color: var(--danger); }
+        .msg-item .from { color: var(--accent2); font-weight: 600; font-size: 13px; }
+        .msg-item .text { margin-top: 3px; color: var(--text); font-size: 14px; }
+        .msg-item .time { color: var(--text3); font-size: 11px; margin-top: 4px; }
+
+        /* ── PRIORITY TOGGLE ─────────────────────── */
+        .priority-toggle { display: flex; gap: 8px; margin-top: 6px; }
+        .priority-toggle label {
+            flex: 1; text-align: center; padding: 8px;
+            border-radius: 8px; cursor: pointer;
+            border: 1px solid var(--border); margin: 0;
+            font-size: 13px; text-transform: none;
+            letter-spacing: 0; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .priority-toggle input { display: none; }
+        .priority-toggle label:has(input:checked) {
+            border-color: var(--accent);
+            background: rgba(0,184,212,0.06);
+            color: var(--accent2);
+        }
+
+        /* ── STATUS ───────────────────────────────── */
         .status {
             text-align: center;
             padding: 10px;
             border-radius: 8px;
             margin-top: 12px;
             display: none;
+            font-size: 13px;
+            font-weight: 500;
         }
-        .status.success { display: block; background: #1b5e20; color: #a5d6a7; }
-        .status.error { display: block; background: #b71c1c; color: #ef9a9a; }
-        .empty { text-align: center; color: #666; padding: 20px; font-style: italic; }
-        .priority-toggle {
-            display: flex; gap: 10px; margin-top: 6px;
+        .status.success { display: block; background: #ecfdf5; color: #065f46; }
+        .status.error { display: block; background: #fef2f2; color: #991b1b; }
+
+        .empty { text-align: center; color: var(--text3); padding: 20px; font-size: 14px; }
+
+        /* ── ADMIN LINK ──────────────────────────── */
+        .admin-link { text-align: center; margin-top: 24px; }
+        .admin-link a {
+            color: var(--text3); font-size: 12px; text-decoration: none;
+            padding: 8px 16px; border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
         }
-        .priority-toggle label {
-            flex: 1; text-align: center; padding: 8px;
-            border-radius: 6px; cursor: pointer;
-            border: 1px solid #444; margin: 0;
+        .admin-link a:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ── FOOTER ───────────────────────────────── */
+        .app-footer {
+            text-align: center;
+            padding: 24px 0;
+            color: var(--text3);
+            font-size: 12px;
         }
-        .priority-toggle input { display: none; }
-        .priority-toggle input:checked + span { color: #00e5ff; }
-        .priority-toggle label:has(input:checked) { border-color: #00e5ff; background: #1a1a3e; }
+        .app-footer a { color: var(--accent2); text-decoration: none; }
+        .app-footer a:hover { color: var(--accent); }
+
+        /* ── WARNING BOX ──────────────────────────── */
+        .warning-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 13px;
+            color: #991b1b;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>WONDER DEVICE</h1>
-            <p>Send messages to the display</p>
+            <a href="index.html" class="header-back">&larr; Back to Wonder Device</a>
+            <h1>WONDER <span>DEVICE</span></h1>
+            <p>Dashboard</p>
         </div>
 
         <div class="tabs hidden" id="admin-tabs">
@@ -127,123 +294,338 @@
             <div class="tab" onclick="switchTab('config')">Configure</div>
         </div>
 
-        <!-- MESSAGES PANEL -->
+        <!-- ═══════════════ MESSAGES PANEL ═══════════════ -->
         <div id="messages-panel" class="panel active">
+
+            <!-- Send a message (always open) -->
             <div class="card">
-                <h3>Send a Message</h3>
-                <label>Your Name</label>
-                <input type="text" id="msg-from" placeholder="e.g. Dad, Sarah, Office">
-                <label>Message</label>
-                <textarea id="msg-text" placeholder="Type your message here..."></textarea>
-                <div>
-                    <label>Priority</label>
-                    <div class="priority-toggle">
-                        <label><input type="radio" name="priority" value="normal" checked><span>Normal</span></label>
-                        <label><input type="radio" name="priority" value="high"><span>Urgent</span></label>
+                <div class="card-header open" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(0,184,212,0.1)">&#9993;</span> Send a Message</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body open">
+                    <div class="card-body-inner">
+                        <label>Your Name</label>
+                        <input type="text" id="msg-from" placeholder="e.g. Dad, Sarah, Office">
+                        <label>Message</label>
+                        <textarea id="msg-text" placeholder="Type your message here..."></textarea>
+                        <label>Priority</label>
+                        <div class="priority-toggle">
+                            <label><input type="radio" name="priority" value="normal" checked><span>Normal</span></label>
+                            <label><input type="radio" name="priority" value="high"><span>Urgent</span></label>
+                        </div>
+                        <button class="btn btn-primary" onclick="sendMessage()">Send Message</button>
+                        <div id="send-status" class="status"></div>
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="sendMessage()">Send Message</button>
-                <div id="send-status" class="status"></div>
             </div>
 
+            <!-- Current messages -->
             <div class="card">
-                <h3>Current Messages</h3>
-                <div id="msg-list"><div class="empty">Loading...</div></div>
-                <button class="btn btn-danger" onclick="clearMessages()">Clear All Messages</button>
+                <div class="card-header open" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(0,201,122,0.1)">&#128172;</span> Current Messages</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body open">
+                    <div class="card-body-inner">
+                        <div id="msg-list"><div class="empty">Loading...</div></div>
+                        <button class="btn btn-danger" onclick="clearMessages()">Clear All Messages</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- ADMIN LINK (visible to everyone, opens config after token) -->
+        <!-- Admin link -->
         <div class="admin-link" id="admin-link-div">
             <a href="#" onclick="unlockAdmin(); return false;">Device Admin</a>
         </div>
 
-        <!-- CONFIG PANEL (hidden until admin unlocked) -->
+        <!-- ═══════════════ CONFIG PANEL ═══════════════ -->
         <div id="config-panel" class="panel hidden">
-            <div class="card">
-                <h3>Device Location</h3>
-                <label>Label</label>
-                <input type="text" id="cfg-loc-label" placeholder="Brighton">
-                <label>Latitude</label>
-                <input type="number" step="0.0001" id="cfg-loc-lat" placeholder="50.8225">
-                <label>Longitude</label>
-                <input type="number" step="0.0001" id="cfg-loc-lon" placeholder="-0.1372">
-            </div>
 
+            <!-- LOCATION -->
             <div class="card">
-                <h3>Train Routes</h3>
-                <p style="color: #888; font-size: 12px; margin-bottom: 8px;">Find CRS codes at huxley2.azurewebsites.net/crs</p>
-                <label>Home Station (CRS code)</label>
-                <input type="text" id="cfg-train-home-from" placeholder="BTN" maxlength="3" style="text-transform:uppercase">
-                <label>Home Station Name</label>
-                <input type="text" id="cfg-train-home-from-name" placeholder="Brighton">
-                <label>Destination (CRS code)</label>
-                <input type="text" id="cfg-train-home-to" placeholder="VIC" maxlength="3" style="text-transform:uppercase">
-                <label>Destination Name</label>
-                <input type="text" id="cfg-train-home-to-name" placeholder="Victoria">
-                <label>Home Radius (km)</label>
-                <input type="number" id="cfg-radius" placeholder="15" step="1" min="1" max="100">
-                <p style="color: #666; font-size: 11px; margin-top: 4px;">Distance from home before auto-switching train direction</p>
-            </div>
-
-            <div class="card">
-                <h3>Display &amp; Screensaver</h3>
-                <label>Brightness (10–255)</label>
-                <input type="range" id="cfg-brightness" min="10" max="255" value="210">
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:11px;"><span>Dim</span><span id="cfg-brightness-val">210</span><span>Max</span></div>
-                <label>Dim Brightness (5–200)</label>
-                <input type="range" id="cfg-dim-brightness" min="5" max="200" value="60">
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:11px;"><span>Low</span><span id="cfg-dim-brightness-val">60</span><span>High</span></div>
-                <label>Dim Timeout (seconds)</label>
-                <input type="number" id="cfg-dim-timeout" placeholder="30" step="5" min="5" max="600">
-                <label>Screensaver Timeout (seconds)</label>
-                <input type="number" id="cfg-ss-timeout" placeholder="60" step="5" min="10" max="600">
-                <label>Screensaver Mode</label>
-                <select id="cfg-ss-mode">
-                    <option value="0">Dim Only</option>
-                    <option value="1" selected>Matrix Rain</option>
-                    <option value="2">Hyperspace</option>
-                </select>
-            </div>
-
-            <div class="card">
-                <h3>Crypto Coins</h3>
-                <p style="color: #888; font-size: 12px; margin-bottom: 8px;">IDs from coingecko.com/api/v3/coins/list</p>
-                <label>Coins (CoinGecko IDs, comma-separated)</label>
-                <input type="text" id="cfg-crypto-ids" placeholder="bitcoin,ethereum,solana,cardano">
-                <label>Symbols (comma-separated)</label>
-                <input type="text" id="cfg-crypto-syms" placeholder="BTC,ETH,SOL,ADA">
-            </div>
-
-            <div class="card">
-                <h3>Countdown Timer</h3>
-                <label>Event Name</label>
-                <input type="text" id="cfg-countdown-label" placeholder="Summer Holiday">
-                <label>Date</label>
-                <input type="date" id="cfg-countdown-date">
-            </div>
-
-            <div class="card">
-                <h3>Pomodoro Timer</h3>
-                <label>Work Duration (minutes)</label>
-                <input type="number" id="cfg-pomo-work" placeholder="25" step="1" min="1" max="120">
-                <label>Break Duration (minutes)</label>
-                <input type="number" id="cfg-pomo-break" placeholder="5" step="1" min="1" max="60">
-            </div>
-
-            <div class="card">
-                <h3>WiFi Networks</h3>
-                <p style="color: #f80f3f; font-size: 13px; line-height: 1.5;">WiFi credentials cannot be configured remotely for security. Edit config.h on the device directly.</p>
-            </div>
-
-            <button class="btn btn-primary" onclick="saveConfigToGitHub()">Save to Device</button>
-            <div id="config-status" class="status"></div>
-            <div id="config-output" style="display:none; margin-top:16px;">
-                <div class="card">
-                    <h3>Config saved successfully</h3>
-                    <textarea id="config-json" style="min-height:150px; font-family:monospace; font-size:11px;" readonly></textarea>
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(0,184,212,0.1)">&#128205;</span> Device Location</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <label>Label</label>
+                        <input type="text" id="cfg-loc-label" placeholder="Brighton">
+                        <div class="row">
+                            <div>
+                                <label>Latitude</label>
+                                <input type="number" step="0.0001" id="cfg-loc-lat" placeholder="50.8225">
+                            </div>
+                            <div>
+                                <label>Longitude</label>
+                                <input type="number" step="0.0001" id="cfg-loc-lon" placeholder="-0.1372">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- WEATHER LOCATIONS -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(0,201,122,0.1)">&#9748;</span> Weather Locations</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <p class="hint" style="margin-bottom:10px">Up to 3 weather locations. Swipe to cycle through them on the device.</p>
+                        <div id="weather-locations"></div>
+                        <button class="btn btn-primary" onclick="addWeatherLocation()" style="background:var(--bg); color:var(--text2); border:1px dashed var(--border);">+ Add Location</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRAINS -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(0,201,122,0.1)">&#128646;</span> Train Routes</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <p class="hint" style="margin-bottom:8px">CRS codes: huxley2.azurewebsites.net/crs</p>
+                        <div class="row">
+                            <div>
+                                <label>Home Station (CRS)</label>
+                                <input type="text" id="cfg-train-home-from" placeholder="BTN" maxlength="3" style="text-transform:uppercase">
+                            </div>
+                            <div>
+                                <label>Station Name</label>
+                                <input type="text" id="cfg-train-home-from-name" placeholder="Brighton">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <label>Destination (CRS)</label>
+                                <input type="text" id="cfg-train-home-to" placeholder="VIC" maxlength="3" style="text-transform:uppercase">
+                            </div>
+                            <div>
+                                <label>Destination Name</label>
+                                <input type="text" id="cfg-train-home-to-name" placeholder="Victoria">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <label>Home Radius (km)</label>
+                                <input type="number" id="cfg-radius" placeholder="15" step="1" min="1" max="100">
+                                <p class="hint">Auto-switch train direction when away from home</p>
+                            </div>
+                            <div>
+                                <label>Max Services</label>
+                                <input type="number" id="cfg-train-max" placeholder="5" step="1" min="1" max="10">
+                                <p class="hint">Number of departures to show</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CRYPTO -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(245,166,35,0.1)">&#9889;</span> Crypto Coins</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <p class="hint" style="margin-bottom:8px">IDs from coingecko.com/api/v3/coins/list</p>
+                        <label>Coins (CoinGecko IDs, comma-separated)</label>
+                        <input type="text" id="cfg-crypto-ids" placeholder="bitcoin,ethereum,solana,cardano">
+                        <label>Symbols (comma-separated)</label>
+                        <input type="text" id="cfg-crypto-syms" placeholder="BTC,ETH,SOL,ADA">
+                    </div>
+                </div>
+            </div>
+
+            <!-- DISPLAY -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(102,127,255,0.1)">&#128261;</span> Display &amp; Screensaver</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <label>Brightness</label>
+                        <input type="range" id="cfg-brightness" min="10" max="255" value="210">
+                        <div class="range-labels"><span>Dim</span><span id="cfg-brightness-val">210</span><span>Max</span></div>
+
+                        <label>Dim Brightness</label>
+                        <input type="range" id="cfg-dim-brightness" min="5" max="200" value="60">
+                        <div class="range-labels"><span>Low</span><span id="cfg-dim-brightness-val">60</span><span>High</span></div>
+
+                        <div class="row">
+                            <div>
+                                <label>Dim Timeout (secs)</label>
+                                <input type="number" id="cfg-dim-timeout" placeholder="30" step="5" min="5" max="600">
+                            </div>
+                            <div>
+                                <label>Screensaver Timeout (secs)</label>
+                                <input type="number" id="cfg-ss-timeout" placeholder="60" step="5" min="10" max="600">
+                            </div>
+                        </div>
+                        <label>Screensaver Mode</label>
+                        <select id="cfg-ss-mode">
+                            <option value="0">Dim Only</option>
+                            <option value="1" selected>Matrix Rain</option>
+                            <option value="2">Hyperspace</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REFRESH INTERVALS -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(0,184,212,0.1)">&#8635;</span> Refresh Intervals</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <p class="hint" style="margin-bottom:10px">How often the device fetches fresh data (in minutes). Lower values use more battery and API calls.</p>
+                        <div class="row">
+                            <div>
+                                <label>Weather (mins)</label>
+                                <input type="number" id="cfg-refresh-weather" placeholder="5" step="1" min="1" max="60">
+                            </div>
+                            <div>
+                                <label>Trains (mins)</label>
+                                <input type="number" id="cfg-refresh-trains" placeholder="2" step="1" min="1" max="30">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <label>Crypto (mins)</label>
+                                <input type="number" id="cfg-refresh-crypto" placeholder="3" step="1" min="1" max="30">
+                            </div>
+                            <div>
+                                <label>News (mins)</label>
+                                <input type="number" id="cfg-refresh-news" placeholder="10" step="1" min="1" max="60">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <label>F1 Data (mins)</label>
+                                <input type="number" id="cfg-refresh-f1" placeholder="30" step="1" min="5" max="120">
+                            </div>
+                            <div>
+                                <label>Messages (mins)</label>
+                                <input type="number" id="cfg-refresh-messages" placeholder="2" step="1" min="1" max="30">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- F1 & NEWS -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(229,62,92,0.1)">&#127937;</span> F1 &amp; News</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="row">
+                            <div>
+                                <label>Max F1 Drivers</label>
+                                <input type="number" id="cfg-f1-max" placeholder="10" step="1" min="3" max="20">
+                                <p class="hint">Drivers shown in standings</p>
+                            </div>
+                            <div>
+                                <label>Max News Items</label>
+                                <input type="number" id="cfg-news-max" placeholder="5" step="1" min="1" max="15">
+                                <p class="hint">Headlines from Hacker News</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COUNTDOWN -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(245,166,35,0.1)">&#9200;</span> Countdown Timer</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="row">
+                            <div>
+                                <label>Event Name</label>
+                                <input type="text" id="cfg-countdown-label" placeholder="Summer Holiday">
+                            </div>
+                            <div>
+                                <label>Date</label>
+                                <input type="date" id="cfg-countdown-date">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POMODORO -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(0,201,122,0.1)">&#127813;</span> Pomodoro Timer</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="row">
+                            <div>
+                                <label>Work (mins)</label>
+                                <input type="number" id="cfg-pomo-work" placeholder="25" step="1" min="1" max="120">
+                            </div>
+                            <div>
+                                <label>Break (mins)</label>
+                                <input type="number" id="cfg-pomo-break" placeholder="5" step="1" min="1" max="60">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WIFI WARNING -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3><span class="icon" style="background:rgba(229,62,92,0.1)">&#128274;</span> WiFi Networks</h3>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="warning-box">
+                            WiFi credentials cannot be configured remotely for security. Edit <code>config.h</code> on the device directly.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SAVE BUTTON -->
+            <button class="btn btn-primary" onclick="saveConfigToGitHub()" style="margin-bottom:8px;">Save to Device</button>
+            <div id="config-status" class="status"></div>
+            <div id="config-output" style="display:none; margin-top:12px;">
+                <div class="card">
+                    <div class="card-header open" onclick="toggleCard(this)">
+                        <h3>Saved Config JSON</h3>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="card-body open">
+                        <div class="card-body-inner">
+                            <textarea id="config-json" style="min-height:120px; font-family:'Courier New',monospace; font-size:11px;" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-footer">
+            <a href="index.html">Wonder Device</a> &middot; <a href="https://github.com/dmccuk/wonder-config" target="_blank">GitHub</a>
         </div>
     </div>
 
@@ -256,7 +638,14 @@
         const GH_FILE = 'config.json';
         const GH_API = `https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`;
 
-        // Token stored in browser only — never in the code
+        /* ── Collapsible cards ────────────────────── */
+        function toggleCard(header) {
+            header.classList.toggle('open');
+            const body = header.nextElementSibling;
+            body.classList.toggle('open');
+        }
+
+        /* ── GitHub token ─────────────────────────── */
         function getGHToken() {
             let token = localStorage.getItem('gh_token');
             if (!token) {
@@ -266,6 +655,7 @@
             return token;
         }
 
+        /* ── Tabs ─────────────────────────────────── */
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -273,6 +663,7 @@
             event.target.classList.add('active');
         }
 
+        /* ── Messages ─────────────────────────────── */
         async function loadMessages() {
             try {
                 const res = await fetch(BIN_URL + '/latest', {
@@ -287,15 +678,21 @@
                 }
                 list.innerHTML = msgs.map(m => `
                     <div class="msg-item ${m.priority === 'high' ? 'high' : ''}">
-                        <div class="from">${m.from || 'Anonymous'}</div>
-                        <div class="text">${m.text}</div>
-                        <div class="time">${m.time || ''}</div>
+                        <div class="from">${escapeHtml(m.from || 'Anonymous')}</div>
+                        <div class="text">${escapeHtml(m.text)}</div>
+                        <div class="time">${escapeHtml(m.time || '')}</div>
                     </div>
                 `).join('');
             } catch (e) {
                 document.getElementById('msg-list').innerHTML =
                     '<div class="empty">Could not load messages</div>';
             }
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
         }
 
         async function sendMessage() {
@@ -307,14 +704,12 @@
             if (!text) { showStatus(status, 'Please type a message', 'error'); return; }
 
             try {
-                // Read current messages
                 const res = await fetch(BIN_URL + '/latest', {
                     headers: { 'X-Access-Key': API_KEY }
                 });
                 const data = await res.json();
                 let msgs = data.record.messages || [];
 
-                // Add new message (keep max 5)
                 msgs.push({
                     text: text,
                     from: from,
@@ -323,7 +718,6 @@
                 });
                 if (msgs.length > 10) msgs = msgs.slice(-10);
 
-                // Write back
                 await fetch(BIN_URL, {
                     method: 'PUT',
                     headers: {
@@ -363,6 +757,46 @@
             setTimeout(() => { el.style.display = 'none'; el.className = 'status'; }, 5000);
         }
 
+        /* ── Weather locations (dynamic) ──────────── */
+        let weatherLocs = [{ name: '', lat: '', lon: '' }];
+
+        function renderWeatherLocations() {
+            const container = document.getElementById('weather-locations');
+            container.innerHTML = weatherLocs.map((loc, i) => `
+                <div style="background:var(--bg); border-radius:8px; padding:12px; margin-bottom:8px; position:relative;">
+                    ${weatherLocs.length > 1 ? `<button onclick="removeWeatherLocation(${i})" style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;" title="Remove">&times;</button>` : ''}
+                    <label style="margin-top:0">Name</label>
+                    <input type="text" value="${escapeAttr(loc.name)}" placeholder="e.g. London" onchange="weatherLocs[${i}].name=this.value">
+                    <div class="row">
+                        <div>
+                            <label>Latitude</label>
+                            <input type="number" step="0.0001" value="${loc.lat}" placeholder="51.50" onchange="weatherLocs[${i}].lat=parseFloat(this.value)">
+                        </div>
+                        <div>
+                            <label>Longitude</label>
+                            <input type="number" step="0.0001" value="${loc.lon}" placeholder="-0.12" onchange="weatherLocs[${i}].lon=parseFloat(this.value)">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addWeatherLocation() {
+            if (weatherLocs.length >= 3) { alert('Maximum 3 weather locations'); return; }
+            weatherLocs.push({ name: '', lat: '', lon: '' });
+            renderWeatherLocations();
+        }
+
+        function removeWeatherLocation(i) {
+            weatherLocs.splice(i, 1);
+            renderWeatherLocations();
+        }
+
+        function escapeAttr(str) {
+            return String(str).replace(/"/g, '&quot;').replace(/</g, '&lt;');
+        }
+
+        /* ── Config save ──────────────────────────── */
         async function saveConfigToGitHub() {
             const status = document.getElementById('config-status');
             showStatus(status, 'Saving to device...', 'success');
@@ -371,21 +805,18 @@
             const configJson = JSON.stringify(config, null, 2);
 
             try {
-                // Get current file SHA (needed for update)
                 const getRes = await fetch(GH_API, {
                     headers: { 'Authorization': `Bearer ${getGHToken()}` }
                 });
                 if (!getRes.ok) throw new Error('Could not read current config');
                 const current = await getRes.json();
 
-                // Merge with existing config to preserve f1_session_active etc.
                 const existingContent = atob(current.content.replace(/\n/g, ''));
                 let existing = {};
                 try { existing = JSON.parse(existingContent); } catch(e) {}
                 const merged = { ...existing, ...config };
                 const mergedJson = JSON.stringify(merged, null, 2);
 
-                // Update file
                 const putRes = await fetch(GH_API, {
                     method: 'PUT',
                     headers: {
@@ -433,14 +864,29 @@
             const dimBrightness = parseInt(document.getElementById('cfg-dim-brightness').value) || 60;
             const dimTimeout = parseInt(document.getElementById('cfg-dim-timeout').value) || 30;
 
+            // New fields
+            const trainMax = parseInt(document.getElementById('cfg-train-max').value) || 5;
+            const refreshWeather = parseInt(document.getElementById('cfg-refresh-weather').value) || 5;
+            const refreshTrains = parseInt(document.getElementById('cfg-refresh-trains').value) || 2;
+            const refreshCrypto = parseInt(document.getElementById('cfg-refresh-crypto').value) || 3;
+            const refreshNews = parseInt(document.getElementById('cfg-refresh-news').value) || 10;
+            const refreshF1 = parseInt(document.getElementById('cfg-refresh-f1').value) || 30;
+            const refreshMessages = parseInt(document.getElementById('cfg-refresh-messages').value) || 2;
+            const f1Max = parseInt(document.getElementById('cfg-f1-max').value) || 10;
+            const newsMax = parseInt(document.getElementById('cfg-news-max').value) || 5;
+
             let cy = 2026, cm = 8, cd = 15;
             if (cdate) { const d = new Date(cdate); cy = d.getFullYear(); cm = d.getMonth()+1; cd = d.getDate(); }
 
-            return {
+            // Build weather locations array
+            const validWeatherLocs = weatherLocs.filter(l => l.name && l.lat && l.lon);
+
+            const config = {
                 location: { lat, lon, label: loc_label },
                 train_home: { from: hf, to: ht, from_name: hfn, to_name: htn },
                 train_away: { from: ht, to: hf, from_name: htn, to_name: hfn },
                 home_radius_km: radius,
+                train_max_services: trainMax,
                 crypto: cryptoIds,
                 crypto_symbols: cryptoSyms,
                 countdown: { label: clabel, year: cy, month: cm, day: cd },
@@ -450,10 +896,25 @@
                 pomo_break_mins: pomoBreak,
                 brightness: brightness,
                 dim_brightness: dimBrightness,
-                dim_timeout_secs: dimTimeout
+                dim_timeout_secs: dimTimeout,
+                refresh_weather_mins: refreshWeather,
+                refresh_trains_mins: refreshTrains,
+                refresh_crypto_mins: refreshCrypto,
+                refresh_news_mins: refreshNews,
+                refresh_f1_mins: refreshF1,
+                refresh_messages_mins: refreshMessages,
+                f1_max_drivers: f1Max,
+                news_max_items: newsMax
             };
+
+            if (validWeatherLocs.length > 0) {
+                config.weather_locations = validWeatherLocs;
+            }
+
+            return config;
         }
 
+        /* ── Admin ────────────────────────────────── */
         function unlockAdmin() {
             const token = getGHToken();
             if (!token) { alert('Token required for admin access'); return; }
@@ -464,7 +925,6 @@
             loadConfig();
         }
 
-        // Auto-unlock admin if token already saved in browser
         function checkAutoUnlock() {
             const token = localStorage.getItem('gh_token');
             if (token) {
@@ -474,7 +934,7 @@
             }
         }
 
-        // Load current config into form fields
+        /* ── Load config into form ────────────────── */
         async function loadConfig() {
             try {
                 const res = await fetch(GH_API, {
@@ -495,6 +955,8 @@
                     document.getElementById('cfg-train-home-to').value = cfg.train_home.to || '';
                     document.getElementById('cfg-train-home-to-name').value = cfg.train_home.to_name || '';
                 }
+                if (cfg.home_radius_km) document.getElementById('cfg-radius').value = cfg.home_radius_km;
+                if (cfg.train_max_services) document.getElementById('cfg-train-max').value = cfg.train_max_services;
                 if (cfg.crypto) document.getElementById('cfg-crypto-ids').value = cfg.crypto.join(',');
                 if (cfg.crypto_symbols) document.getElementById('cfg-crypto-syms').value = cfg.crypto_symbols.join(',');
                 if (cfg.countdown) {
@@ -502,7 +964,6 @@
                     const d = `${cfg.countdown.year}-${String(cfg.countdown.month).padStart(2,'0')}-${String(cfg.countdown.day).padStart(2,'0')}`;
                     document.getElementById('cfg-countdown-date').value = d;
                 }
-                if (cfg.home_radius_km) document.getElementById('cfg-radius').value = cfg.home_radius_km;
                 if (cfg.screensaver_timeout_secs) document.getElementById('cfg-ss-timeout').value = cfg.screensaver_timeout_secs;
                 if (cfg.screensaver_mode !== undefined) document.getElementById('cfg-ss-mode').value = cfg.screensaver_mode;
                 if (cfg.pomo_work_mins) document.getElementById('cfg-pomo-work').value = cfg.pomo_work_mins;
@@ -516,10 +977,26 @@
                     document.getElementById('cfg-dim-brightness-val').textContent = cfg.dim_brightness;
                 }
                 if (cfg.dim_timeout_secs) document.getElementById('cfg-dim-timeout').value = cfg.dim_timeout_secs;
+
+                // New fields
+                if (cfg.refresh_weather_mins) document.getElementById('cfg-refresh-weather').value = cfg.refresh_weather_mins;
+                if (cfg.refresh_trains_mins) document.getElementById('cfg-refresh-trains').value = cfg.refresh_trains_mins;
+                if (cfg.refresh_crypto_mins) document.getElementById('cfg-refresh-crypto').value = cfg.refresh_crypto_mins;
+                if (cfg.refresh_news_mins) document.getElementById('cfg-refresh-news').value = cfg.refresh_news_mins;
+                if (cfg.refresh_f1_mins) document.getElementById('cfg-refresh-f1').value = cfg.refresh_f1_mins;
+                if (cfg.refresh_messages_mins) document.getElementById('cfg-refresh-messages').value = cfg.refresh_messages_mins;
+                if (cfg.f1_max_drivers) document.getElementById('cfg-f1-max').value = cfg.f1_max_drivers;
+                if (cfg.news_max_items) document.getElementById('cfg-news-max').value = cfg.news_max_items;
+
+                // Weather locations
+                if (cfg.weather_locations && cfg.weather_locations.length > 0) {
+                    weatherLocs = cfg.weather_locations;
+                }
+                renderWeatherLocations();
             } catch(e) { console.log('Could not load config:', e); }
         }
 
-        // Slider value display
+        /* ── Slider value display ─────────────────── */
         document.getElementById('cfg-brightness').oninput = function() {
             document.getElementById('cfg-brightness-val').textContent = this.value;
         };
@@ -527,10 +1004,10 @@
             document.getElementById('cfg-dim-brightness-val').textContent = this.value;
         };
 
-        // Load on page start
+        /* ── Init ─────────────────────────────────── */
         loadMessages();
         checkAutoUnlock();
-        // Only load config if admin is unlocked
+        renderWeatherLocations();
         if (localStorage.getItem('gh_token')) loadConfig();
     </script>
 </body>
