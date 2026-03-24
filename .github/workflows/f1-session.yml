@@ -1,7 +1,7 @@
-name: F1 Session Monitor (2025 Hardcoded Schedule)
+name: F1 Session Monitor (2026 Hardcoded Schedule)
 
 # Runs every 10 minutes on F1 weekend days (Thu-Sun) during the season (Mar-Dec).
-# No API polling — all 2025 session times are hardcoded from the official F1 calendar.
+# No API polling — all 2026 session times are hardcoded from the official F1 calendar.
 on:
   schedule:
     # Every 10 minutes on Thursday, Friday, Saturday, Sunday (Mar-Dec)
@@ -27,358 +27,317 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
 
-          echo "=== F1 Session Monitor (2025 Hardcoded Schedule) ==="
+          echo "=== F1 Session Monitor (2026 Hardcoded Schedule) ==="
           NOW_UTC=$(date -u '+%Y-%m-%d %H:%M:%S')
           NOW_EPOCH=$(date -u +%s)
           echo "Current UTC time: $NOW_UTC (epoch: $NOW_EPOCH)"
 
           # -------------------------------------------------------------------
-          # FULL 2025 F1 CALENDAR — ALL SESSION TIMES IN UTC
+          # FULL 2026 F1 CALENDAR — ALL SESSION TIMES IN UTC
           # Source: formula1.com official timetables
           #
           # Format: "YYYY-MM-DD HH:MM DURATION_MIN SESSION_TYPE RACE_NAME"
           #   DURATION_MIN = session length in minutes
           #   SESSION_TYPE = PRACTICE|QUALIFYING|SPRINT_QUALIFYING|SPRINT|RACE
           #
-          # Sprint weekends: China, Miami, Belgium, Austin, Sao Paulo, Qatar
+          # Sprint weekends: China, Canada, Great Britain, Netherlands, Singapore
           # -------------------------------------------------------------------
 
           SESSIONS=(
             # ================================================================
             # ROUND 1 — AUSTRALIAN GP (Melbourne, UTC+11)
             # ================================================================
-            # FP1: Fri Mar 14, 12:30 local = 01:30 UTC
-            "2025-03-14 01:30 60 PRACTICE Australian_GP"
-            # FP2: Fri Mar 14, 16:00 local = 05:00 UTC
-            "2025-03-14 05:00 60 PRACTICE Australian_GP"
-            # FP3: Sat Mar 15, 12:30 local = 01:30 UTC
-            "2025-03-15 01:30 60 PRACTICE Australian_GP"
-            # Qualifying: Sat Mar 15, 16:00 local = 05:00 UTC
-            "2025-03-15 05:00 60 QUALIFYING Australian_GP"
-            # Race: Sun Mar 16, 15:00 local = 04:00 UTC
-            "2025-03-16 04:00 120 RACE Australian_GP"
+            # FP1: Fri Mar 6, 13:30 local = 02:30 UTC
+            "2026-03-06 02:30 60 PRACTICE Australian_GP"
+            # FP2: Fri Mar 6, 17:00 local = 06:00 UTC
+            "2026-03-06 06:00 60 PRACTICE Australian_GP"
+            # FP3: Sat Mar 7, 12:30 local = 01:30 UTC
+            "2026-03-07 01:30 60 PRACTICE Australian_GP"
+            # Qualifying: Sat Mar 7, 16:00 local = 05:00 UTC
+            "2026-03-07 05:00 60 QUALIFYING Australian_GP"
+            # Race: Sun Mar 8, 15:00 local = 04:00 UTC
+            "2026-03-08 04:00 120 RACE Australian_GP"
 
             # ================================================================
             # ROUND 2 — CHINESE GP [SPRINT] (Shanghai, UTC+8)
             # ================================================================
-            # FP1: Fri Mar 21, 11:30 local = 03:30 UTC
-            "2025-03-21 03:30 60 PRACTICE Chinese_GP"
-            # Sprint Qualifying: Fri Mar 21, 15:30 local = 07:30 UTC
-            "2025-03-21 07:30 44 SPRINT_QUALIFYING Chinese_GP"
-            # Sprint: Sat Mar 22, 11:00 local = 03:00 UTC
-            "2025-03-22 03:00 30 SPRINT Chinese_GP"
-            # Qualifying: Sat Mar 22, 15:00 local = 07:00 UTC
-            "2025-03-22 07:00 60 QUALIFYING Chinese_GP"
-            # Race: Sun Mar 23, 15:00 local = 07:00 UTC
-            "2025-03-23 07:00 120 RACE Chinese_GP"
+            # FP1: Fri Mar 13, 13:30 local = 05:30 UTC
+            "2026-03-13 05:30 60 PRACTICE Chinese_GP"
+            # Sprint Qualifying: Fri Mar 13, 17:30 local = 09:30 UTC
+            "2026-03-13 09:30 44 SPRINT_QUALIFYING Chinese_GP"
+            # Sprint: Sat Mar 14, 12:00 local = 04:00 UTC
+            "2026-03-14 04:00 30 SPRINT Chinese_GP"
+            # Qualifying: Sat Mar 14, 16:00 local = 08:00 UTC
+            "2026-03-14 08:00 60 QUALIFYING Chinese_GP"
+            # Race: Sun Mar 15, 15:00 local = 07:00 UTC
+            "2026-03-15 07:00 120 RACE Chinese_GP"
 
             # ================================================================
             # ROUND 3 — JAPANESE GP (Suzuka, UTC+9)
             # ================================================================
-            # FP1: Fri Apr 4, 11:30 local = 02:30 UTC
-            "2025-04-04 02:30 60 PRACTICE Japanese_GP"
-            # FP2: Fri Apr 4, 15:00 local = 06:00 UTC
-            "2025-04-04 06:00 60 PRACTICE Japanese_GP"
-            # FP3: Sat Apr 5, 11:30 local = 02:30 UTC
-            "2025-04-05 02:30 60 PRACTICE Japanese_GP"
-            # Qualifying: Sat Apr 5, 15:00 local = 06:00 UTC
-            "2025-04-05 06:00 60 QUALIFYING Japanese_GP"
-            # Race: Sun Apr 6, 14:00 local = 05:00 UTC
-            "2025-04-06 05:00 120 RACE Japanese_GP"
+            # FP1: Fri Mar 27, 13:30 local = 04:30 UTC
+            "2026-03-27 04:30 60 PRACTICE Japanese_GP"
+            # FP2: Fri Mar 27, 17:00 local = 08:00 UTC
+            "2026-03-27 08:00 60 PRACTICE Japanese_GP"
+            # FP3: Sat Mar 28, 12:30 local = 03:30 UTC
+            "2026-03-28 03:30 60 PRACTICE Japanese_GP"
+            # Qualifying: Sat Mar 28, 16:00 local = 07:00 UTC
+            "2026-03-28 07:00 60 QUALIFYING Japanese_GP"
+            # Race: Sun Mar 29, 15:00 local = 06:00 UTC
+            "2026-03-29 06:00 120 RACE Japanese_GP"
 
             # ================================================================
-            # ROUND 4 — BAHRAIN GP (Sakhir, UTC+3)
+            # ROUND 4 — MIAMI GP (Miami, UTC-4 EDT)
             # ================================================================
-            # FP1: Fri Apr 11, 14:30 local = 11:30 UTC
-            "2025-04-11 11:30 60 PRACTICE Bahrain_GP"
-            # FP2: Fri Apr 11, 18:00 local = 15:00 UTC
-            "2025-04-11 15:00 60 PRACTICE Bahrain_GP"
-            # FP3: Sat Apr 12, 15:30 local = 12:30 UTC
-            "2025-04-12 12:30 60 PRACTICE Bahrain_GP"
-            # Qualifying: Sat Apr 12, 19:00 local = 16:00 UTC
-            "2025-04-12 16:00 60 QUALIFYING Bahrain_GP"
-            # Race: Sun Apr 13, 18:00 local = 15:00 UTC
-            "2025-04-13 15:00 120 RACE Bahrain_GP"
+            # FP1: Fri May 1, 13:30 local = 17:30 UTC
+            "2026-05-01 17:30 60 PRACTICE Miami_GP"
+            # FP2: Fri May 1, 17:00 local = 21:00 UTC
+            "2026-05-01 21:00 60 PRACTICE Miami_GP"
+            # FP3: Sat May 2, 12:30 local = 16:30 UTC
+            "2026-05-02 16:30 60 PRACTICE Miami_GP"
+            # Qualifying: Sat May 2, 16:00 local = 20:00 UTC
+            "2026-05-02 20:00 60 QUALIFYING Miami_GP"
+            # Race: Sun May 3, 15:00 local = 19:00 UTC
+            "2026-05-03 19:00 120 RACE Miami_GP"
 
             # ================================================================
-            # ROUND 5 — SAUDI ARABIAN GP (Jeddah, UTC+3)
+            # ROUND 5 — CANADIAN GP [SPRINT] (Montreal, UTC-4 EDT)
             # ================================================================
-            # FP1: Fri Apr 18, 16:30 local = 13:30 UTC
-            "2025-04-18 13:30 60 PRACTICE Saudi_Arabian_GP"
-            # FP2: Fri Apr 18, 20:00 local = 17:00 UTC
-            "2025-04-18 17:00 60 PRACTICE Saudi_Arabian_GP"
-            # FP3: Sat Apr 19, 16:30 local = 13:30 UTC
-            "2025-04-19 13:30 60 PRACTICE Saudi_Arabian_GP"
-            # Qualifying: Sat Apr 19, 20:00 local = 17:00 UTC
-            "2025-04-19 17:00 60 QUALIFYING Saudi_Arabian_GP"
-            # Race: Sun Apr 20, 20:00 local = 17:00 UTC
-            "2025-04-20 17:00 120 RACE Saudi_Arabian_GP"
+            # FP1: Fri May 22, 13:30 local = 17:30 UTC
+            "2026-05-22 17:30 60 PRACTICE Canadian_GP"
+            # Sprint Qualifying: Fri May 22, 17:30 local = 21:30 UTC
+            "2026-05-22 21:30 44 SPRINT_QUALIFYING Canadian_GP"
+            # Sprint: Sat May 23, 12:00 local = 16:00 UTC
+            "2026-05-23 16:00 30 SPRINT Canadian_GP"
+            # Qualifying: Sat May 23, 16:00 local = 20:00 UTC
+            "2026-05-23 20:00 60 QUALIFYING Canadian_GP"
+            # Race: Sun May 24, 15:00 local = 19:00 UTC
+            "2026-05-24 19:00 120 RACE Canadian_GP"
 
             # ================================================================
-            # ROUND 6 — MIAMI GP [SPRINT] (Miami, UTC-4 EDT)
+            # ROUND 6 — MONACO GP (Monte Carlo, UTC+2 CEST)
             # ================================================================
-            # FP1: Fri May 2, 12:30 local = 16:30 UTC
-            "2025-05-02 16:30 60 PRACTICE Miami_GP"
-            # Sprint Qualifying: Fri May 2, 16:30 local = 20:30 UTC
-            "2025-05-02 20:30 44 SPRINT_QUALIFYING Miami_GP"
-            # Sprint: Sat May 3, 12:00 local = 16:00 UTC
-            "2025-05-03 16:00 30 SPRINT Miami_GP"
-            # Qualifying: Sat May 3, 16:15 local = 20:15 UTC
-            "2025-05-03 20:15 60 QUALIFYING Miami_GP"
-            # Race: Sun May 4, 16:00 local = 20:00 UTC
-            "2025-05-04 20:00 120 RACE Miami_GP"
+            # FP1: Fri Jun 5, 13:30 local = 11:30 UTC
+            "2026-06-05 11:30 60 PRACTICE Monaco_GP"
+            # FP2: Fri Jun 5, 17:00 local = 15:00 UTC
+            "2026-06-05 15:00 60 PRACTICE Monaco_GP"
+            # FP3: Sat Jun 6, 12:30 local = 10:30 UTC
+            "2026-06-06 10:30 60 PRACTICE Monaco_GP"
+            # Qualifying: Sat Jun 6, 16:00 local = 14:00 UTC
+            "2026-06-06 14:00 60 QUALIFYING Monaco_GP"
+            # Race: Sun Jun 7, 15:00 local = 13:00 UTC
+            "2026-06-07 13:00 120 RACE Monaco_GP"
 
             # ================================================================
-            # ROUND 7 — EMILIA-ROMAGNA GP (Imola, UTC+2 CEST)
+            # ROUND 7 — BARCELONA-CATALUNYA GP (Barcelona, UTC+2 CEST)
             # ================================================================
-            # FP1: Fri May 16, 13:30 local = 11:30 UTC
-            "2025-05-16 11:30 60 PRACTICE Emilia_Romagna_GP"
-            # FP2: Fri May 16, 17:00 local = 15:00 UTC
-            "2025-05-16 15:00 60 PRACTICE Emilia_Romagna_GP"
-            # FP3: Sat May 17, 12:30 local = 10:30 UTC
-            "2025-05-17 10:30 60 PRACTICE Emilia_Romagna_GP"
-            # Qualifying: Sat May 17, 16:00 local = 14:00 UTC
-            "2025-05-17 14:00 60 QUALIFYING Emilia_Romagna_GP"
-            # Race: Sun May 18, 15:00 local = 13:00 UTC
-            "2025-05-18 13:00 120 RACE Emilia_Romagna_GP"
+            # FP1: Fri Jun 12, 13:30 local = 11:30 UTC
+            "2026-06-12 11:30 60 PRACTICE Barcelona-Catalunya_GP"
+            # FP2: Fri Jun 12, 17:00 local = 15:00 UTC
+            "2026-06-12 15:00 60 PRACTICE Barcelona-Catalunya_GP"
+            # FP3: Sat Jun 13, 12:30 local = 10:30 UTC
+            "2026-06-13 10:30 60 PRACTICE Barcelona-Catalunya_GP"
+            # Qualifying: Sat Jun 13, 16:00 local = 14:00 UTC
+            "2026-06-13 14:00 60 QUALIFYING Barcelona-Catalunya_GP"
+            # Race: Sun Jun 14, 15:00 local = 13:00 UTC
+            "2026-06-14 13:00 120 RACE Barcelona-Catalunya_GP"
 
             # ================================================================
-            # ROUND 8 — MONACO GP (Monte Carlo, UTC+2 CEST)
+            # ROUND 8 — AUSTRIAN GP (Spielberg, UTC+2 CEST)
             # ================================================================
-            # FP1: Fri May 23, 13:30 local = 11:30 UTC
-            "2025-05-23 11:30 60 PRACTICE Monaco_GP"
-            # FP2: Fri May 23, 17:00 local = 15:00 UTC
-            "2025-05-23 15:00 60 PRACTICE Monaco_GP"
-            # FP3: Sat May 24, 12:30 local = 10:30 UTC
-            "2025-05-24 10:30 60 PRACTICE Monaco_GP"
-            # Qualifying: Sat May 24, 16:00 local = 14:00 UTC
-            "2025-05-24 14:00 60 QUALIFYING Monaco_GP"
-            # Race: Sun May 25, 15:00 local = 13:00 UTC
-            "2025-05-25 13:00 120 RACE Monaco_GP"
+            # FP1: Fri Jun 26, 13:30 local = 11:30 UTC
+            "2026-06-26 11:30 60 PRACTICE Austrian_GP"
+            # FP2: Fri Jun 26, 17:00 local = 15:00 UTC
+            "2026-06-26 15:00 60 PRACTICE Austrian_GP"
+            # FP3: Sat Jun 27, 12:30 local = 10:30 UTC
+            "2026-06-27 10:30 60 PRACTICE Austrian_GP"
+            # Qualifying: Sat Jun 27, 16:00 local = 14:00 UTC
+            "2026-06-27 14:00 60 QUALIFYING Austrian_GP"
+            # Race: Sun Jun 28, 15:00 local = 13:00 UTC
+            "2026-06-28 13:00 120 RACE Austrian_GP"
 
             # ================================================================
-            # ROUND 9 — SPANISH GP (Barcelona, UTC+2 CEST)
+            # ROUND 9 — BRITISH GP [SPRINT] (Silverstone, UTC+1 BST)
             # ================================================================
-            # FP1: Fri May 30, 13:30 local = 11:30 UTC
-            "2025-05-30 11:30 60 PRACTICE Spanish_GP"
-            # FP2: Fri May 30, 17:00 local = 15:00 UTC
-            "2025-05-30 15:00 60 PRACTICE Spanish_GP"
-            # FP3: Sat May 31, 12:30 local = 10:30 UTC
-            "2025-05-31 10:30 60 PRACTICE Spanish_GP"
-            # Qualifying: Sat May 31, 16:00 local = 14:00 UTC
-            "2025-05-31 14:00 60 QUALIFYING Spanish_GP"
-            # Race: Sun Jun 1, 15:00 local = 13:00 UTC
-            "2025-06-01 13:00 120 RACE Spanish_GP"
+            # FP1: Fri Jul 3, 13:30 local = 12:30 UTC
+            "2026-07-03 12:30 60 PRACTICE British_GP"
+            # Sprint Qualifying: Fri Jul 3, 17:30 local = 16:30 UTC
+            "2026-07-03 16:30 44 SPRINT_QUALIFYING British_GP"
+            # Sprint: Sat Jul 4, 12:00 local = 11:00 UTC
+            "2026-07-04 11:00 30 SPRINT British_GP"
+            # Qualifying: Sat Jul 4, 16:00 local = 15:00 UTC
+            "2026-07-04 15:00 60 QUALIFYING British_GP"
+            # Race: Sun Jul 5, 15:00 local = 14:00 UTC
+            "2026-07-05 14:00 120 RACE British_GP"
 
             # ================================================================
-            # ROUND 10 — CANADIAN GP (Montreal, UTC-4 EDT)
+            # ROUND 10 — BELGIAN GP (Spa, UTC+2 CEST)
             # ================================================================
-            # FP1: Fri Jun 13, 13:30 local = 17:30 UTC
-            "2025-06-13 17:30 60 PRACTICE Canadian_GP"
-            # FP2: Fri Jun 13, 17:00 local = 21:00 UTC
-            "2025-06-13 21:00 60 PRACTICE Canadian_GP"
-            # FP3: Sat Jun 14, 12:30 local = 16:30 UTC
-            "2025-06-14 16:30 60 PRACTICE Canadian_GP"
-            # Qualifying: Sat Jun 14, 16:00 local = 20:00 UTC
-            "2025-06-14 20:00 60 QUALIFYING Canadian_GP"
-            # Race: Sun Jun 15, 14:00 local = 18:00 UTC
-            "2025-06-15 18:00 120 RACE Canadian_GP"
+            # FP1: Fri Jul 17, 13:30 local = 11:30 UTC
+            "2026-07-17 11:30 60 PRACTICE Belgian_GP"
+            # FP2: Fri Jul 17, 17:00 local = 15:00 UTC
+            "2026-07-17 15:00 60 PRACTICE Belgian_GP"
+            # FP3: Sat Jul 18, 12:30 local = 10:30 UTC
+            "2026-07-18 10:30 60 PRACTICE Belgian_GP"
+            # Qualifying: Sat Jul 18, 16:00 local = 14:00 UTC
+            "2026-07-18 14:00 60 QUALIFYING Belgian_GP"
+            # Race: Sun Jul 19, 15:00 local = 13:00 UTC
+            "2026-07-19 13:00 120 RACE Belgian_GP"
 
             # ================================================================
-            # ROUND 11 — AUSTRIAN GP (Spielberg, UTC+2 CEST)
+            # ROUND 11 — HUNGARIAN GP (Budapest, UTC+2 CEST)
             # ================================================================
-            # FP1: Fri Jun 27, 13:30 local = 11:30 UTC
-            "2025-06-27 11:30 60 PRACTICE Austrian_GP"
-            # FP2: Fri Jun 27, 17:00 local = 15:00 UTC
-            "2025-06-27 15:00 60 PRACTICE Austrian_GP"
-            # FP3: Sat Jun 28, 12:30 local = 10:30 UTC
-            "2025-06-28 10:30 60 PRACTICE Austrian_GP"
-            # Qualifying: Sat Jun 28, 16:00 local = 14:00 UTC
-            "2025-06-28 14:00 60 QUALIFYING Austrian_GP"
-            # Race: Sun Jun 29, 15:00 local = 13:00 UTC
-            "2025-06-29 13:00 120 RACE Austrian_GP"
+            # FP1: Fri Jul 24, 13:30 local = 11:30 UTC
+            "2026-07-24 11:30 60 PRACTICE Hungarian_GP"
+            # FP2: Fri Jul 24, 17:00 local = 15:00 UTC
+            "2026-07-24 15:00 60 PRACTICE Hungarian_GP"
+            # FP3: Sat Jul 25, 12:30 local = 10:30 UTC
+            "2026-07-25 10:30 60 PRACTICE Hungarian_GP"
+            # Qualifying: Sat Jul 25, 16:00 local = 14:00 UTC
+            "2026-07-25 14:00 60 QUALIFYING Hungarian_GP"
+            # Race: Sun Jul 26, 15:00 local = 13:00 UTC
+            "2026-07-26 13:00 120 RACE Hungarian_GP"
 
             # ================================================================
-            # ROUND 12 — BRITISH GP (Silverstone, UTC+1 BST)
+            # ROUND 12 — DUTCH GP [SPRINT] (Zandvoort, UTC+2 CEST)
             # ================================================================
-            # FP1: Fri Jul 4, 12:30 local = 11:30 UTC
-            "2025-07-04 11:30 60 PRACTICE British_GP"
-            # FP2: Fri Jul 4, 16:00 local = 15:00 UTC
-            "2025-07-04 15:00 60 PRACTICE British_GP"
-            # FP3: Sat Jul 5, 11:30 local = 10:30 UTC
-            "2025-07-05 10:30 60 PRACTICE British_GP"
-            # Qualifying: Sat Jul 5, 15:00 local = 14:00 UTC
-            "2025-07-05 14:00 60 QUALIFYING British_GP"
-            # Race: Sun Jul 6, 15:00 local = 14:00 UTC
-            "2025-07-06 14:00 120 RACE British_GP"
+            # FP1: Fri Aug 21, 13:30 local = 11:30 UTC
+            "2026-08-21 11:30 60 PRACTICE Dutch_GP"
+            # Sprint Qualifying: Fri Aug 21, 17:30 local = 15:30 UTC
+            "2026-08-21 15:30 44 SPRINT_QUALIFYING Dutch_GP"
+            # Sprint: Sat Aug 22, 12:00 local = 10:00 UTC
+            "2026-08-22 10:00 30 SPRINT Dutch_GP"
+            # Qualifying: Sat Aug 22, 16:00 local = 14:00 UTC
+            "2026-08-22 14:00 60 QUALIFYING Dutch_GP"
+            # Race: Sun Aug 23, 15:00 local = 13:00 UTC
+            "2026-08-23 13:00 120 RACE Dutch_GP"
 
             # ================================================================
-            # ROUND 13 — BELGIAN GP [SPRINT] (Spa, UTC+2 CEST)
+            # ROUND 13 — ITALIAN GP (Monza, UTC+2 CEST)
             # ================================================================
-            # FP1: Fri Jul 25, 12:30 local = 10:30 UTC
-            "2025-07-25 10:30 60 PRACTICE Belgian_GP"
-            # Sprint Qualifying: Fri Jul 25, 16:30 local = 14:30 UTC
-            "2025-07-25 14:30 44 SPRINT_QUALIFYING Belgian_GP"
-            # Sprint: Sat Jul 26, 12:00 local = 10:00 UTC
-            "2025-07-26 10:00 30 SPRINT Belgian_GP"
-            # Qualifying: Sat Jul 26, 16:00 local = 14:00 UTC
-            "2025-07-26 14:00 60 QUALIFYING Belgian_GP"
-            # Race: Sun Jul 27, 15:00 local = 13:00 UTC
-            "2025-07-27 13:00 120 RACE Belgian_GP"
+            # FP1: Fri Sep 4, 13:30 local = 11:30 UTC
+            "2026-09-04 11:30 60 PRACTICE Italian_GP"
+            # FP2: Fri Sep 4, 17:00 local = 15:00 UTC
+            "2026-09-04 15:00 60 PRACTICE Italian_GP"
+            # FP3: Sat Sep 5, 12:30 local = 10:30 UTC
+            "2026-09-05 10:30 60 PRACTICE Italian_GP"
+            # Qualifying: Sat Sep 5, 16:00 local = 14:00 UTC
+            "2026-09-05 14:00 60 QUALIFYING Italian_GP"
+            # Race: Sun Sep 6, 15:00 local = 13:00 UTC
+            "2026-09-06 13:00 120 RACE Italian_GP"
 
             # ================================================================
-            # ROUND 14 — HUNGARIAN GP (Budapest, UTC+2 CEST)
+            # ROUND 14 — SPANISH GP (Madrid, UTC+2 CEST)
             # ================================================================
-            # FP1: Fri Aug 1, 13:30 local = 11:30 UTC
-            "2025-08-01 11:30 60 PRACTICE Hungarian_GP"
-            # FP2: Fri Aug 1, 17:00 local = 15:00 UTC
-            "2025-08-01 15:00 60 PRACTICE Hungarian_GP"
-            # FP3: Sat Aug 2, 12:30 local = 10:30 UTC
-            "2025-08-02 10:30 60 PRACTICE Hungarian_GP"
-            # Qualifying: Sat Aug 2, 16:00 local = 14:00 UTC
-            "2025-08-02 14:00 60 QUALIFYING Hungarian_GP"
-            # Race: Sun Aug 3, 15:00 local = 13:00 UTC
-            "2025-08-03 13:00 120 RACE Hungarian_GP"
+            # FP1: Fri Sep 11, 13:30 local = 11:30 UTC
+            "2026-09-11 11:30 60 PRACTICE Spanish_GP"
+            # FP2: Fri Sep 11, 17:00 local = 15:00 UTC
+            "2026-09-11 15:00 60 PRACTICE Spanish_GP"
+            # FP3: Sat Sep 12, 12:30 local = 10:30 UTC
+            "2026-09-12 10:30 60 PRACTICE Spanish_GP"
+            # Qualifying: Sat Sep 12, 16:00 local = 14:00 UTC
+            "2026-09-12 14:00 60 QUALIFYING Spanish_GP"
+            # Race: Sun Sep 13, 15:00 local = 13:00 UTC
+            "2026-09-13 13:00 120 RACE Spanish_GP"
 
             # ================================================================
-            # ROUND 15 — DUTCH GP (Zandvoort, UTC+2 CEST)
+            # ROUND 15 — AZERBAIJAN GP (Baku, UTC+4)
             # ================================================================
-            # FP1: Fri Aug 29, 12:30 local = 10:30 UTC
-            "2025-08-29 10:30 60 PRACTICE Dutch_GP"
-            # FP2: Fri Aug 29, 16:00 local = 14:00 UTC
-            "2025-08-29 14:00 60 PRACTICE Dutch_GP"
-            # FP3: Sat Aug 30, 11:30 local = 09:30 UTC
-            "2025-08-30 09:30 60 PRACTICE Dutch_GP"
-            # Qualifying: Sat Aug 30, 15:00 local = 13:00 UTC
-            "2025-08-30 13:00 60 QUALIFYING Dutch_GP"
-            # Race: Sun Aug 31, 15:00 local = 13:00 UTC
-            "2025-08-31 13:00 120 RACE Dutch_GP"
+            # FP1: Fri Sep 25, 13:30 local = 09:30 UTC
+            "2026-09-25 09:30 60 PRACTICE Azerbaijan_GP"
+            # FP2: Fri Sep 25, 17:00 local = 13:00 UTC
+            "2026-09-25 13:00 60 PRACTICE Azerbaijan_GP"
+            # FP3: Sat Sep 26, 12:30 local = 08:30 UTC
+            "2026-09-26 08:30 60 PRACTICE Azerbaijan_GP"
+            # Qualifying: Sat Sep 26, 16:00 local = 12:00 UTC
+            "2026-09-26 12:00 60 QUALIFYING Azerbaijan_GP"
+            # Race: Sun Sep 27, 15:00 local = 11:00 UTC
+            "2026-09-27 11:00 120 RACE Azerbaijan_GP"
 
             # ================================================================
-            # ROUND 16 — ITALIAN GP (Monza, UTC+2 CEST)
+            # ROUND 16 — SINGAPORE GP [SPRINT] (Marina Bay, UTC+8)
             # ================================================================
-            # FP1: Fri Sep 5, 13:30 local = 11:30 UTC
-            "2025-09-05 11:30 60 PRACTICE Italian_GP"
-            # FP2: Fri Sep 5, 17:00 local = 15:00 UTC
-            "2025-09-05 15:00 60 PRACTICE Italian_GP"
-            # FP3: Sat Sep 6, 12:30 local = 10:30 UTC
-            "2025-09-06 10:30 60 PRACTICE Italian_GP"
-            # Qualifying: Sat Sep 6, 16:00 local = 14:00 UTC
-            "2025-09-06 14:00 60 QUALIFYING Italian_GP"
-            # Race: Sun Sep 7, 15:00 local = 13:00 UTC
-            "2025-09-07 13:00 120 RACE Italian_GP"
+            # FP1: Fri Oct 9, 13:30 local = 05:30 UTC
+            "2026-10-09 05:30 60 PRACTICE Singapore_GP"
+            # Sprint Qualifying: Fri Oct 9, 17:30 local = 09:30 UTC
+            "2026-10-09 09:30 44 SPRINT_QUALIFYING Singapore_GP"
+            # Sprint: Sat Oct 10, 12:00 local = 04:00 UTC
+            "2026-10-10 04:00 30 SPRINT Singapore_GP"
+            # Qualifying: Sat Oct 10, 16:00 local = 08:00 UTC
+            "2026-10-10 08:00 60 QUALIFYING Singapore_GP"
+            # Race: Sun Oct 11, 15:00 local = 07:00 UTC
+            "2026-10-11 07:00 120 RACE Singapore_GP"
 
             # ================================================================
-            # ROUND 17 — AZERBAIJAN GP (Baku, UTC+4)
+            # ROUND 17 — UNITED STATES GP (Austin, UTC-5 CDT)
             # ================================================================
-            # FP1: Fri Sep 19, 12:30 local = 08:30 UTC
-            "2025-09-19 08:30 60 PRACTICE Azerbaijan_GP"
-            # FP2: Fri Sep 19, 16:00 local = 12:00 UTC
-            "2025-09-19 12:00 60 PRACTICE Azerbaijan_GP"
-            # FP3: Sat Sep 20, 12:30 local = 08:30 UTC
-            "2025-09-20 08:30 60 PRACTICE Azerbaijan_GP"
-            # Qualifying: Sat Sep 20, 16:00 local = 12:00 UTC
-            "2025-09-20 12:00 60 QUALIFYING Azerbaijan_GP"
-            # Race: Sun Sep 21, 15:00 local = 11:00 UTC
-            "2025-09-21 11:00 120 RACE Azerbaijan_GP"
+            # FP1: Fri Oct 23, 13:30 local = 18:30 UTC
+            "2026-10-23 18:30 60 PRACTICE United_States_GP"
+            # FP2: Fri Oct 23, 17:00 local = 22:00 UTC
+            "2026-10-23 22:00 60 PRACTICE United_States_GP"
+            # FP3: Sat Oct 24, 12:30 local = 17:30 UTC
+            "2026-10-24 17:30 60 PRACTICE United_States_GP"
+            # Qualifying: Sat Oct 24, 16:00 local = 21:00 UTC
+            "2026-10-24 21:00 60 QUALIFYING United_States_GP"
+            # Race: Sun Oct 25, 15:00 local = 20:00 UTC
+            "2026-10-25 20:00 120 RACE United_States_GP"
 
             # ================================================================
-            # ROUND 18 — SINGAPORE GP (Marina Bay, UTC+8)
+            # ROUND 18 — MEXICO CITY GP (Mexico City, UTC-6 CST)
             # ================================================================
-            # FP1: Fri Oct 3, 17:30 local = 09:30 UTC
-            "2025-10-03 09:30 60 PRACTICE Singapore_GP"
-            # FP2: Fri Oct 3, 21:00 local = 13:00 UTC
-            "2025-10-03 13:00 60 PRACTICE Singapore_GP"
-            # FP3: Sat Oct 4, 17:30 local = 09:30 UTC
-            "2025-10-04 09:30 60 PRACTICE Singapore_GP"
-            # Qualifying: Sat Oct 4, 21:00 local = 13:00 UTC
-            "2025-10-04 13:00 60 QUALIFYING Singapore_GP"
-            # Race: Sun Oct 5, 20:00 local = 12:00 UTC
-            "2025-10-05 12:00 120 RACE Singapore_GP"
+            # FP1: Fri Oct 30, 13:30 local = 19:30 UTC
+            "2026-10-30 19:30 60 PRACTICE Mexico_City_GP"
+            # FP2: Fri Oct 30, 17:00 local = 23:00 UTC
+            "2026-10-30 23:00 60 PRACTICE Mexico_City_GP"
+            # FP3: Sat Oct 31, 12:30 local = 18:30 UTC
+            "2026-10-31 18:30 60 PRACTICE Mexico_City_GP"
+            # Qualifying: Sat Oct 31, 16:00 local = 22:00 UTC
+            "2026-10-31 22:00 60 QUALIFYING Mexico_City_GP"
+            # Race: Sun Nov 1, 15:00 local = 21:00 UTC
+            "2026-11-01 21:00 120 RACE Mexico_City_GP"
 
             # ================================================================
-            # ROUND 19 — UNITED STATES GP [SPRINT] (Austin, UTC-5 CDT)
+            # ROUND 19 — LAS VEGAS GP (Las Vegas, UTC-8 PST)
+            # Sessions run Thu/Fri/Sat local time
             # ================================================================
-            # FP1: Fri Oct 17, 12:30 local = 17:30 UTC
-            "2025-10-17 17:30 60 PRACTICE United_States_GP"
-            # Sprint Qualifying: Fri Oct 17, 16:30 local = 21:30 UTC
-            "2025-10-17 21:30 44 SPRINT_QUALIFYING United_States_GP"
-            # Sprint: Sat Oct 18, 12:00 local = 17:00 UTC
-            "2025-10-18 17:00 30 SPRINT United_States_GP"
-            # Qualifying: Sat Oct 18, 16:00 local = 21:00 UTC
-            "2025-10-18 21:00 60 QUALIFYING United_States_GP"
-            # Race: Sun Oct 19, 14:00 local = 19:00 UTC
-            "2025-10-19 19:00 120 RACE United_States_GP"
+            # FP1: Thu Nov 19, 18:30 local = 02:30 UTC (Fri Nov 20)
+            "2026-11-20 02:30 60 PRACTICE Las_Vegas_GP"
+            # FP2: Thu Nov 19, 22:00 local = 06:00 UTC (Fri Nov 20)
+            "2026-11-20 06:00 60 PRACTICE Las_Vegas_GP"
+            # FP3: Fri Nov 20, 18:30 local = 02:30 UTC (Sat Nov 21)
+            "2026-11-21 02:30 60 PRACTICE Las_Vegas_GP"
+            # Qualifying: Fri Nov 20, 22:00 local = 06:00 UTC (Sat Nov 21)
+            "2026-11-21 06:00 60 QUALIFYING Las_Vegas_GP"
+            # Race: Sat Nov 21, 22:00 local = 06:00 UTC (Sun Nov 22)
+            "2026-11-22 06:00 120 RACE Las_Vegas_GP"
 
             # ================================================================
-            # ROUND 20 — MEXICO CITY GP (Mexico City, UTC-6 CST)
+            # ROUND 20 — QATAR GP (Lusail, UTC+3)
             # ================================================================
-            # FP1: Fri Oct 24, 12:30 local = 18:30 UTC
-            "2025-10-24 18:30 60 PRACTICE Mexico_City_GP"
-            # FP2: Fri Oct 24, 16:00 local = 22:00 UTC
-            "2025-10-24 22:00 60 PRACTICE Mexico_City_GP"
-            # FP3: Sat Oct 25, 11:30 local = 17:30 UTC
-            "2025-10-25 17:30 60 PRACTICE Mexico_City_GP"
-            # Qualifying: Sat Oct 25, 15:00 local = 21:00 UTC
-            "2025-10-25 21:00 60 QUALIFYING Mexico_City_GP"
-            # Race: Sun Oct 26, 14:00 local = 20:00 UTC
-            "2025-10-26 20:00 120 RACE Mexico_City_GP"
+            # FP1: Fri Nov 27, 13:30 local = 10:30 UTC
+            "2026-11-27 10:30 60 PRACTICE Qatar_GP"
+            # FP2: Fri Nov 27, 17:00 local = 14:00 UTC
+            "2026-11-27 14:00 60 PRACTICE Qatar_GP"
+            # FP3: Sat Nov 28, 12:30 local = 09:30 UTC
+            "2026-11-28 09:30 60 PRACTICE Qatar_GP"
+            # Qualifying: Sat Nov 28, 16:00 local = 13:00 UTC
+            "2026-11-28 13:00 60 QUALIFYING Qatar_GP"
+            # Race: Sun Nov 29, 15:00 local = 12:00 UTC
+            "2026-11-29 12:00 120 RACE Qatar_GP"
 
             # ================================================================
-            # ROUND 21 — SAO PAULO GP [SPRINT] (Interlagos, UTC-3 BRT)
+            # ROUND 21 — ABU DHABI GP (Yas Marina, UTC+4)
             # ================================================================
-            # FP1: Fri Nov 7, 11:30 local = 14:30 UTC
-            "2025-11-07 14:30 60 PRACTICE Sao_Paulo_GP"
-            # Sprint Qualifying: Fri Nov 7, 15:30 local = 18:30 UTC
-            "2025-11-07 18:30 44 SPRINT_QUALIFYING Sao_Paulo_GP"
-            # Sprint: Sat Nov 8, 11:00 local = 14:00 UTC
-            "2025-11-08 14:00 30 SPRINT Sao_Paulo_GP"
-            # Qualifying: Sat Nov 8, 15:00 local = 18:00 UTC
-            "2025-11-08 18:00 60 QUALIFYING Sao_Paulo_GP"
-            # Race: Sun Nov 9, 14:00 local = 17:00 UTC
-            "2025-11-09 17:00 120 RACE Sao_Paulo_GP"
-
-            # ================================================================
-            # ROUND 22 — LAS VEGAS GP (Las Vegas, UTC-8 PST)
-            # ================================================================
-            # FP1: Thu Nov 20, 16:30 local = 00:30 UTC (Fri Nov 21)
-            "2025-11-21 00:30 60 PRACTICE Las_Vegas_GP"
-            # FP2: Thu Nov 20, 20:00 local = 04:00 UTC (Fri Nov 21)
-            "2025-11-21 04:00 60 PRACTICE Las_Vegas_GP"
-            # FP3: Fri Nov 21, 16:30 local = 00:30 UTC (Sat Nov 22)
-            "2025-11-22 00:30 60 PRACTICE Las_Vegas_GP"
-            # Qualifying: Fri Nov 21, 20:00 local = 04:00 UTC (Sat Nov 22)
-            "2025-11-22 04:00 60 QUALIFYING Las_Vegas_GP"
-            # Race: Sat Nov 22, 20:00 local = 04:00 UTC (Sun Nov 23)
-            "2025-11-23 04:00 120 RACE Las_Vegas_GP"
-
-            # ================================================================
-            # ROUND 23 — QATAR GP [SPRINT] (Lusail, UTC+3)
-            # ================================================================
-            # FP1: Fri Nov 28, 16:30 local = 13:30 UTC
-            "2025-11-28 13:30 60 PRACTICE Qatar_GP"
-            # Sprint Qualifying: Fri Nov 28, 20:30 local = 17:30 UTC
-            "2025-11-28 17:30 44 SPRINT_QUALIFYING Qatar_GP"
-            # Sprint: Sat Nov 29, 17:00 local = 14:00 UTC
-            "2025-11-29 14:00 30 SPRINT Qatar_GP"
-            # Qualifying: Sat Nov 29, 21:00 local = 18:00 UTC
-            "2025-11-29 18:00 60 QUALIFYING Qatar_GP"
-            # Race: Sun Nov 30, 19:00 local = 16:00 UTC
-            "2025-11-30 16:00 120 RACE Qatar_GP"
-
-            # ================================================================
-            # ROUND 24 — ABU DHABI GP (Yas Marina, UTC+4)
-            # ================================================================
-            # FP1: Fri Dec 5, 13:30 local = 09:30 UTC
-            "2025-12-05 09:30 60 PRACTICE Abu_Dhabi_GP"
-            # FP2: Fri Dec 5, 17:00 local = 13:00 UTC
-            "2025-12-05 13:00 60 PRACTICE Abu_Dhabi_GP"
-            # FP3: Sat Dec 6, 14:30 local = 10:30 UTC
-            "2025-12-06 10:30 60 PRACTICE Abu_Dhabi_GP"
-            # Qualifying: Sat Dec 6, 18:00 local = 14:00 UTC
-            "2025-12-06 14:00 60 QUALIFYING Abu_Dhabi_GP"
-            # Race: Sun Dec 7, 17:00 local = 13:00 UTC
-            "2025-12-07 13:00 120 RACE Abu_Dhabi_GP"
+            # FP1: Fri Dec 4, 13:30 local = 09:30 UTC
+            "2026-12-04 09:30 60 PRACTICE Abu_Dhabi_GP"
+            # FP2: Fri Dec 4, 17:00 local = 13:00 UTC
+            "2026-12-04 13:00 60 PRACTICE Abu_Dhabi_GP"
+            # FP3: Sat Dec 5, 12:30 local = 08:30 UTC
+            "2026-12-05 08:30 60 PRACTICE Abu_Dhabi_GP"
+            # Qualifying: Sat Dec 5, 16:00 local = 12:00 UTC
+            "2026-12-05 12:00 60 QUALIFYING Abu_Dhabi_GP"
+            # Race: Sun Dec 6, 15:00 local = 11:00 UTC
+            "2026-12-06 11:00 120 RACE Abu_Dhabi_GP"
           )
 
           # -------------------------------------------------------------------
