@@ -36,10 +36,19 @@
     "day": 2
   },
   "screensaver_timeout_secs": 30,
-  "screensaver_mode": 1,
+  "screensaver_mode": 3,
   "pomo_work_mins": 10,
   "pomo_break_mins": 5,
   "brightness": 210,
   "dim_brightness": 60,
-  "dim_timeout_secs": 30
+  "dim_timeout_secs": 30,
+  "train_max_services": 5,
+  "refresh_weather_mins": 5,
+  "refresh_trains_mins": 2,
+  "refresh_crypto_mins": 3,
+  "refresh_news_mins": 10,
+  "refresh_f1_mins": 30,
+  "refresh_messages_mins": 2,
+  "f1_max_drivers": 10,
+  "news_max_items": 5
 }
