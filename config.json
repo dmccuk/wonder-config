@@ -50,5 +50,7 @@
   "refresh_f1_mins": 30,
   "refresh_messages_mins": 2,
   "f1_max_drivers": 10,
-  "news_max_items": 5
+  "news_max_items": 5,
+  "f1_session_active": true,
+  "f1_session_type": "PRACTICE"
 }
