@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Wonder Device — Message</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px 0;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00e5ff;
+            letter-spacing: 2px;
+        }
+        .header .owner {
+            font-size: 18px;
+            color: #b0b0b0;
+            margin-top: 8px;
+        }
+        .header .device-id {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+            font-family: monospace;
+        }
+        .error-box {
+            background: #1a0a0a;
+            border: 2px solid #ff4444;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            color: #ff6666;
+        }
+        .send-box {
+            background: #111128;
+            border: 2px solid #1a1a3a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .send-box h2 {
+            font-size: 16px;
+            color: #00e5ff;
+            margin-bottom: 16px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #2a2a4a;
+            border-radius: 8px;
+            background: #0a0a1a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            margin-bottom: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus, textarea:focus {
+            border-color: #00e5ff;
+        }
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .priority-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .priority-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #2a2a4a;
+            border-radius: 8px;
+            background: none;
+            color: #888;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .priority-btn.active {
+            border-color: #00e5ff;
+            color: #00e5ff;
+            background: rgba(0, 229, 255, 0.1);
+        }
+        .priority-btn.urgent.active {
+            border-color: #ff4444;
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+        .send-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #00e5ff;
+            color: #0a0a1a;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.2s;
+        }
+        .send-btn:hover { background: #00b8d4; }
+        .send-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .status {
+            text-align: center;
+            padding: 8px;
+            font-size: 14px;
+            color: #4caf50;
+            display: none;
+        }
+        .conversation {
+            margin-top: 8px;
+        }
+        .conversation h2 {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .msg {
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 85%;
+        }
+        .msg.incoming {
+            background: #1a1a3a;
+            border: 1px solid #2a2a4a;
+            margin-right: auto;
+        }
+        .msg.reply {
+            background: #0a2a2a;
+            border: 1px solid #00e5ff33;
+            margin-left: auto;
+            text-align: right;
+        }
+        .msg .from {
+            font-size: 12px;
+            font-weight: 600;
+            color: #00e5ff;
+            margin-bottom: 4px;
+        }
+        .msg.reply .from {
+            color: #4caf50;
+        }
+        .msg .text {
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        .msg .time {
+            font-size: 11px;
+            color: #555;
+            margin-top: 4px;
+        }
+        .msg.urgent {
+            border-color: #ff4444;
+        }
+        .msg.urgent .from {
+            color: #ff4444;
+        }
+        .empty {
+            text-align: center;
+            color: #444;
+            padding: 24px;
+            font-style: italic;
+        }
+        .refresh-note {
+            text-align: center;
+            font-size: 11px;
+            color: #444;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WONDER DEVICE</h1>
+            <div class="owner" id="ownerName">Loading...</div>
+            <div class="device-id" id="deviceCode"></div>
+        </div>
+
+        <div id="errorBox" class="error-box" style="display:none">
+            <p>Device not found</p>
+            <p style="font-size:14px;margin-top:8px;color:#999">Check the URL and try again</p>
+        </div>
+
+        <div id="mainContent" style="display:none">
+            <div class="send-box">
+                <h2>Send a message</h2>
+                <input type="text" id="fromName" placeholder="Your name" maxlength="30">
+                <textarea id="msgText" placeholder="Type your message..." maxlength="280"></textarea>
+                <div class="priority-row">
+                    <button class="priority-btn active" id="btnNormal" onclick="setPriority('normal')">Normal</button>
+                    <button class="priority-btn urgent" id="btnUrgent" onclick="setPriority('urgent')">Urgent</button>
+                </div>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send Message</button>
+                <div class="status" id="status"></div>
+            </div>
+
+            <div class="conversation">
+                <h2>Conversation</h2>
+                <div id="messages"></div>
+            </div>
+        </div>
+
+        <div class="refresh-note">Auto-refreshes every 15 seconds</div>
+    </div>
+
+    <script>
+        const API = 'https://wonder-msg.dmccuk.workers.dev';
+        let deviceId = '';
+        let priority = 'normal';
+
+        // Get device ID from URL path: /m/XZJEC6
+        const pathParts = window.location.pathname.split('/');
+        deviceId = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2] || '';
+        // Also check hash: #XZJEC6
+        if (!deviceId || deviceId === 'm' || deviceId === 'index.html') {
+            deviceId = window.location.hash.replace('#', '');
+        }
+        document.getElementById('deviceCode').textContent = deviceId ? `Device: ${deviceId}` : '';
+
+        function setPriority(p) {
+            priority = p;
+            document.getElementById('btnNormal').classList.toggle('active', p === 'normal');
+            document.getElementById('btnUrgent').classList.toggle('active', p === 'urgent');
+        }
+
+        async function loadMessages() {
+            if (!deviceId) {
+                document.getElementById('errorBox').style.display = 'block';
+                return;
+            }
+            try {
+                const res = await fetch(`${API}/api/msg/${deviceId}`);
+                const data = await res.json();
+                if (!data.ok) {
+                    document.getElementById('errorBox').style.display = 'block';
+                    return;
+                }
+                document.getElementById('mainContent').style.display = 'block';
+                document.getElementById('ownerName').textContent = `Send a message to ${data.owner}`;
+
+                // Merge messages and replies, sort by time
+                const all = [];
+                (data.messages || []).forEach(m => all.push({ ...m, type: 'msg' }));
+                (data.replies || []).forEach(r => all.push({ ...r, type: 'reply', from: data.owner }));
+                all.sort((a, b) => new Date(a.time) - new Date(b.time));
+
+                const container = document.getElementById('messages');
+                if (all.length === 0) {
+                    container.innerHTML = '<div class="empty">No messages yet. Be the first!</div>';
+                    return;
+                }
+
+                container.innerHTML = all.map(m => {
+                    const time = new Date(m.time).toLocaleString('en-GB', {
+                        hour: '2-digit', minute: '2-digit',
+                        day: 'numeric', month: 'short'
+                    });
+                    const isReply = m.type === 'reply';
+                    const urgentClass = m.priority === 'urgent' ? ' urgent' : '';
+                    return `<div class="msg ${isReply ? 'reply' : 'incoming'}${urgentClass}">
+                        <div class="from">${isReply ? m.from + ' (device)' : m.from}</div>
+                        <div class="text">${m.text}</div>
+                        <div class="time">${time}</div>
+                    </div>`;
+                }).join('');
+
+                // Scroll to bottom
+                container.scrollTop = container.scrollHeight;
+            } catch (e) {
+                console.error('Load error:', e);
+            }
+        }
+
+        async function sendMessage() {
+            const from = document.getElementById('fromName').value.trim() || 'Anonymous';
+            const text = document.getElementById('msgText').value.trim();
+            if (!text) return;
+
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+
+            try {
+                const res = await fetch(`${API}/api/msg/${deviceId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ from, text, priority }),
+                });
+                const data = await res.json();
+
+                const status = document.getElementById('status');
+                if (data.ok) {
+                    status.style.display = 'block';
+                    status.style.color = '#4caf50';
+                    status.textContent = 'Message sent!';
+                    document.getElementById('msgText').value = '';
+                    loadMessages();
+                } else {
+                    status.style.display = 'block';
+                    status.style.color = '#ff4444';
+                    status.textContent = data.error || 'Failed to send';
+                }
+                setTimeout(() => status.style.display = 'none', 3000);
+            } catch (e) {
+                console.error('Send error:', e);
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Send Message';
+        }
+
+        // Save name in localStorage
+        const savedName = localStorage.getItem('wonder_name');
+        if (savedName) document.getElementById('fromName').value = savedName;
+        document.getElementById('fromName').addEventListener('change', function() {
+            localStorage.setItem('wonder_name', this.value);
+        });
+
+        // Load and auto-refresh
+        loadMessages();
+        setInterval(loadMessages, 15000);
+    </script>
+</body>
+</html>
