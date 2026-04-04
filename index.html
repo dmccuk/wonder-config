@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <title>Wonder Device — Your world at a glance</title>
-    <meta name="description" content="A swipe-driven AMOLED smart display. Live weather, trains, crypto, F1, messages and more — all on your desk.">
+    <title>Wonder Device — AI-Powered Smart Display</title>
+    <meta name="description" content="An AI-powered AMOLED smart display with voice control. Live weather, trains, crypto, F1, internet radio, messages and more — just ask.">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -109,7 +109,7 @@
             font-size: clamp(16px, 2.5vw, 20px);
             color: var(--text2);
             font-weight: 400;
-            max-width: 540px;
+            max-width: 600px;
             margin: 0 auto;
             line-height: 1.6;
         }
@@ -154,30 +154,55 @@
         }
         .hero-devices img:hover { transform: translateY(-8px); }
 
-        /* ── CONFIGURABLE ────────────────────────────────────── */
-        .configurable {
-            background: var(--bg2);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
+        /* ── AI CONTROL ─────────────────────────────────────── */
+        .ai-section {
+            background: var(--navy);
+            color: #fff;
             padding: 80px 24px;
         }
-        .config-inner { max-width: 1100px; margin: 0 auto; }
-        .config-row {
+        .ai-inner { max-width: 1100px; margin: 0 auto; }
+        .ai-row {
             display: flex;
             align-items: center;
             gap: 60px;
         }
-        .config-img {
+        .ai-img {
             flex: 0 0 320px;
             text-align: center;
         }
-        .config-img img {
+        .ai-img img {
             width: 100%;
             max-width: 300px;
             border-radius: 16px;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
-        .config-text { flex: 1; }
+        .ai-text { flex: 1; }
+        .ai-text h2 {
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+        .ai-text h2 span { color: var(--accent); }
+        .ai-text p {
+            color: #b0b8c8;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .ai-commands {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .ai-cmd {
+            background: rgba(0, 184, 212, 0.15);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
 
         /* ── SECTION SHARED ──────────────────────────────────── */
         .section-title {
@@ -197,16 +222,16 @@
         }
 
         /* ── FEATURES ─────────────────────────────────────────── */
-        .features {
-            max-width: 1100px; margin: 0 auto;
-            padding: 100px 24px;
-        }
+        .features { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
 
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
         }
+
         .feature-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -216,286 +241,150 @@
         }
         .feature-card:hover {
             border-color: var(--accent);
+            box-shadow: var(--shadow-md);
             transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
         }
-        .feature-icon {
-            width: 48px; height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin-bottom: 16px;
-        }
-        .icon-cyan   { background: rgba(0,184,212,0.1); }
-        .icon-green  { background: rgba(0,201,122,0.1); }
-        .icon-amber  { background: rgba(245,166,35,0.1); }
-        .icon-pink   { background: rgba(229,62,92,0.1); }
-        .icon-purple { background: rgba(102,127,255,0.1); }
         .feature-card h3 {
-            font-size: 17px; font-weight: 700;
-            margin-bottom: 8px;
+            font-size: 17px; font-weight: 700; margin-bottom: 8px;
             color: var(--navy);
         }
         .feature-card p {
-            color: var(--text2); font-size: 14px;
-            line-height: 1.6;
+            font-size: 14px; color: var(--text2); line-height: 1.6;
         }
-        .feature-card .tag {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+        .feature-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
         }
-        .tag-free { background: rgba(0,201,122,0.1); color: var(--success); }
-        .tag-live { background: rgba(0,184,212,0.1); color: var(--accent2); }
-        .tag-fun  { background: rgba(245,166,35,0.1); color: var(--warn); }
+        .icon-cyan { background: rgba(0,184,212,0.1); }
+        .icon-green { background: rgba(0,201,122,0.1); }
+        .icon-amber { background: rgba(245,166,35,0.1); }
+        .icon-pink { background: rgba(229,62,92,0.1); }
+        .icon-purple { background: rgba(139,92,246,0.1); }
 
-        /* ── SHOWCASE (replaces old video section) ───────────── */
-        .showcase {
-            background: var(--bg2);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            padding: 100px 24px;
+        .tag {
+            display: inline-block; margin-top: 12px;
+            font-size: 11px; font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 3px 10px; border-radius: 6px;
         }
-        .showcase-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        .tag-live { background: rgba(0,201,122,0.1); color: var(--success); }
+        .tag-free { background: rgba(0,184,212,0.1); color: var(--accent); }
+        .tag-fun { background: rgba(245,166,35,0.1); color: var(--warn); }
+        .tag-ai { background: rgba(139,92,246,0.1); color: #8b5cf6; }
+
+        /* ── SHOWCASE ─────────────────────────────────────────── */
+        .showcase { padding: 80px 24px; }
+        .showcase-inner { max-width: 1100px; margin: 0 auto; }
         .showcase-row {
             display: flex;
             align-items: center;
             gap: 60px;
             margin-bottom: 80px;
         }
-        .showcase-row:last-child { margin-bottom: 0; }
         .showcase-row.reverse { flex-direction: row-reverse; }
-        .showcase-img {
-            flex: 0 0 280px;
-            text-align: center;
-        }
+        .showcase-img { flex: 0 0 380px; text-align: center; }
         .showcase-img img {
             height: 400px;
             object-fit: contain;
-            filter: drop-shadow(0 16px 40px rgba(0,0,0,0.12));
-            transition: transform 0.4s;
+            filter: drop-shadow(0 12px 30px rgba(0,0,0,0.12));
+            border-radius: 16px;
         }
-        .showcase-img img:hover { transform: scale(1.03); }
-        .showcase-text {
-            flex: 1;
-        }
-        .showcase-text .label {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-        .label-cyan  { background: rgba(0,184,212,0.1); color: var(--accent2); }
-        .label-green { background: rgba(0,201,122,0.1); color: var(--success); }
-        .label-amber { background: rgba(245,166,35,0.1); color: var(--warn); }
-        .label-pink  { background: rgba(229,62,92,0.1); color: var(--danger); }
+        .showcase-text { flex: 1; }
         .showcase-text h3 {
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 26px; font-weight: 800; margin-bottom: 12px;
             color: var(--navy);
-            margin-bottom: 12px;
         }
         .showcase-text p {
-            color: var(--text2);
-            font-size: 15px;
-            line-height: 1.7;
-            max-width: 440px;
+            color: var(--text2); font-size: 15px; line-height: 1.7;
+            max-width: 400px;
         }
+        .label {
+            display: inline-block; padding: 4px 12px;
+            border-radius: 6px; font-size: 11px;
+            font-weight: 700; letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .label-green { background: rgba(0,201,122,0.1); color: var(--success); }
+        .label-amber { background: rgba(245,166,35,0.1); color: var(--warn); }
+        .label-pink { background: rgba(229,62,92,0.1); color: var(--danger); }
+        .label-cyan { background: rgba(0,184,212,0.1); color: var(--accent); }
+        .label-purple { background: rgba(139,92,246,0.1); color: #8b5cf6; }
 
         /* ── SPECS ────────────────────────────────────────────── */
-        .specs {
-            padding: 100px 24px;
-        }
-        .specs-inner {
-            max-width: 1100px; margin: 0 auto;
-        }
+        .specs { background: var(--bg2); padding: 80px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .specs-inner { max-width: 900px; margin: 0 auto; }
         .spec-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
         .spec-item {
-            text-align: center;
-            padding: 28px 20px;
-            background: var(--bg2);
-            border-radius: 16px;
+            text-align: center; padding: 24px 16px;
+            background: var(--card);
+            border-radius: 12px;
             border: 1px solid var(--border);
-            transition: all 0.3s;
         }
-        .spec-item:hover {
-            border-color: var(--accent);
-            box-shadow: var(--shadow-md);
-        }
-        .spec-val {
-            font-size: 28px; font-weight: 800;
-            color: var(--navy);
-            margin-bottom: 4px;
-        }
-        .spec-label {
-            color: var(--text3); font-size: 12px;
-            font-weight: 600; letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+        .spec-val { font-size: 24px; font-weight: 800; color: var(--accent); }
+        .spec-label { font-size: 12px; color: var(--text3); margin-top: 6px; font-weight: 500; }
 
-        /* ── GALLERY ────────────────────────────────────────── */
-        .gallery {
-            background: var(--bg2);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            padding: 100px 24px;
-        }
-        .gallery-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        /* ── GALLERY ──────────────────────────────────────────── */
+        .gallery { padding: 80px 24px; }
+        .gallery-inner { max-width: 1100px; margin: 0 auto; }
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px;
         }
         .gallery-item {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            aspect-ratio: 3/4;
-        }
-        .gallery-item:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--accent);
-        }
-        .gallery-item img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.08));
-        }
-        .gallery-item { cursor: pointer; }
-        .gallery-item .caption {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text3);
-            text-align: center;
-        }
-
-        /* ── LIGHTBOX ────────────────────────────────────────── */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            align-items: center;
-            justify-content: center;
+            border-radius: 12px; overflow: hidden;
+            box-shadow: var(--shadow-sm);
             cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .gallery-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .gallery-item img { width: 100%; display: block; }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,0.9);
+            display: none; align-items: center; justify-content: center;
         }
         .lightbox.open { display: flex; }
-        .lightbox img {
-            max-height: 85vh;
-            max-width: 90vw;
-            object-fit: contain;
-            border-radius: 16px;
-            filter: drop-shadow(0 20px 60px rgba(0,0,0,0.4));
-            animation: lightbox-in 0.25s ease;
-        }
-        @keyframes lightbox-in {
-            from { transform: scale(0.9); opacity: 0; }
-            to   { transform: scale(1);   opacity: 1; }
-        }
+        .lightbox img { max-height: 90vh; max-width: 90vw; border-radius: 12px; }
         .lightbox-close {
-            position: absolute;
-            top: 24px; right: 32px;
-            color: #fff;
-            font-size: 32px;
-            font-weight: 300;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-            background: none;
-            border: none;
-            font-family: inherit;
+            position: absolute; top: 20px; right: 24px;
+            background: none; border: none; color: #fff;
+            font-size: 36px; cursor: pointer;
         }
-        .lightbox-close:hover { opacity: 1; }
         .lightbox-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-            font-size: 36px;
-            width: 48px; height: 48px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.7;
-            transition: all 0.2s;
-            font-family: inherit;
-            line-height: 1;
-            padding: 0 0 2px 0;
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.1); border: none; color: #fff;
+            font-size: 40px; padding: 10px 16px; cursor: pointer; border-radius: 8px;
         }
-        .lightbox-arrow:hover { opacity: 1; background: rgba(255,255,255,0.2); }
-        .lightbox-prev { left: 24px; }
-        .lightbox-next { right: 24px; }
-        @media (max-width: 768px) {
-            .gallery-item { cursor: default; }
-        }
+        .lightbox-prev { left: 16px; }
+        .lightbox-next { right: 16px; }
 
-        /* ── CTA BANNER ──────────────────────────────────────── */
-        .cta-banner {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 100px 24px;
-            text-align: center;
-        }
+        /* ── MESSAGE CTA ─────────────────────────────────────── */
+        .cta-banner { padding: 0 24px; }
         .cta-box {
-            background: var(--navy);
-            border-radius: 24px;
-            padding: 60px 40px;
+            max-width: 800px; margin: 0 auto;
+            background: linear-gradient(135deg, var(--navy) 0%, #1a2a4a 100%);
             color: #fff;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        .cta-box h2 {
-            font-size: clamp(24px, 4vw, 36px);
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
+        .cta-box h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 800; margin-bottom: 16px; }
         .cta-box h2 span { color: var(--accent); }
-        .cta-box p {
-            color: rgba(255,255,255,0.6);
-            font-size: 16px;
-            margin-bottom: 32px;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        .cta-box p { color: #8a91a0; font-size: 15px; line-height: 1.7; max-width: 500px; margin: 0 auto 28px; }
         .cta-box a {
-            display: inline-block;
-            padding: 14px 36px;
+            display: inline-block; padding: 14px 36px;
             background: var(--accent);
             color: var(--navy);
             border-radius: 10px;
@@ -539,14 +428,13 @@
             nav .links { gap: 16px; }
             nav .links a:not(.cta) { display: none; }
             .hero-devices img { height: 220px !important; }
-            .config-row {
+            .ai-row {
                 flex-direction: column;
                 text-align: center;
                 gap: 30px;
             }
-            .config-img { flex: none; }
-            .config-text .section-title { text-align: center !important; }
-            .config-text p { max-width: 100%; }
+            .ai-img { flex: none; }
+            .ai-commands { justify-content: center; }
             .showcase-row, .showcase-row.reverse {
                 flex-direction: column;
                 text-align: center;
@@ -572,7 +460,7 @@
                 <a href="#features">Features</a>
                 <a href="#specs">Specs</a>
                 <a href="#gallery">Gallery</a>
-                <a href="app.html" class="cta">Open App</a>
+                <a href="#features" class="cta">Explore</a>
             </div>
         </div>
     </nav>
@@ -580,35 +468,45 @@
     <!-- HERO -->
     <section class="hero" id="top">
         <div class="hero-content">
-            <div class="hero-badge">ESP32-S3 AMOLED SMART DISPLAY</div>
-            <h1 class="hero-title">Your world<br><span>at a glance</span></h1>
-            <p class="hero-tagline">A swipe-driven smart display that shows live weather, train times, crypto prices, F1 standings, messages and more — beautifully.</p>
+            <div class="hero-badge">AI-POWERED SMART DISPLAY</div>
+            <h1 class="hero-title">Just ask.<br><span>It knows.</span></h1>
+            <p class="hero-tagline">An AI-powered AMOLED smart display you control with your voice. Powered by Claude, it answers questions, plays internet radio, reads your messages aloud and keeps you updated — all on your desk.</p>
 
             <div class="hero-cta">
-                <a href="app.html" class="primary">Send a Message</a>
-                <a href="#features" class="secondary">Explore Features</a>
+                <a href="#features" class="primary">See Features</a>
+                <a href="#ai" class="secondary">Voice AI</a>
             </div>
 
             <div class="hero-devices">
-                <img src="images/homescreen-image-07.png" alt="Wonder Device home screen">
-                <img src="images/startup-image-05.png" alt="Wonder Device startup">
-                <img src="images/weather-image-04.png" alt="Wonder Device weather page">
+                <img src="images/Smart device homescreen with time and train info.png" alt="Wonder Device home screen">
+                <img src="images/Wonder device startup display.png" alt="Wonder Device startup">
+                <img src="images/Smart weather display for Gibraltar.png" alt="Wonder Device weather">
             </div>
         </div>
     </section>
 
-    <!-- CONFIGURABLE -->
-    <section class="configurable">
-        <div class="config-inner">
-            <div class="config-row">
-                <div class="config-img">
-                    <img src="images/configure-wonder-device-image-11.png" alt="Wonder Device web dashboard">
+    <!-- AI VOICE CONTROL -->
+    <section class="ai-section" id="ai">
+        <div class="ai-inner">
+            <div class="ai-row">
+                <div class="ai-img">
+                    <img src="images/Modern device with screen display.png" alt="Wonder Device AI voice control">
                 </div>
-                <div class="config-text">
-                    <div class="hero-badge" style="margin-bottom:16px">FULLY CONFIGURABLE</div>
-                    <h2 class="section-title" style="text-align:left; margin-bottom:12px;">Configure everything<br>from the <span>web app</span></h2>
-                    <p style="color:var(--text2); font-size:15px; line-height:1.7; max-width:420px;">Change your location, train stations, crypto coins, weather locations, display brightness, screensaver, refresh intervals and more — all from your phone or laptop. Changes sync to the device over WiFi. No cables, no reflashing.</p>
-                    <a href="app.html" style="display:inline-block; margin-top:20px; padding:12px 28px; background:var(--navy); color:#fff; border-radius:10px; font-weight:600; font-size:14px; text-decoration:none; transition:all 0.3s;">Open Dashboard</a>
+                <div class="ai-text">
+                    <div class="hero-badge" style="margin-bottom:16px">POWERED BY CLAUDE AI</div>
+                    <h2>Control everything<br>with your <span>voice</span></h2>
+                    <p>Press the button and speak naturally. Wonder Device uses Claude AI for real-time responses about anything on the device — or anything at all. It speaks back with a natural voice powered by OpenAI TTS.</p>
+                    <p>Want to change your train station? Just ask. Want country music? Just ask. Want to know the F1 standings? Just ask. The AI has full access to all your live data and can control every feature.</p>
+                    <div class="ai-commands">
+                        <span class="ai-cmd">"Play some jazz"</span>
+                        <span class="ai-cmd">"When's my next train?"</span>
+                        <span class="ai-cmd">"What's the weather?"</span>
+                        <span class="ai-cmd">"Change my station to Gatwick"</span>
+                        <span class="ai-cmd">"Who leads the F1?"</span>
+                        <span class="ai-cmd">"Update everything"</span>
+                        <span class="ai-cmd">"Reply: see you at 8"</span>
+                        <span class="ai-cmd">"Remember mum's birthday is March 15"</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -616,68 +514,80 @@
 
     <!-- FEATURES -->
     <section class="features" id="features">
-        <h2 class="section-title">Nine pages. <span>One swipe.</span></h2>
-        <p class="section-subtitle">Everything you need, updating in real time on a beautiful AMOLED display</p>
+        <h2 class="section-title">Everything you need. <span>One device.</span></h2>
+        <p class="section-subtitle">Swipe through pages of live data, or just ask the AI</p>
 
         <div class="feature-grid">
             <div class="feature-card">
+                <div class="feature-icon icon-purple">&#129302;</div>
+                <h3>Voice AI</h3>
+                <p>Powered by Claude. Ask questions, control the device, get spoken answers. Natural conversation with persistent memory — it remembers what you tell it.</p>
+                <span class="tag tag-ai">CLAUDE AI</span>
+            </div>
+            <div class="feature-card">
                 <div class="feature-icon icon-cyan">&#9201;</div>
                 <h3>Home</h3>
-                <p>Live clock, WiFi status, weather snapshot and your next train at a glance. Swipe up for messages sent from anyone, anywhere.</p>
+                <p>Big clock, weather snapshot, next train and WiFi status — all at a glance. Split-screen layout makes the most of the AMOLED display.</p>
                 <span class="tag tag-live">LIVE UPDATES</span>
             </div>
             <div class="feature-card">
                 <div class="feature-icon icon-green">&#9748;</div>
                 <h3>Weather</h3>
-                <p>Current conditions, hourly forecast and 3-day outlook for multiple locations. Hand-drawn weather icons on pure black AMOLED.</p>
-                <span class="tag tag-free">NO API KEY</span>
+                <p>Current conditions, hourly forecast and 3-day outlook for multiple locations. Beautiful weather icons on pure black AMOLED.</p>
+                <span class="tag tag-free">FREE API</span>
             </div>
             <div class="feature-card">
                 <div class="feature-icon icon-green">&#128646;</div>
                 <h3>Trains</h3>
-                <p>Live UK National Rail departures with platform numbers, delay alerts and cancellation warnings. Auto-switches direction based on your location.</p>
-                <span class="tag tag-live">LIVE DEPARTURES</span>
+                <p>Live UK National Rail departures with platform numbers and delay alerts. Change your home station by voice — "Set my station to Gatwick".</p>
+                <span class="tag tag-ai">VOICE CONTROL</span>
             </div>
             <div class="feature-card">
                 <div class="feature-icon icon-amber">&#9889;</div>
                 <h3>Crypto</h3>
                 <p>Live prices in GBP with 24h change, market cap and 3-day sparkline charts. Track Bitcoin, Ethereum, Solana and more.</p>
-                <span class="tag tag-free">NO API KEY</span>
+                <span class="tag tag-free">FREE API</span>
             </div>
             <div class="feature-card">
-                <div class="feature-icon icon-cyan">&#128240;</div>
-                <h3>News</h3>
-                <p>Top tech headlines from Hacker News, refreshed automatically. Swipe through stories, see points and comments, and tap to read or scan a QR code to open on your phone.</p>
-                <span class="tag tag-live">AUTO REFRESH</span>
+                <div class="feature-icon icon-pink">&#127925;</div>
+                <h3>Internet Radio</h3>
+                <p>10 UK favourites plus 30,000+ stations worldwide. Say "Play some country music" and the AI finds and plays the best station.</p>
+                <span class="tag tag-ai">AI DISCOVERY</span>
             </div>
             <div class="feature-card">
                 <div class="feature-icon icon-pink">&#127937;</div>
                 <h3>Formula 1</h3>
-                <p>Driver standings, next race countdown and a live leaderboard with lap times during qualifying and race weekends. The device auto-switches to F1 when a session goes live.</p>
-                <span class="tag tag-fun">RACE DAY</span>
+                <p>Driver standings, next race countdown, live session data and BBC F1 news headlines. Tap a story to read the full article.</p>
+                <span class="tag tag-fun">F1 NEWS</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon icon-cyan">&#128240;</div>
+                <h3>News</h3>
+                <p>BBC News headlines refreshed on demand. Swipe through stories, tap to read the full article or scan a QR code to open on your phone.</p>
+                <span class="tag tag-live">BBC NEWS</span>
             </div>
             <div class="feature-card">
                 <div class="feature-icon icon-purple">&#128172;</div>
                 <h3>Messages</h3>
-                <p>Anyone can send messages to your device from the web app. Urgent messages flash orange. Perfect for family or the office.</p>
-                <span class="tag tag-fun">INTERACTIVE</span>
+                <p>Anyone can message your device from a unique web link. The AI reads messages aloud and you reply by voice — two-way conversation.</p>
+                <span class="tag tag-ai">VOICE REPLY</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon icon-amber">&#128190;</div>
+                <h3>SD Card Storage</h3>
+                <p>MicroSD slot for offline music, voice history, data logging, custom settings and AI memory. Your device gets smarter over time.</p>
+                <span class="tag tag-fun">EXPANDABLE</span>
             </div>
             <div class="feature-card">
                 <div class="feature-icon icon-amber">&#127918;</div>
-                <h3>Games &amp; Timers</h3>
-                <p>Reaction time test, memory game, Pomodoro timer and a countdown to your next big event — all on your wrist-sized screen.</p>
+                <h3>Games & Timers</h3>
+                <p>Reaction time test, memory colour game, Pomodoro timer and countdown to your next event. Quick fun on your desk.</p>
                 <span class="tag tag-fun">MINI GAMES</span>
             </div>
             <div class="feature-card">
                 <div class="feature-icon icon-cyan">&#9881;</div>
-                <h3>Remote Config</h3>
-                <p>Everything is configurable from the web app — locations, stations, coins, refresh rates, brightness, screensaver and more. No reflashing needed — changes sync over WiFi.</p>
-                <span class="tag tag-live">OTA CONFIG</span>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon icon-purple">&#128295;</div>
                 <h3>Settings</h3>
-                <p>System info, WiFi details, IP address, free memory, uptime and refresh intervals — all on the device. Adjust brightness with a swipe.</p>
+                <p>System info, WiFi, screensaver picker and your personal message QR code. Everything configurable by voice or touch.</p>
                 <span class="tag tag-live">ON DEVICE</span>
             </div>
         </div>
@@ -687,71 +597,71 @@
     <section class="showcase" id="showcase">
         <div class="showcase-inner">
             <h2 class="section-title">See it <span>in action</span></h2>
-            <p class="section-subtitle">Real screenshots from the device, running live data</p>
+            <p class="section-subtitle">Real photos from the device, running live data</p>
 
             <div class="showcase-row">
                 <div class="showcase-img">
-                    <img src="images/train-times-image-03.png" alt="Live train departures">
+                    <img src="images/Wonder device with train schedule displayed.png" alt="Train departures">
                 </div>
                 <div class="showcase-text">
                     <div class="label label-green">LIVE DATA</div>
                     <h3>Never miss your train</h3>
-                    <p>Real-time departures from National Rail with platform numbers, on-time status, and upcoming services. The device auto-flips direction when you're away from home.</p>
+                    <p>Real-time departures from National Rail with platform numbers and on-time status. Change your home station by voice — just say "Set my station to London Bridge".</p>
                 </div>
             </div>
 
             <div class="showcase-row reverse">
                 <div class="showcase-img">
-                    <img src="images/crypto-image-01.png" alt="Crypto prices">
+                    <img src="images/Cryptocurrency tracker with Bitcoin stats.png" alt="Crypto prices">
                 </div>
                 <div class="showcase-text">
                     <div class="label label-amber">MARKETS</div>
                     <h3>Crypto at a glance</h3>
-                    <p>Live prices in GBP with 24-hour change percentages, market cap, and mini sparkline charts. Track up to 4 coins, configured from the web app.</p>
+                    <p>Live prices in GBP with 24-hour change percentages, market cap and 3-day sparkline charts. Ask the AI "What's Bitcoin at?" for a spoken update.</p>
                 </div>
             </div>
 
             <div class="showcase-row">
                 <div class="showcase-img">
-                    <img src="images/F1-image-02.png" alt="F1 standings">
+                    <img src="images/Radio device with neon interface.png" alt="Internet radio">
                 </div>
                 <div class="showcase-text">
-                    <div class="label label-pink">RACE DAY</div>
-                    <h3>Formula 1 standings</h3>
-                    <p>Driver championship standings with points, next race countdown, and session times. During qualifying and race weekends, a live leaderboard shows positions and lap times. The device automatically switches to the F1 page when a session begins.</p>
+                    <div class="label label-purple">INTERNET RADIO</div>
+                    <h3>30,000+ stations worldwide</h3>
+                    <p>10 UK favourites one tap away, plus AI-powered discovery. Say "Play some American country" and Claude finds and plays the perfect station from radio-browser.info.</p>
                 </div>
             </div>
 
             <div class="showcase-row reverse">
                 <div class="showcase-img">
-                    <img src="images/messages-image-08.png" alt="Messages on device">
-                </div>
-                <div class="showcase-text">
-                    <div class="label label-cyan">INTERACTIVE</div>
-                    <h3>Messages from anywhere</h3>
-                    <p>Friends and family can send messages straight to your desk from the web app. Urgent messages glow pink. No account needed — just open the link and type.</p>
-                </div>
-            </div>
-
-            <div class="showcase-row">
-                <div class="showcase-img">
-                    <img src="images/news-image-10.png" alt="News headlines">
+                    <img src="images/Smartwatch displaying news headline update.png" alt="News headlines">
                 </div>
                 <div class="showcase-text">
                     <div class="label label-amber">HEADLINES</div>
-                    <h3>Top tech news</h3>
-                    <p>Top stories from Hacker News, refreshed automatically. Swipe through headlines, see points and comments, and tap to read the full article or scan a QR code to open it on your phone.</p>
+                    <h3>BBC News on your desk</h3>
+                    <p>Top stories refreshed on demand. Swipe through headlines, tap to read the full article or scan a QR code to open on your phone. F1 news included on the F1 page.</p>
+                </div>
+            </div>
+
+            <div class="showcase-row">
+                <div class="showcase-img">
+                    <img src="images/Digital device with cascading green code.png" alt="Matrix screensaver">
+                </div>
+                <div class="showcase-text">
+                    <div class="label label-green">SCREENSAVERS</div>
+                    <h3>Beautiful when idle</h3>
+                    <p>Matrix rain and hyperspace starfield screensavers. The AMOLED display means true black — only the green characters or white stars glow. Tap or speak to wake.</p>
                 </div>
             </div>
 
             <div class="showcase-row reverse">
                 <div class="showcase-img">
-                    <img src="images/memory-game-image-09.png" alt="Memory game">
+                    <img src="images/Smart device with dynamic screen display.png" alt="Wonder Device in action">
                 </div>
                 <div class="showcase-text">
-                    <div class="label label-pink">MINI GAMES</div>
-                    <h3>Games on your desk</h3>
-                    <p>Take a break with built-in mini games. The memory game challenges you to repeat colour sequences that get longer each round. There's also a reaction time test — tap when the screen changes colour.</p>
+                    <div class="label label-cyan">COMPACT</div>
+                    <h3>Fits on any desk</h3>
+                    <p>1.8" AMOLED display with rounded corners, built-in speaker, microphone, touch screen, SD card slot and USB-C power. Everything you need in a tiny package.</p>
                 </div>
             </div>
         </div>
@@ -761,15 +671,15 @@
     <section class="specs" id="specs">
         <div class="specs-inner">
             <h2 class="section-title">Built on <span>real hardware</span></h2>
-            <p class="section-subtitle">Waveshare ESP32-S3 AMOLED 1.91" with touch and IMU</p>
+            <p class="section-subtitle">Waveshare ESP32-S3 Touch AMOLED 1.8" with audio and SD</p>
             <div class="spec-grid">
                 <div class="spec-item">
-                    <div class="spec-val">240&times;536</div>
+                    <div class="spec-val">368&times;448</div>
                     <div class="spec-label">AMOLED Display</div>
                 </div>
                 <div class="spec-item">
-                    <div class="spec-val">1.91"</div>
-                    <div class="spec-label">Screen Size</div>
+                    <div class="spec-val">1.8"</div>
+                    <div class="spec-label">Touch Screen</div>
                 </div>
                 <div class="spec-item">
                     <div class="spec-val">ESP32-S3</div>
@@ -788,12 +698,12 @@
                     <div class="spec-label">Always Connected</div>
                 </div>
                 <div class="spec-item">
-                    <div class="spec-val">Touch</div>
-                    <div class="spec-label">Swipe Navigation</div>
+                    <div class="spec-val">Audio</div>
+                    <div class="spec-label">Speaker + Mic</div>
                 </div>
                 <div class="spec-item">
-                    <div class="spec-val">IMU</div>
-                    <div class="spec-label">Shake to Refresh</div>
+                    <div class="spec-val">SD Card</div>
+                    <div class="spec-label">Expandable Storage</div>
                 </div>
             </div>
         </div>
@@ -802,39 +712,45 @@
     <!-- GALLERY -->
     <section class="gallery" id="gallery">
         <div class="gallery-inner">
-            <h2 class="section-title">Every <span>page</span></h2>
-            <p class="section-subtitle">Swipe through all the screens</p>
+            <h2 class="section-title">Every <span>angle</span></h2>
+            <p class="section-subtitle">See the device from every side</p>
 
             <div class="gallery-grid">
                 <div class="gallery-item">
-                    <img src="images/homescreen-image-07.png" alt="Home screen">
+                    <img src="images/Smart device homescreen with time and train info.png" alt="Home screen">
                 </div>
                 <div class="gallery-item">
-                    <img src="images/weather-image-04.png" alt="Weather page">
+                    <img src="images/Smart weather display for Gibraltar.png" alt="Weather page">
                 </div>
                 <div class="gallery-item">
-                    <img src="images/train-times-image-03.png" alt="Train departures">
+                    <img src="images/Train departure information on display device.png" alt="Train departures">
                 </div>
                 <div class="gallery-item">
-                    <img src="images/crypto-image-01.png" alt="Crypto prices">
+                    <img src="images/Cryptocurrency tracker with Bitcoin stats.png" alt="Crypto prices">
                 </div>
                 <div class="gallery-item">
-                    <img src="images/F1-image-02.png" alt="F1 standings">
+                    <img src="images/Radio device with neon interface.png" alt="Radio playing">
                 </div>
                 <div class="gallery-item">
-                    <img src="images/messages-image-08.png" alt="Messages">
+                    <img src="images/Radio device station list interface.png" alt="Radio stations">
                 </div>
                 <div class="gallery-item">
-                    <img src="images/news-image-10.png" alt="News headlines">
+                    <img src="images/Smartwatch displaying news headline update.png" alt="News">
                 </div>
                 <div class="gallery-item">
-                    <img src="images/memory-game-image-09.png" alt="Memory game">
+                    <img src="images/Digital device with cascading green code.png" alt="Matrix screensaver">
                 </div>
                 <div class="gallery-item">
-                    <img src="images/screensaver-image-06.png" alt="Matrix screensaver">
+                    <img src="images/Wonder device with train schedule displayed.png" alt="Train schedule">
                 </div>
                 <div class="gallery-item">
-                    <img src="images/startup-image-05.png" alt="Boot screen">
+                    <img src="images/Modern device with screen display.png" alt="Device display">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/Smart device with dynamic screen display.png" alt="Dynamic display">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/Wonder device startup display.png" alt="Boot screen">
                 </div>
             </div>
         </div>
@@ -843,19 +759,20 @@
     <!-- CTA BANNER -->
     <section class="cta-banner">
         <div class="cta-box">
-            <h2>Your device, <span>your dashboard</span></h2>
-            <p>Send messages, configure every setting, and manage your device from the web app. Everything updates over WiFi — no reflashing needed.</p>
-            <a href="app.html">Open Dashboard</a>
+            <h2>Your AI assistant, <span>on your desk</span></h2>
+            <p>Send messages from anywhere using your device's unique link. The AI reads them aloud and you reply by voice. No app needed — just open the link and type.</p>
+            <a href="m/">Send a Message</a>
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer>
         <div class="logo">WONDER <span>DEVICE</span></div>
-        <p>A swipe-driven AMOLED smart display powered by ESP32-S3</p>
+        <p>An AI-powered AMOLED smart display &mdash; powered by Claude, Whisper and OpenAI TTS</p>
         <div class="links">
-            <a href="app.html">Message Board</a>
-            <a href="app.html">Device Config</a>
+            <a href="m/">Message a Device</a>
+            <a href="#features">Features</a>
+            <a href="#specs">Specs</a>
         </div>
         <p style="margin-top: 20px; color: #bbb;">&copy; 2026 Wonder Device</p>
     </footer>
@@ -878,7 +795,7 @@
             });
         });
 
-        // Gallery lightbox (desktop only)
+        // Gallery lightbox
         const galleryImages = Array.from(document.querySelectorAll('.gallery-item img'));
         let lightboxIndex = 0;
 
