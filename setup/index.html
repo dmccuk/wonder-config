@@ -11,12 +11,11 @@
             --bg: #0a0a14; --bg2: #12121e; --card: #1a1a2e; --border: #2a2a3e;
             --accent: #00b4ff; --accent2: #0091cc; --success: #00ff88;
             --warn: #ffaa00; --danger: #ff4466; --text: #e8e8f0;
-            --text2: #8888aa; --text3: #555570;
+            --text2: #8888aa; --text3: #555570; --purple: #a855f7;
         }
         html { scroll-behavior: smooth; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 520px; margin: 0 auto; padding: 20px; }
 
         /* Header */
         .header { text-align: center; padding: 40px 0 20px; }
@@ -24,374 +23,488 @@
         .header p { color: var(--text2); font-size: 0.85rem; margin-top: 6px; }
 
         /* Cards */
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
-        .card h2 { font-size: 0.9rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
-        .card.locked { opacity: 0.4; pointer-events: none; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+        .card.locked { opacity: 0.35; pointer-events: none; }
+        .card-head { padding: 16px 20px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; }
+        .card-head h2 { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+        .card-head .arrow { color: var(--text3); font-size: 0.7rem; transition: transform 0.2s; }
+        .card-head .arrow.open { transform: rotate(180deg); }
+        .card-body { padding: 0 20px 20px; display: none; }
+        .card-body.open { display: block; }
+        .card-desc { font-size: 0.8rem; color: var(--text2); margin-bottom: 14px; line-height: 1.5; }
+
+        /* Section colours */
+        .s-connect h2 { color: var(--accent); }
+        .s-ai h2 { color: var(--purple); }
+        .s-trains h2 { color: var(--success); }
+        .s-weather h2 { color: var(--warn); }
+        .s-crypto h2 { color: #f7931a; }
+        .s-countdown h2 { color: var(--accent); }
+        .s-pomodoro h2 { color: var(--danger); }
+        .s-display h2 { color: var(--accent2); }
+        .s-layout h2 { color: var(--purple); }
 
         /* Form elements */
-        label { display: block; font-size: 0.8rem; color: var(--text2); margin-bottom: 6px; font-weight: 500; }
-        input[type="text"], input[type="password"], input[type="number"] {
-            width: 100%; padding: 12px 14px; background: var(--bg); border: 1px solid var(--border);
-            border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.95rem;
+        label { display: block; font-size: 0.78rem; color: var(--text2); margin-bottom: 5px; font-weight: 500; }
+        input[type="text"], input[type="password"], input[type="number"], input[type="date"], select {
+            width: 100%; padding: 11px 13px; background: var(--bg); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem;
             outline: none; transition: border 0.2s;
         }
-        input:focus { border-color: var(--accent); }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%238888aa' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+        select option { background: var(--card); color: var(--text); }
+        input:focus, select:focus { border-color: var(--accent); }
         input::placeholder { color: var(--text3); }
-        .input-group { margin-bottom: 14px; }
-        .input-row { display: flex; gap: 12px; }
+        .input-group { margin-bottom: 12px; }
+        .input-row { display: flex; gap: 10px; }
         .input-row .input-group { flex: 1; }
-        .hint { font-size: 0.72rem; color: var(--text3); margin-top: 4px; }
+        .hint { font-size: 0.7rem; color: var(--text3); margin-top: 3px; }
+
+        /* Location search */
+        .loc-row { display: flex; gap: 8px; }
+        .loc-row input { flex: 1; }
+        .loc-row button { flex-shrink: 0; padding: 0 16px; background: var(--border); border: 1px solid var(--text3); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.8rem; font-family: 'Inter', sans-serif; }
+        .loc-row button:hover { background: var(--text3); }
+        .loc-result { font-size: 0.75rem; color: var(--success); margin-top: 4px; }
+        .loc-hidden { display: none; }
+
+        /* Checkboxes */
+        .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .check-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 0.82rem; }
+        .check-item.selected { border-color: var(--accent); background: rgba(0,180,255,0.08); }
+        .check-item .dot { width: 16px; height: 16px; border: 2px solid var(--text3); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .check-item.selected .dot { border-color: var(--accent); background: var(--accent); }
+        .check-item.selected .dot::after { content: '\2713'; color: #000; font-size: 0.65rem; font-weight: 700; }
 
         /* Buttons */
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-family: 'Inter', sans-serif;
-               font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn { width: 100%; padding: 13px; border: none; border-radius: 8px; font-family: 'Inter', sans-serif;
+               font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 6px; }
         .btn-primary { background: var(--accent); color: #000; }
         .btn-primary:hover { background: var(--accent2); }
         .btn-success { background: var(--success); color: #000; }
         .btn-success:hover { background: #00cc6e; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* Status messages */
-        .status { padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-top: 12px; display: none; }
+        /* Status */
+        .status { padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; margin-top: 10px; display: none; }
         .status.ok { display: block; background: rgba(0,255,136,0.1); border: 1px solid var(--success); color: var(--success); }
         .status.err { display: block; background: rgba(255,68,102,0.1); border: 1px solid var(--danger); color: var(--danger); }
-        .status.info { display: block; background: rgba(0,180,255,0.1); border: 1px solid var(--accent); color: var(--accent); }
 
         /* Toggle */
-        .toggle-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-        .toggle-row span { font-size: 0.85rem; color: var(--text2); }
+        .toggle-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .toggle-row span { font-size: 0.82rem; color: var(--text2); }
         .toggle-row span.active { color: var(--accent); font-weight: 600; }
-        .toggle { width: 48px; height: 26px; background: var(--border); border-radius: 13px;
+        .toggle { width: 46px; height: 24px; background: var(--border); border-radius: 12px;
                   cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
         .toggle.on { background: var(--accent); }
-        .toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
+        .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
                          background: white; border-radius: 50%; transition: left 0.2s; }
-        .toggle.on::after { left: 25px; }
+        .toggle.on::after { left: 24px; }
 
-        /* Separator */
-        .sep { height: 1px; background: var(--border); margin: 20px 0; }
-
-        /* Footer */
-        .footer { text-align: center; padding: 30px 0; color: var(--text3); font-size: 0.75rem; }
+        .sep { height: 1px; background: var(--border); margin: 16px 0; }
+        .footer { text-align: center; padding: 30px 0; color: var(--text3); font-size: 0.72rem; }
         .footer a { color: var(--accent); text-decoration: none; }
-
-        /* Spinner */
-        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--text3);
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--text3);
                    border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite;
                    vertical-align: middle; margin-right: 6px; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>WONDER DEVICE</h1>
-            <p>Private device setup</p>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>WONDER DEVICE</h1>
+        <p>Private device configuration</p>
+    </div>
 
-        <!-- Step 1: Connect -->
-        <div class="card" id="card-connect">
-            <h2>Connect Your Device</h2>
+    <!-- ═══ CONNECT ═══ -->
+    <div class="card s-connect" id="card-connect">
+        <div class="card-head" onclick="toggleCard('connect')">
+            <h2>Connect Device</h2><span class="arrow open" id="arrow-connect">&#9660;</span>
+        </div>
+        <div class="card-body open" id="body-connect">
             <div class="input-group">
                 <label>Device Token</label>
                 <input type="text" id="token" placeholder="wd_xxxxxxxx" maxlength="11" autocomplete="off" spellcheck="false">
-                <div class="hint">Found on Settings page 4/4 on your device</div>
+                <div class="hint">Settings page 4/4 on your device</div>
             </div>
             <div class="input-group">
                 <label>Setup PIN</label>
-                <input type="password" id="pin" placeholder="4-digit PIN" maxlength="4" inputmode="numeric" autocomplete="off">
+                <input type="text" id="pin" placeholder="6-character PIN" maxlength="6" autocomplete="off" style="text-transform:uppercase; letter-spacing:3px;">
                 <div class="hint">Shown below the token on your device</div>
             </div>
             <button class="btn btn-primary" id="btn-connect" onclick="connectDevice()">Connect</button>
             <div class="status" id="status-connect"></div>
         </div>
+    </div>
 
-        <!-- Step 2: API Key -->
-        <div class="card locked" id="card-apikey">
-            <h2>AI Voice Assistant</h2>
-            <p style="font-size:0.82rem; color:var(--text2); margin-bottom:14px;">
-                Enter your Anthropic API key to enable the Claude AI voice assistant on your device.
-                Your key is stored securely in Cloudflare KV and never on the device itself.
-            </p>
+    <!-- ═══ AI KEY ═══ -->
+    <div class="card s-ai locked" id="card-ai">
+        <div class="card-head" onclick="toggleCard('ai')">
+            <h2>AI Voice Assistant</h2><span class="arrow" id="arrow-ai">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-ai">
+            <div class="card-desc">Your Anthropic API key enables the Claude voice assistant. Stored securely in Cloudflare KV, never on the device.</div>
             <div class="input-group">
                 <label>Anthropic API Key</label>
                 <input type="password" id="api_key" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
                 <div class="hint">Get yours at <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--accent)">console.anthropic.com</a></div>
             </div>
             <button class="btn btn-primary" id="btn-apikey" onclick="saveApiKey()">Save API Key</button>
-            <div class="status" id="status-apikey"></div>
+            <div class="status" id="status-ai"></div>
         </div>
+    </div>
 
-        <!-- Step 3: Config -->
-        <div class="card locked" id="card-config">
-            <h2>Device Configuration</h2>
-            <p style="font-size:0.82rem; color:var(--text2); margin-bottom:14px;">
-                Changes sync to your device within 5 minutes.
-            </p>
-
+    <!-- ═══ TRAINS ═══ -->
+    <div class="card s-trains locked" id="card-trains">
+        <div class="card-head" onclick="toggleCard('trains')">
+            <h2>Train Stations</h2><span class="arrow" id="arrow-trains">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-trains">
+            <div class="card-desc">UK National Rail station codes. e.g. BTN = Brighton, VIC = Victoria, LBG = London Bridge</div>
             <div class="input-row">
-                <div class="input-group">
-                    <label>Home Station (CRS code)</label>
-                    <input type="text" id="home_station" placeholder="e.g. BTN" maxlength="3" style="text-transform:uppercase">
-                </div>
-                <div class="input-group">
-                    <label>Work Station (CRS code)</label>
-                    <input type="text" id="work_station" placeholder="e.g. VIC" maxlength="3" style="text-transform:uppercase">
-                </div>
+                <div class="input-group"><label>Home Station</label><input type="text" id="home_station" placeholder="BTN" maxlength="3" style="text-transform:uppercase"></div>
+                <div class="input-group"><label>Home Name</label><input type="text" id="home_station_name" placeholder="Brighton"></div>
             </div>
             <div class="input-row">
-                <div class="input-group">
-                    <label>Home Station Name</label>
-                    <input type="text" id="home_station_name" placeholder="e.g. Brighton">
-                </div>
-                <div class="input-group">
-                    <label>Work Station Name</label>
-                    <input type="text" id="work_station_name" placeholder="e.g. Victoria">
-                </div>
+                <div class="input-group"><label>Work Station</label><input type="text" id="work_station" placeholder="VIC" maxlength="3" style="text-transform:uppercase"></div>
+                <div class="input-group"><label>Work Name</label><input type="text" id="work_station_name" placeholder="Victoria"></div>
             </div>
+        </div>
+    </div>
 
-            <div class="sep"></div>
-
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Weather Latitude</label>
-                    <input type="text" id="weather_lat" placeholder="e.g. 50.8225" inputmode="decimal">
+    <!-- ═══ WEATHER ═══ -->
+    <div class="card s-weather locked" id="card-weather">
+        <div class="card-head" onclick="toggleCard('weather')">
+            <h2>Weather Locations</h2><span class="arrow" id="arrow-weather">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-weather">
+            <div class="card-desc">Add up to 3 locations. Type a place name and click Search to find coordinates automatically.</div>
+            <div class="input-group">
+                <label>Location 1 (Primary)</label>
+                <div class="loc-row">
+                    <input type="text" id="w1_name" placeholder="e.g. Brighton">
+                    <button onclick="searchLocation(1)">Search</button>
                 </div>
-                <div class="input-group">
-                    <label>Weather Longitude</label>
-                    <input type="text" id="weather_lon" placeholder="e.g. -0.1372" inputmode="decimal">
-                </div>
+                <div class="loc-result" id="w1_result"></div>
+                <input type="hidden" id="w1_lat"><input type="hidden" id="w1_lon">
             </div>
             <div class="input-group">
-                <label>Weather Location Name</label>
-                <input type="text" id="weather_name" placeholder="e.g. Brighton">
+                <label>Location 2</label>
+                <div class="loc-row">
+                    <input type="text" id="w2_name" placeholder="e.g. London">
+                    <button onclick="searchLocation(2)">Search</button>
+                </div>
+                <div class="loc-result" id="w2_result"></div>
+                <input type="hidden" id="w2_lat"><input type="hidden" id="w2_lon">
             </div>
+            <div class="input-group">
+                <label>Location 3</label>
+                <div class="loc-row">
+                    <input type="text" id="w3_name" placeholder="e.g. Gibraltar">
+                    <button onclick="searchLocation(3)">Search</button>
+                </div>
+                <div class="loc-result" id="w3_result"></div>
+                <input type="hidden" id="w3_lat"><input type="hidden" id="w3_lon">
+            </div>
+        </div>
+    </div>
 
-            <div class="sep"></div>
+    <!-- ═══ CRYPTO ═══ -->
+    <div class="card s-crypto locked" id="card-crypto">
+        <div class="card-head" onclick="toggleCard('crypto')">
+            <h2>Crypto Coins</h2><span class="arrow" id="arrow-crypto">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-crypto">
+            <div class="card-desc">Select which coins to track. Prices shown in GBP.</div>
+            <div class="check-grid" id="crypto-grid"></div>
+        </div>
+    </div>
 
+    <!-- ═══ COUNTDOWN ═══ -->
+    <div class="card s-countdown locked" id="card-countdown">
+        <div class="card-head" onclick="toggleCard('countdown')">
+            <h2>Countdown Timer</h2><span class="arrow" id="arrow-countdown">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-countdown">
+            <div class="input-group"><label>Event Name</label><input type="text" id="countdown_label" placeholder="e.g. Holiday"></div>
+            <div class="input-group"><label>Target Date</label><input type="date" id="countdown_date"></div>
+        </div>
+    </div>
+
+    <!-- ═══ POMODORO ═══ -->
+    <div class="card s-pomodoro locked" id="card-pomodoro">
+        <div class="card-head" onclick="toggleCard('pomodoro')">
+            <h2>Pomodoro Timer</h2><span class="arrow" id="arrow-pomodoro">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-pomodoro">
+            <div class="input-row">
+                <div class="input-group"><label>Work (minutes)</label><input type="number" id="pomo_work" value="25" min="1" max="120"></div>
+                <div class="input-group"><label>Break (minutes)</label><input type="number" id="pomo_break" value="5" min="1" max="60"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ DISPLAY ═══ -->
+    <div class="card s-display locked" id="card-display">
+        <div class="card-head" onclick="toggleCard('display')">
+            <h2>Display Settings</h2><span class="arrow" id="arrow-display">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-display">
+            <div class="input-row">
+                <div class="input-group"><label>Brightness (10-255)</label><input type="number" id="brightness" placeholder="200" min="10" max="255"></div>
+                <div class="input-group"><label>Dim Brightness</label><input type="number" id="dim_brightness" placeholder="40" min="5" max="200"></div>
+            </div>
+            <div class="input-row">
+                <div class="input-group"><label>Dim After (secs)</label><input type="number" id="dim_timeout" placeholder="30" min="5" max="600"></div>
+                <div class="input-group"><label>Screensaver After (secs)</label><input type="number" id="ss_timeout" placeholder="60" min="10" max="600"></div>
+            </div>
+            <div class="input-group">
+                <label>Screensaver</label>
+                <select id="ss_mode">
+                    <option value="0">Dim Only</option>
+                    <option value="1" selected>Matrix Rain</option>
+                    <option value="2">Hyperspace</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ LAYOUT ═══ -->
+    <div class="card s-layout locked" id="card-layout">
+        <div class="card-head" onclick="toggleCard('layout')">
+            <h2>Home Layout</h2><span class="arrow" id="arrow-layout">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-layout">
             <div class="toggle-row">
                 <span id="lbl-hero" class="active">Hero</span>
                 <div class="toggle" id="toggle-layout" onclick="toggleLayout()"></div>
                 <span id="lbl-grid">Grid</span>
             </div>
-            <div class="hint" style="margin-top:-8px; margin-bottom:14px;">Home screen layout</div>
-
-            <div class="input-group">
-                <label>Display Brightness (10-255)</label>
-                <input type="number" id="brightness" placeholder="200" min="10" max="255">
-            </div>
-
-            <button class="btn btn-success" id="btn-config" onclick="saveConfig()">Save Configuration</button>
-            <div class="status" id="status-config"></div>
-        </div>
-
-        <div class="footer">
-            <a href="https://wonder-device.com">wonder-device.com</a><br>
-            Your data is stored securely in Cloudflare KV. No tracking, no cookies.
+            <div class="hint">Hero shows data tiles. Grid shows app icons.</div>
         </div>
     </div>
 
-    <script>
-        const API = 'https://wonder-msg.dmccuk.workers.dev';
-        let connectedToken = '';
-        let connectedPin = '';
-        let layoutGrid = false;
+    <!-- ═══ SAVE ALL ═══ -->
+    <div class="card locked" id="card-save" style="border-color:var(--success)">
+        <div class="card-body open" style="padding-top:20px;">
+            <button class="btn btn-success" id="btn-save" onclick="saveAll()">Save All Settings</button>
+            <div class="hint" style="text-align:center; margin-top:8px;">Changes sync to your device within 5 minutes</div>
+            <div class="status" id="status-save"></div>
+        </div>
+    </div>
 
-        // Pre-fill token from URL param
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('token')) {
-            document.getElementById('token').value = params.get('token');
+    <div class="footer">
+        <a href="https://wonder-device.com">wonder-device.com</a><br>
+        Stored securely in Cloudflare KV. No tracking. No cookies.
+    </div>
+</div>
+
+<script>
+const API = 'https://wonder-msg.dmccuk.workers.dev';
+const GEO = 'https://geocoding-api.open-meteo.com/v1/search';
+let connectedToken = '', connectedPin = '', layoutGrid = false;
+
+const COINS = [
+    { id: 'bitcoin', sym: 'BTC', label: 'Bitcoin' },
+    { id: 'ethereum', sym: 'ETH', label: 'Ethereum' },
+    { id: 'solana', sym: 'SOL', label: 'Solana' },
+    { id: 'cardano', sym: 'ADA', label: 'Cardano' },
+    { id: 'ripple', sym: 'XRP', label: 'XRP' },
+    { id: 'dogecoin', sym: 'DOGE', label: 'Dogecoin' },
+    { id: 'polkadot', sym: 'DOT', label: 'Polkadot' },
+    { id: 'chainlink', sym: 'LINK', label: 'Chainlink' },
+];
+let selectedCoins = ['bitcoin','ethereum','solana','cardano'];
+
+// Pre-fill token from URL
+const params = new URLSearchParams(window.location.search);
+if (params.get('token')) document.getElementById('token').value = params.get('token');
+
+// ── Card toggles ──
+function toggleCard(id) {
+    const body = document.getElementById('body-' + id);
+    const arrow = document.getElementById('arrow-' + id);
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+}
+
+function setStatus(id, msg, type) {
+    const el = document.getElementById(id);
+    el.className = 'status ' + type; el.innerHTML = msg;
+}
+
+function unlock(id) { document.getElementById('card-' + id).classList.remove('locked'); }
+
+// ── Crypto grid ──
+function renderCoins() {
+    const grid = document.getElementById('crypto-grid');
+    grid.innerHTML = COINS.map(c =>
+        `<div class="check-item${selectedCoins.includes(c.id)?' selected':''}" onclick="toggleCoin('${c.id}')">
+            <div class="dot"></div><span>${c.sym}</span>
+        </div>`
+    ).join('');
+}
+function toggleCoin(id) {
+    if (selectedCoins.includes(id)) selectedCoins = selectedCoins.filter(c => c !== id);
+    else if (selectedCoins.length < 4) selectedCoins.push(id);
+    renderCoins();
+}
+
+// ── Layout toggle ──
+function toggleLayout() {
+    layoutGrid = !layoutGrid;
+    document.getElementById('toggle-layout').classList.toggle('on', layoutGrid);
+    document.getElementById('lbl-hero').classList.toggle('active', !layoutGrid);
+    document.getElementById('lbl-grid').classList.toggle('active', layoutGrid);
+}
+
+// ── Location search (Open-Meteo geocoding) ──
+async function searchLocation(n) {
+    const name = document.getElementById('w'+n+'_name').value.trim();
+    if (!name) return;
+    const res = document.getElementById('w'+n+'_result');
+    res.textContent = 'Searching...'; res.style.color = 'var(--text2)';
+    try {
+        const r = await fetch(GEO + '?name=' + encodeURIComponent(name) + '&count=1&language=en');
+        const data = await r.json();
+        if (data.results && data.results.length > 0) {
+            const loc = data.results[0];
+            document.getElementById('w'+n+'_lat').value = loc.latitude.toFixed(4);
+            document.getElementById('w'+n+'_lon').value = loc.longitude.toFixed(4);
+            document.getElementById('w'+n+'_name').value = loc.name;
+            res.textContent = loc.name + ', ' + (loc.country||'') + ' (' + loc.latitude.toFixed(4) + ', ' + loc.longitude.toFixed(4) + ')';
+            res.style.color = 'var(--success)';
+        } else {
+            res.textContent = 'Not found — try a different name';
+            res.style.color = 'var(--danger)';
         }
+    } catch (e) {
+        res.textContent = 'Search failed: ' + e.message;
+        res.style.color = 'var(--danger)';
+    }
+}
 
-        function setStatus(id, msg, type) {
-            const el = document.getElementById(id);
-            el.className = 'status ' + type;
-            el.innerHTML = msg;
-        }
+// ── Connect ──
+async function connectDevice() {
+    const token = document.getElementById('token').value.trim().toLowerCase();
+    const pin = document.getElementById('pin').value.trim().toUpperCase();
 
-        function clearStatus(id) {
-            document.getElementById(id).className = 'status';
-            document.getElementById(id).innerHTML = '';
-        }
+    if (!token.match(/^wd_[a-z0-9]{8}$/)) { setStatus('status-connect', 'Token must be wd_ + 8 characters', 'err'); return; }
+    if (pin.length < 4) { setStatus('status-connect', 'Enter your PIN from the device screen', 'err'); return; }
 
-        function unlock(cardId) {
-            document.getElementById(cardId).classList.remove('locked');
-        }
+    const btn = document.getElementById('btn-connect');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Connecting...';
 
-        function toggleLayout() {
-            layoutGrid = !layoutGrid;
-            const tog = document.getElementById('toggle-layout');
-            tog.classList.toggle('on', layoutGrid);
-            document.getElementById('lbl-hero').classList.toggle('active', !layoutGrid);
-            document.getElementById('lbl-grid').classList.toggle('active', layoutGrid);
-        }
-
-        async function connectDevice() {
-            const token = document.getElementById('token').value.trim().toLowerCase();
-            const pin = document.getElementById('pin').value.trim();
-
-            if (!token.match(/^wd_[a-z0-9]{8}$/)) {
-                setStatus('status-connect', 'Token must be in format wd_xxxxxxxx', 'err');
-                return;
-            }
-            if (!pin.match(/^\d{4}$/)) {
-                setStatus('status-connect', 'PIN must be 4 digits', 'err');
-                return;
-            }
-
-            const btn = document.getElementById('btn-connect');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>Connecting...';
-            clearStatus('status-connect');
-
-            try {
-                const res = await fetch(API + '/api/register-token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token, pin })
-                });
-                const data = await res.json();
-
-                if (!data.ok) {
-                    setStatus('status-connect', data.error || 'Connection failed', 'err');
-                    btn.disabled = false;
-                    btn.textContent = 'Connect';
-                    return;
-                }
-
-                connectedToken = token;
-                connectedPin = pin;
-
-                setStatus('status-connect',
-                    data.registered ? 'Device registered! Set up your AI key and config below.' : 'Connected! You can update your settings below.',
-                    'ok');
-
-                btn.textContent = 'Connected';
-                btn.disabled = true;
-                document.getElementById('token').readOnly = true;
-                document.getElementById('pin').readOnly = true;
-
-                unlock('card-apikey');
-                unlock('card-config');
-
-                // Load existing config
-                loadConfig();
-
-            } catch (e) {
-                setStatus('status-connect', 'Network error: ' + e.message, 'err');
-                btn.disabled = false;
-                btn.textContent = 'Connect';
-            }
-        }
-
-        async function loadConfig() {
-            try {
-                const res = await fetch(API + '/api/config/' + connectedToken);
-                const data = await res.json();
-                if (!data.ok || !data.config) return;
-
-                const c = data.config;
-                if (c.home_station) document.getElementById('home_station').value = c.home_station;
-                if (c.work_station) document.getElementById('work_station').value = c.work_station;
-                if (c.home_station_name) document.getElementById('home_station_name').value = c.home_station_name;
-                if (c.work_station_name) document.getElementById('work_station_name').value = c.work_station_name;
-                if (c.weather_lat) document.getElementById('weather_lat').value = c.weather_lat;
-                if (c.weather_lon) document.getElementById('weather_lon').value = c.weather_lon;
-                if (c.weather_name) document.getElementById('weather_name').value = c.weather_name;
-                if (c.brightness) document.getElementById('brightness').value = c.brightness;
-                if (c.home_layout === 'grid') {
-                    layoutGrid = true;
-                    document.getElementById('toggle-layout').classList.add('on');
-                    document.getElementById('lbl-hero').classList.remove('active');
-                    document.getElementById('lbl-grid').classList.add('active');
-                }
-            } catch (e) { /* silent */ }
-        }
-
-        async function saveApiKey() {
-            const api_key = document.getElementById('api_key').value.trim();
-            if (!api_key.startsWith('sk-ant-')) {
-                setStatus('status-apikey', 'API key must start with sk-ant-', 'err');
-                return;
-            }
-
-            const btn = document.getElementById('btn-apikey');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>Saving...';
-            clearStatus('status-apikey');
-
-            try {
-                const res = await fetch(API + '/api/register-token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: connectedToken, pin: connectedPin, api_key })
-                });
-                const data = await res.json();
-
-                if (data.ok) {
-                    setStatus('status-apikey', 'API key saved. Voice AI is now enabled on your device.', 'ok');
-                    document.getElementById('api_key').value = '';
-                    document.getElementById('api_key').placeholder = 'Key saved (hidden for security)';
-                } else {
-                    setStatus('status-apikey', data.error || 'Save failed', 'err');
-                }
-            } catch (e) {
-                setStatus('status-apikey', 'Network error: ' + e.message, 'err');
-            }
-            btn.disabled = false;
-            btn.textContent = 'Save API Key';
-        }
-
-        async function saveConfig() {
-            const config = {};
-            const hs = document.getElementById('home_station').value.trim().toUpperCase();
-            const ws = document.getElementById('work_station').value.trim().toUpperCase();
-            const hsn = document.getElementById('home_station_name').value.trim();
-            const wsn = document.getElementById('work_station_name').value.trim();
-            const wlat = document.getElementById('weather_lat').value.trim();
-            const wlon = document.getElementById('weather_lon').value.trim();
-            const wname = document.getElementById('weather_name').value.trim();
-            const bright = document.getElementById('brightness').value.trim();
-
-            if (hs) config.home_station = hs;
-            if (ws) config.work_station = ws;
-            if (hsn) config.home_station_name = hsn;
-            if (wsn) config.work_station_name = wsn;
-            if (wlat) config.weather_lat = wlat;
-            if (wlon) config.weather_lon = wlon;
-            if (wname) config.weather_name = wname;
-            if (bright) config.brightness = bright;
-            config.home_layout = layoutGrid ? 'grid' : 'hero';
-
-            const btn = document.getElementById('btn-config');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>Saving...';
-            clearStatus('status-config');
-
-            try {
-                const res = await fetch(API + '/api/config', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: connectedToken, pin: connectedPin, config })
-                });
-                const data = await res.json();
-
-                if (data.ok) {
-                    setStatus('status-config', 'Configuration saved. Your device will pick it up within 5 minutes.', 'ok');
-                } else {
-                    setStatus('status-config', data.error || 'Save failed', 'err');
-                }
-            } catch (e) {
-                setStatus('status-config', 'Network error: ' + e.message, 'err');
-            }
-            btn.disabled = false;
-            btn.textContent = 'Save Configuration';
-        }
-
-        // Allow Enter to submit on connect form
-        document.getElementById('pin').addEventListener('keydown', e => {
-            if (e.key === 'Enter') connectDevice();
+    try {
+        const res = await fetch(API + '/api/register-token', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, pin })
         });
-    </script>
+        const data = await res.json();
+        if (!data.ok) { setStatus('status-connect', data.error || 'Failed', 'err'); btn.disabled = false; btn.textContent = 'Connect'; return; }
+
+        connectedToken = token; connectedPin = pin;
+        setStatus('status-connect', data.registered ? 'Device registered!' : 'Connected!', 'ok');
+        btn.textContent = 'Connected'; document.getElementById('token').readOnly = true; document.getElementById('pin').readOnly = true;
+
+        ['ai','trains','weather','crypto','countdown','pomodoro','display','layout','save'].forEach(unlock);
+        loadConfig();
+    } catch (e) {
+        setStatus('status-connect', 'Network error: ' + e.message, 'err');
+        btn.disabled = false; btn.textContent = 'Connect';
+    }
+}
+
+// ── Load existing config ──
+async function loadConfig() {
+    try {
+        const r = await fetch(API + '/api/config/' + connectedToken);
+        const d = await r.json();
+        if (!d.ok || !d.config) return;
+        const c = d.config;
+
+        if (c.home_station) document.getElementById('home_station').value = c.home_station;
+        if (c.work_station) document.getElementById('work_station').value = c.work_station;
+        if (c.home_station_name) document.getElementById('home_station_name').value = c.home_station_name;
+        if (c.work_station_name) document.getElementById('work_station_name').value = c.work_station_name;
+
+        if (c.weather_name) { document.getElementById('w1_name').value = c.weather_name; document.getElementById('w1_lat').value = c.weather_lat||''; document.getElementById('w1_lon').value = c.weather_lon||''; document.getElementById('w1_result').textContent = c.weather_name + ' (' + (c.weather_lat||'') + ', ' + (c.weather_lon||'') + ')'; }
+        if (c.weather_loc2_name) { document.getElementById('w2_name').value = c.weather_loc2_name; document.getElementById('w2_lat').value = c.weather_loc2_lat||''; document.getElementById('w2_lon').value = c.weather_loc2_lon||''; document.getElementById('w2_result').textContent = c.weather_loc2_name + ' (' + (c.weather_loc2_lat||'') + ', ' + (c.weather_loc2_lon||'') + ')'; }
+        if (c.weather_loc3_name) { document.getElementById('w3_name').value = c.weather_loc3_name; document.getElementById('w3_lat').value = c.weather_loc3_lat||''; document.getElementById('w3_lon').value = c.weather_loc3_lon||''; document.getElementById('w3_result').textContent = c.weather_loc3_name + ' (' + (c.weather_loc3_lat||'') + ', ' + (c.weather_loc3_lon||'') + ')'; }
+
+        if (c.crypto_coins) { selectedCoins = c.crypto_coins.split(',').filter(Boolean); renderCoins(); }
+        if (c.countdown_label) document.getElementById('countdown_label').value = c.countdown_label;
+        if (c.countdown_date) document.getElementById('countdown_date').value = c.countdown_date;
+        if (c.pomo_work_mins) document.getElementById('pomo_work').value = c.pomo_work_mins;
+        if (c.pomo_break_mins) document.getElementById('pomo_break').value = c.pomo_break_mins;
+        if (c.brightness) document.getElementById('brightness').value = c.brightness;
+        if (c.dim_brightness) document.getElementById('dim_brightness').value = c.dim_brightness;
+        if (c.dim_timeout) document.getElementById('dim_timeout').value = c.dim_timeout;
+        if (c.screensaver_timeout) document.getElementById('ss_timeout').value = c.screensaver_timeout;
+        if (c.screensaver_mode) document.getElementById('ss_mode').value = c.screensaver_mode;
+        if (c.home_layout === 'grid') { layoutGrid = true; document.getElementById('toggle-layout').classList.add('on'); document.getElementById('lbl-hero').classList.remove('active'); document.getElementById('lbl-grid').classList.add('active'); }
+    } catch (e) { /* silent */ }
+}
+
+// ── Save API Key ──
+async function saveApiKey() {
+    const key = document.getElementById('api_key').value.trim();
+    if (!key.startsWith('sk-ant-')) { setStatus('status-ai', 'Key must start with sk-ant-', 'err'); return; }
+    const btn = document.getElementById('btn-apikey');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Saving...';
+    try {
+        const r = await fetch(API + '/api/register-token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: connectedToken, pin: connectedPin, api_key: key }) });
+        const d = await r.json();
+        if (d.ok) { setStatus('status-ai', 'API key saved. Voice AI enabled.', 'ok'); document.getElementById('api_key').value = ''; document.getElementById('api_key').placeholder = 'Key saved (hidden)'; }
+        else setStatus('status-ai', d.error || 'Failed', 'err');
+    } catch (e) { setStatus('status-ai', 'Error: ' + e.message, 'err'); }
+    btn.disabled = false; btn.textContent = 'Save API Key';
+}
+
+// ── Save All Config ──
+async function saveAll() {
+    const config = {};
+    const v = id => document.getElementById(id).value.trim();
+
+    if (v('home_station')) config.home_station = v('home_station').toUpperCase();
+    if (v('work_station')) config.work_station = v('work_station').toUpperCase();
+    if (v('home_station_name')) config.home_station_name = v('home_station_name');
+    if (v('work_station_name')) config.work_station_name = v('work_station_name');
+
+    if (v('w1_name')) { config.weather_name = v('w1_name'); config.weather_lat = v('w1_lat'); config.weather_lon = v('w1_lon'); }
+    if (v('w2_name')) { config.weather_loc2_name = v('w2_name'); config.weather_loc2_lat = v('w2_lat'); config.weather_loc2_lon = v('w2_lon'); }
+    if (v('w3_name')) { config.weather_loc3_name = v('w3_name'); config.weather_loc3_lat = v('w3_lat'); config.weather_loc3_lon = v('w3_lon'); }
+
+    config.crypto_coins = selectedCoins.join(',');
+    if (v('countdown_label')) config.countdown_label = v('countdown_label');
+    if (v('countdown_date')) config.countdown_date = v('countdown_date');
+    if (v('pomo_work')) config.pomo_work_mins = v('pomo_work');
+    if (v('pomo_break')) config.pomo_break_mins = v('pomo_break');
+    if (v('brightness')) config.brightness = v('brightness');
+    if (v('dim_brightness')) config.dim_brightness = v('dim_brightness');
+    if (v('dim_timeout')) config.dim_timeout = v('dim_timeout');
+    if (v('ss_timeout')) config.screensaver_timeout = v('ss_timeout');
+    config.screensaver_mode = v('ss_mode');
+    config.home_layout = layoutGrid ? 'grid' : 'hero';
+
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Saving...';
+
+    try {
+        const r = await fetch(API + '/api/config', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: connectedToken, pin: connectedPin, config }) });
+        const d = await r.json();
+        if (d.ok) setStatus('status-save', 'All settings saved. Device syncs within 5 minutes.', 'ok');
+        else setStatus('status-save', d.error || 'Failed', 'err');
+    } catch (e) { setStatus('status-save', 'Error: ' + e.message, 'err'); }
+    btn.disabled = false; btn.textContent = 'Save All Settings';
+}
+
+// Enter key on PIN
+document.getElementById('pin').addEventListener('keydown', e => { if (e.key === 'Enter') connectDevice(); });
+
+// Init crypto grid
+renderCoins();
+</script>
 </body>
 </html>
