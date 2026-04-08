@@ -270,7 +270,7 @@
                 const all = [];
                 (data.messages || []).forEach(m => all.push({ ...m, type: 'msg' }));
                 (data.replies || []).forEach(r => all.push({ ...r, type: 'reply', from: data.owner }));
-                all.sort((a, b) => new Date(a.time) - new Date(b.time));
+                all.sort((a, b) => new Date(b.time) - new Date(a.time));
 
                 const container = document.getElementById('messages');
                 if (all.length === 0) {
