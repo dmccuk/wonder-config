@@ -155,6 +155,48 @@
         </div>
     </div>
 
+    <!-- ═══ YOUR DEVICE ═══ -->
+    <div class="card s-connect locked" id="card-device">
+        <div class="card-head" onclick="toggleCard('device')">
+            <h2>Your Device</h2><span class="arrow" id="arrow-device">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-device">
+            <div class="input-group"><label>Owner Name</label><input type="text" id="owner_name" placeholder="e.g. Dave" maxlength="24"></div>
+            <div class="input-group">
+                <label>Timezone</label>
+                <select id="timezone">
+                    <option value="GMT0BST,M3.5.0/1,M10.5.0">UK (GMT/BST)</option>
+                    <option value="CET-1CEST,M3.5.0,M10.5.0/3">Central Europe (CET/CEST)</option>
+                    <option value="EET-2EEST,M3.5.0/3,M10.5.0/4">Eastern Europe (EET/EEST)</option>
+                    <option value="EST5EDT,M3.2.0,M11.1.0">US Eastern (EST/EDT)</option>
+                    <option value="CST6CDT,M3.2.0,M11.1.0">US Central (CST/CDT)</option>
+                    <option value="MST7MDT,M3.2.0,M11.1.0">US Mountain (MST/MDT)</option>
+                    <option value="PST8PDT,M3.2.0,M11.1.0">US Pacific (PST/PDT)</option>
+                    <option value="AEST-10AEDT,M10.1.0,M4.1.0/3">Australia Eastern (AEST/AEDT)</option>
+                    <option value="JST-9">Japan (JST)</option>
+                    <option value="IST-5:30">India (IST)</option>
+                    <option value="GST-4">Dubai (GST)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>AI Voice</label>
+                <select id="tts_voice">
+                    <option value="nova">Nova (warm, female)</option>
+                    <option value="alloy">Alloy (neutral, balanced)</option>
+                    <option value="echo">Echo (warm, male)</option>
+                    <option value="fable">Fable (expressive, British)</option>
+                    <option value="onyx">Onyx (deep, authoritative)</option>
+                    <option value="shimmer">Shimmer (soft, gentle)</option>
+                </select>
+            </div>
+            <div class="toggle-row">
+                <span id="lbl-celsius" class="active">Celsius</span>
+                <div class="toggle" id="toggle-temp" onclick="toggleTemp()"></div>
+                <span id="lbl-fahren">Fahrenheit</span>
+            </div>
+        </div>
+    </div>
+
     <!-- ═══ TRAINS ═══ -->
     <div class="card s-trains locked" id="card-trains">
         <div class="card-head" onclick="toggleCard('trains')">
@@ -303,7 +345,7 @@
 <script>
 const API = 'https://wonder-msg.dmccuk.workers.dev';
 const GEO = 'https://geocoding-api.open-meteo.com/v1/search';
-let connectedToken = '', connectedPin = '', layoutGrid = false;
+let connectedToken = '', connectedPin = '', layoutGrid = false, tempF = false;
 
 const COINS = [
     { id: 'bitcoin', sym: 'BTC', label: 'Bitcoin' },
@@ -349,6 +391,14 @@ function toggleCoin(id) {
     if (selectedCoins.includes(id)) selectedCoins = selectedCoins.filter(c => c !== id);
     else if (selectedCoins.length < 4) selectedCoins.push(id);
     renderCoins();
+}
+
+// ── Temp toggle ──
+function toggleTemp() {
+    tempF = !tempF;
+    document.getElementById('toggle-temp').classList.toggle('on', tempF);
+    document.getElementById('lbl-celsius').classList.toggle('active', !tempF);
+    document.getElementById('lbl-fahren').classList.toggle('active', tempF);
 }
 
 // ── Layout toggle ──
@@ -408,7 +458,7 @@ async function connectDevice() {
         setStatus('status-connect', data.registered ? 'Device registered!' : 'Connected!', 'ok');
         btn.textContent = 'Connected'; document.getElementById('token').readOnly = true; document.getElementById('pin').readOnly = true;
 
-        ['ai','trains','weather','crypto','countdown','pomodoro','display','layout','save'].forEach(unlock);
+        ['ai','device','trains','weather','crypto','countdown','pomodoro','display','layout','save'].forEach(unlock);
         loadConfig();
     } catch (e) {
         setStatus('status-connect', 'Network error: ' + e.message, 'err');
@@ -444,6 +494,11 @@ async function loadConfig() {
         if (c.screensaver_timeout) document.getElementById('ss_timeout').value = c.screensaver_timeout;
         if (c.screensaver_mode) document.getElementById('ss_mode').value = c.screensaver_mode;
         if (c.home_layout === 'grid') { layoutGrid = true; document.getElementById('toggle-layout').classList.add('on'); document.getElementById('lbl-hero').classList.remove('active'); document.getElementById('lbl-grid').classList.add('active'); }
+
+        if (c.owner_name) document.getElementById('owner_name').value = c.owner_name;
+        if (c.timezone) document.getElementById('timezone').value = c.timezone;
+        if (c.tts_voice) document.getElementById('tts_voice').value = c.tts_voice;
+        if (c.temp_units === 'F') { tempF = true; document.getElementById('toggle-temp').classList.add('on'); document.getElementById('lbl-celsius').classList.remove('active'); document.getElementById('lbl-fahren').classList.add('active'); }
     } catch (e) { /* silent */ }
 }
 
@@ -487,6 +542,10 @@ async function saveAll() {
     if (v('ss_timeout')) config.screensaver_timeout = v('ss_timeout');
     config.screensaver_mode = v('ss_mode');
     config.home_layout = layoutGrid ? 'grid' : 'hero';
+    if (v('owner_name')) config.owner_name = v('owner_name');
+    config.timezone = v('timezone');
+    config.tts_voice = v('tts_voice');
+    config.temp_units = tempF ? 'F' : 'C';
 
     const btn = document.getElementById('btn-save');
     btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Saving...';
