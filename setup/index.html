@@ -203,14 +203,24 @@
             <h2>Train Stations</h2><span class="arrow" id="arrow-trains">&#9660;</span>
         </div>
         <div class="card-body" id="body-trains">
-            <div class="card-desc">UK National Rail station codes. e.g. BTN = Brighton, VIC = Victoria, LBG = London Bridge</div>
-            <div class="input-row">
-                <div class="input-group"><label>Home Station</label><input type="text" id="home_station" placeholder="BTN" maxlength="3" style="text-transform:uppercase"></div>
-                <div class="input-group"><label>Home Name</label><input type="text" id="home_station_name" placeholder="Brighton"></div>
+            <div class="card-desc">Search by station name to find the code automatically.</div>
+            <div class="input-group">
+                <label>Home Station</label>
+                <div class="loc-row">
+                    <input type="text" id="train_home_search" placeholder="e.g. Brighton">
+                    <button onclick="searchStation('home')">Search</button>
+                </div>
+                <div class="loc-result" id="train_home_result"></div>
+                <input type="hidden" id="home_station"><input type="hidden" id="home_station_name">
             </div>
-            <div class="input-row">
-                <div class="input-group"><label>Work Station</label><input type="text" id="work_station" placeholder="VIC" maxlength="3" style="text-transform:uppercase"></div>
-                <div class="input-group"><label>Work Name</label><input type="text" id="work_station_name" placeholder="Victoria"></div>
+            <div class="input-group">
+                <label>Work / Destination Station</label>
+                <div class="loc-row">
+                    <input type="text" id="train_work_search" placeholder="e.g. Victoria">
+                    <button onclick="searchStation('work')">Search</button>
+                </div>
+                <div class="loc-result" id="train_work_result"></div>
+                <input type="hidden" id="work_station"><input type="hidden" id="work_station_name">
             </div>
         </div>
     </div>
@@ -409,6 +419,52 @@ function toggleLayout() {
     document.getElementById('lbl-grid').classList.toggle('active', layoutGrid);
 }
 
+// ── Station search (Huxley2 CRS lookup) ──
+async function searchStation(which) {
+    const input = document.getElementById('train_' + which + '_search');
+    const result = document.getElementById('train_' + which + '_result');
+    const codeField = document.getElementById(which === 'home' ? 'home_station' : 'work_station');
+    const nameField = document.getElementById(which === 'home' ? 'home_station_name' : 'work_station_name');
+    const query = input.value.trim();
+    if (!query) return;
+
+    result.textContent = 'Searching...'; result.style.color = 'var(--text2)';
+    try {
+        const r = await fetch('https://huxley2.azurewebsites.net/crs/' + encodeURIComponent(query));
+        const data = await r.json();
+        if (data && data.length > 0) {
+            // Show all results as clickable options
+            result.style.color = 'var(--success)';
+            if (data.length === 1) {
+                // Single match — auto-select
+                codeField.value = data[0].crsCode;
+                nameField.value = data[0].stationName;
+                input.value = data[0].stationName;
+                result.textContent = data[0].stationName + ' (' + data[0].crsCode + ')';
+            } else {
+                // Multiple matches — show list
+                result.innerHTML = data.slice(0, 6).map(s =>
+                    '<span style="cursor:pointer;display:inline-block;margin:3px 6px 3px 0;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:0.78rem;" ' +
+                    'onclick="pickStation(\'' + which + '\',\'' + s.crsCode + '\',\'' + s.stationName.replace(/'/g, "\\'") + '\')">' +
+                    s.stationName + ' <b>' + s.crsCode + '</b></span>'
+                ).join('');
+            }
+        } else {
+            result.textContent = 'No stations found'; result.style.color = 'var(--danger)';
+        }
+    } catch (e) {
+        result.textContent = 'Search failed: ' + e.message; result.style.color = 'var(--danger)';
+    }
+}
+
+function pickStation(which, code, name) {
+    document.getElementById(which === 'home' ? 'home_station' : 'work_station').value = code;
+    document.getElementById(which === 'home' ? 'home_station_name' : 'work_station_name').value = name;
+    document.getElementById('train_' + which + '_search').value = name;
+    document.getElementById('train_' + which + '_result').innerHTML = name + ' (<b>' + code + '</b>)';
+    document.getElementById('train_' + which + '_result').style.color = 'var(--success)';
+}
+
 // ── Location search (Open-Meteo geocoding) ──
 async function searchLocation(n) {
     const name = document.getElementById('w'+n+'_name').value.trim();
@@ -474,8 +530,8 @@ async function loadConfig() {
         if (!d.ok || !d.config) return;
         const c = d.config;
 
-        if (c.home_station) document.getElementById('home_station').value = c.home_station;
-        if (c.work_station) document.getElementById('work_station').value = c.work_station;
+        if (c.home_station) { document.getElementById('home_station').value = c.home_station; document.getElementById('train_home_search').value = c.home_station_name || c.home_station; document.getElementById('train_home_result').textContent = (c.home_station_name||'') + ' (' + c.home_station + ')'; document.getElementById('train_home_result').style.color = 'var(--success)'; }
+        if (c.work_station) { document.getElementById('work_station').value = c.work_station; document.getElementById('train_work_search').value = c.work_station_name || c.work_station; document.getElementById('train_work_result').textContent = (c.work_station_name||'') + ' (' + c.work_station + ')'; document.getElementById('train_work_result').style.color = 'var(--success)'; }
         if (c.home_station_name) document.getElementById('home_station_name').value = c.home_station_name;
         if (c.work_station_name) document.getElementById('work_station_name').value = c.work_station_name;
 
