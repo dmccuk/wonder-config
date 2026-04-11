@@ -262,6 +262,23 @@
         </div>
     </div>
 
+    <!-- ═══ FRIENDS (Communicator) ═══ -->
+    <div class="card locked" id="card-friends" style="border-color:var(--accent)">
+        <div class="card-head" onclick="toggleCard('friends')">
+            <h2 style="color:var(--accent)">Friends (Communicator)</h2><span class="arrow" id="arrow-friends">&#9660;</span>
+        </div>
+        <div class="card-body" id="body-friends">
+            <div class="card-desc">Add other Wonder Devices as friends to send voice messages between them. Both devices must add each other.</div>
+            <div class="input-row">
+                <div class="input-group" style="flex:2"><label>Friend's Device Token</label><input type="text" id="friend_token" placeholder="wd_xxxxxxxx" maxlength="11" style="text-transform:lowercase"></div>
+                <div class="input-group" style="flex:1"><label>Nickname</label><input type="text" id="friend_name" placeholder="e.g. Sarah" maxlength="20"></div>
+            </div>
+            <button class="btn btn-primary" onclick="addFriend()" style="margin-bottom:12px">Add Friend</button>
+            <div class="status" id="status-friends"></div>
+            <div id="friends-list"></div>
+        </div>
+    </div>
+
     <!-- ═══ CRYPTO ═══ -->
     <div class="card s-crypto locked" id="card-crypto">
         <div class="card-head" onclick="toggleCard('crypto')">
@@ -419,6 +436,55 @@ function toggleLayout() {
     document.getElementById('lbl-grid').classList.toggle('active', layoutGrid);
 }
 
+// ── Friends (Communicator) ──
+async function addFriend() {
+    const ft = document.getElementById('friend_token').value.trim().toLowerCase();
+    const fn = document.getElementById('friend_name').value.trim() || 'Friend';
+    if (!ft.match(/^wd_[a-z0-9]{8}$/)) { setStatus('status-friends', 'Token must be wd_ + 8 characters', 'err'); return; }
+    if (ft === connectedToken) { setStatus('status-friends', "That's your own device!", 'err'); return; }
+    try {
+        const r = await fetch(API + '/api/friends', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: connectedToken, pin: connectedPin, action: 'add', friend_token: ft, friend_name: fn }) });
+        const d = await r.json();
+        if (d.ok) {
+            setStatus('status-friends', fn + ' added!', 'ok');
+            document.getElementById('friend_token').value = '';
+            document.getElementById('friend_name').value = '';
+            renderFriends(d.friends);
+        } else { setStatus('status-friends', d.error || 'Failed', 'err'); }
+    } catch (e) { setStatus('status-friends', 'Error: ' + e.message, 'err'); }
+}
+
+async function removeFriend(ft) {
+    try {
+        const r = await fetch(API + '/api/friends', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: connectedToken, pin: connectedPin, action: 'remove', friend_token: ft }) });
+        const d = await r.json();
+        if (d.ok) renderFriends(d.friends);
+    } catch (e) {}
+}
+
+async function loadFriends() {
+    try {
+        const r = await fetch(API + '/api/friends/' + connectedToken);
+        const d = await r.json();
+        if (d.ok) renderFriends(d.friends);
+    } catch (e) {}
+}
+
+function renderFriends(friends) {
+    const el = document.getElementById('friends-list');
+    if (!friends || friends.length === 0) {
+        el.innerHTML = '<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:12px">No friends added yet</div>';
+        return;
+    }
+    el.innerHTML = friends.map(f =>
+        '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;margin-top:6px;background:var(--bg);border:1px solid var(--border);border-radius:8px">' +
+        '<div><span style="font-size:0.9rem;color:var(--text)">' + f.name + '</span> <span style="font-size:0.72rem;color:var(--text3);font-family:monospace">' + f.token + '</span></div>' +
+        '<span style="cursor:pointer;color:var(--danger);font-size:0.75rem" onclick="removeFriend(\'' + f.token + '\')">&times; Remove</span></div>'
+    ).join('');
+}
+
 // ── Station search (Huxley2 CRS lookup) ──
 async function searchStation(which) {
     const input = document.getElementById('train_' + which + '_search');
@@ -514,8 +580,9 @@ async function connectDevice() {
         setStatus('status-connect', data.registered ? 'Device registered!' : 'Connected!', 'ok');
         btn.textContent = 'Connected'; document.getElementById('token').readOnly = true; document.getElementById('pin').readOnly = true;
 
-        ['ai','device','trains','weather','crypto','countdown','pomodoro','display','layout','save'].forEach(unlock);
+        ['ai','device','trains','weather','friends','crypto','countdown','pomodoro','display','layout','save'].forEach(unlock);
         loadConfig();
+        loadFriends();
     } catch (e) {
         setStatus('status-connect', 'Network error: ' + e.message, 'err');
         btn.disabled = false; btn.textContent = 'Connect';
