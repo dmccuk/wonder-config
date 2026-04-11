@@ -374,6 +374,13 @@ const API = 'https://wonder-msg.dmccuk.workers.dev';
 const GEO = 'https://geocoding-api.open-meteo.com/v1/search';
 let connectedToken = '', connectedPin = '', layoutGrid = false, tempF = false;
 
+// HTML escaping to prevent XSS
+function esc(text) {
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+}
+
 const COINS = [
     { id: 'bitcoin', sym: 'BTC', label: 'Bitcoin' },
     { id: 'ethereum', sym: 'ETH', label: 'Ethereum' },
@@ -480,8 +487,8 @@ function renderFriends(friends) {
     }
     el.innerHTML = friends.map(f =>
         '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;margin-top:6px;background:var(--bg);border:1px solid var(--border);border-radius:8px">' +
-        '<div><span style="font-size:0.9rem;color:var(--text)">' + f.name + '</span> <span style="font-size:0.72rem;color:var(--text3);font-family:monospace">' + f.token + '</span></div>' +
-        '<span style="cursor:pointer;color:var(--danger);font-size:0.75rem" onclick="removeFriend(\'' + f.token + '\')">&times; Remove</span></div>'
+        '<div><span style="font-size:0.9rem;color:var(--text)">' + esc(f.name) + '</span> <span style="font-size:0.72rem;color:var(--text3);font-family:monospace">' + esc(f.token) + '</span></div>' +
+        '<span style="cursor:pointer;color:var(--danger);font-size:0.75rem" onclick="removeFriend(\'' + esc(f.token) + '\')">&times; Remove</span></div>'
     ).join('');
 }
 

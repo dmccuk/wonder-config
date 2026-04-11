@@ -236,6 +236,12 @@
         let deviceId = '';
         let priority = 'normal';
 
+        function esc(text) {
+            const d = document.createElement('div');
+            d.textContent = String(text || '');
+            return d.innerHTML;
+        }
+
         // Get device ID from URL path: /m/XZJEC6
         const pathParts = window.location.pathname.split('/');
         deviceId = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2] || '';
@@ -286,9 +292,9 @@
                     const isReply = m.type === 'reply';
                     const urgentClass = m.priority === 'urgent' ? ' urgent' : '';
                     return `<div class="msg ${isReply ? 'reply' : 'incoming'}${urgentClass}">
-                        <div class="from">${isReply ? m.from + ' (device)' : m.from}</div>
-                        <div class="text">${m.text}</div>
-                        <div class="time">${time}</div>
+                        <div class="from">${esc(isReply ? m.from + ' (device)' : m.from)}</div>
+                        <div class="text">${esc(m.text)}</div>
+                        <div class="time">${esc(time)}</div>
                     </div>`;
                 }).join('');
 
