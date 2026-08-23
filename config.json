@@ -51,6 +51,6 @@
   "refresh_messages_mins": 2,
   "f1_max_drivers": 10,
   "news_max_items": 5,
-  "f1_session_active": true,
-  "f1_session_type": "RACE"
+  "f1_session_active": false,
+  "f1_session_type": ""
 }
