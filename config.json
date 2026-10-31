@@ -52,5 +52,5 @@
   "f1_max_drivers": 10,
   "news_max_items": 5,
   "f1_session_active": true,
-  "f1_session_type": "PRACTICE"
+  "f1_session_type": "QUALIFYING"
 }
